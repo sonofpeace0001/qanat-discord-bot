@@ -1,1 +1,164 @@
-Ly8g4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQCi8vIFFBTkFUIEJvdCDigJQgU2xhc2ggQ29tbWFuZCBEZWZpbml0aW9ucwovLyDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAKCmNvbnN0IHsgU2xhc2hDb21tYW5kQnVpbGRlciB9ID0gcmVxdWlyZSgnZGlzY29yZC5qcycpOwoKY29uc3QgY29tbWFuZHMgPSBbCiAgLy8g4pSA4pSAIC9wb2ludHMg4oCUIENoZWNrIHlvdXIgZW5nYWdlbWVudCBwb2ludHMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgbmV3IFNsYXNoQ29tbWFuZEJ1aWxkZXIoKQogICAgLnNldE5hbWUoJ3BvaW50cycpCiAgICAuc2V0RGVzY3JpcHRpb24oJ0NoZWNrIHlvdXIgUUFOQVQgZW5nYWdlbWVudCBwb2ludHMnKQogICAgLmFkZFVzZXJPcHRpb24ob3B0ID0+CiAgICAgIG9wdC5zZXROYW1lKCd1c2VyJykKICAgICAgICAuc2V0RGVzY3JpcHRpb24oJ0NoZWNrIGFub3RoZXIgbWVtYmVyXCdzIHBvaW50cycpCiAgICAgICAgLnNldFJlcXVpcmVkKGZhbHNlKQogICAgKSwKCiAgLy8g4pSA4pSAIC9sZWFkZXJib2FyZCDigJQgVG9wIHBvaW50IGhvbGRlcnMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgbmV3IFNsYXNoQ29tbWFuZEJ1aWxkZXIoKQogICAgLnNldE5hbWUoJ2xlYWRlcmJvYXJkJykKICAgIC5zZXREZXNjcmlwdGlvbignVmlldyB0aGUgdG9wIFFBTkFUIGVuZ2FnZW1lbnQgbGVhZGVyYm9hcmQnKQogICAgLmFkZEludGVnZXJPcHRpb24ob3B0ID0+CiAgICAgIG9wdC5zZXROYW1lKCdsaW1pdCcpCiAgICAgICAgLnNldERlc2NyaXB0aW9uKCdOdW1iZXIgb2YgZW50cmllcyB0byBzaG93IChkZWZhdWx0OiAxMCknKQogICAgICAgIC5zZXRNaW5WYWx1ZSg1KQogICAgICAgIC5zZXRNYXhWYWx1ZSgyNSkKICAgICAgICAuc2V0UmVxdWlyZWQoZmFsc2UpCiAgICApLAoKICAvLyDilIDilIAgL2ludml0ZXMg4oCUIENoZWNrIHlvdXIgaW52aXRlIGNvdW50IOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogIG5ldyBTbGFzaENvbW1hbmRCdWlsZGVyKCkKICAgIC5zZXROYW1lKCdpbnZpdGVzJykKICAgIC5zZXREZXNjcmlwdGlvbignQ2hlY2sgeW91ciBpbnZpdGUgY291bnQnKQogICAgLmFkZFVzZXJPcHRpb24ob3B0ID0+CiAgICAgIG9wdC5zZXROYW1lKCd1c2VyJykKICAgICAgICAuc2V0RGVzY3JpcHRpb24oJ0NoZWNrIGFub3RoZXIgbWVtYmVyXCdzIGludml0ZXMnKQogICAgICAgIC5zZXRSZXF1aXJlZChmYWxzZSkKICAgICksCgogIC8vIOKUgOKUgCAvaW52aXRlc2xlYWRlcmJvYXJkIOKAlCBUb3AgaW52aXRlcnMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgbmV3IFNsYXNoQ29tbWFuZEJ1aWxkZXIoKQogICAgLnNldE5hbWUoJ2ludml0ZXNsZWFkZXJib2FyZCcpCiAgICAuc2V0RGVzY3JpcHRpb24oJ1ZpZXcgdGhlIHRvcCBpbnZpdGVycyBsZWFkZXJib2FyZCcpCiAgICAuYWRkSW50ZWdlck9wdGlvbihvcHQgPT4KICAgICAgb3B0LnNldE5hbWUoJ2xpbWl0JykKICAgICAgICAuc2V0RGVzY3JpcHRpb24oJ051bWJlciBvZiBlbnRyaWVzIHRvIHNob3cgKGRlZmF1bHQ6IDEwKScpCiAgICAgICAgLnNldE1pblZhbHVlKDUpCiAgICAgICAgLnNldE1heFZhbHVlKDI1KQogICAgICAgIC5zZXRSZXF1aXJlZChmYWxzZSkKICAgICksCgogIC8vIOKUgOKUgCAvbGlua3gg4oCUIExpbmsgeW91ciBYL1R3aXR0ZXIgYWNjb3VudCDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAKICBuZXcgU2xhc2hDb21tYW5kQnVpbGRlcigpCiAgICAuc2V0TmFtZSgnbGlua3gnKQogICAgLnNldERlc2NyaXB0aW9uKCdMaW5rIHlvdXIgWC9Ud2l0dGVyIGFjY291bnQgdG8gZWFybiBlbmdhZ2VtZW50IHBvaW50cycpCiAgICAuYWRkU3RyaW5nT3B0aW9uKG9wdCA9PgogICAgICBvcHQuc2V0TmFtZSgnaGFuZGxlJykKICAgICAgICAuc2V0RGVzY3JpcHRpb24oJ1lvdXIgWCBoYW5kbGUgKGUuZy4gUUFOQVRfSU8pJykKICAgICAgICAuc2V0UmVxdWlyZWQodHJ1ZSkKICAgICksCgogIC8vIOKUgOKUgCAvZmFxIOKAlCBBc2sgYSBxdWVzdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAKICBuZXcgU2xhc2hDb21tYW5kQnVpbGRlcigpCiAgICAuc2V0TmFtZSgnZmFxJykKICAgIC5zZXREZXNjcmlwdGlvbignR2V0IGFuc3dlcnMgdG8gZnJlcXVlbnRseSBhc2tlZCBxdWVzdGlvbnMgYWJvdXQgUUFOQVQnKQogICAgLmFkZFN0cmluZ09wdGlvbihvcHQgPT4KICAgICAgb3B0LnNldE5hbWUoJ3F1ZXN0aW9uJykKICAgICAgICAuc2V0RGVzY3JpcHRpb24oJ1lvdXIgcXVlc3Rpb24gYWJvdXQgUUFOQVQnKQogICAgICAgIC5zZXRSZXF1aXJlZChmYWxzZSkKICAgICksCgogIC8vIOKUgOKUgCAvam9pbnZjIOKAlCBCb3Qgam9pbnMgeW91ciB2b2ljZSBjaGFubmVsIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogIG5ldyBTbGFzaENvbW1hbmRCdWlsZGVyKCkKICAgIC5zZXROYW1lKCdqb2ludmMnKQogICAgLnNldERlc2NyaXB0aW9uKCdJbnZpdGUgUUFOQVQgR3VhcmRpYW4gdG8gam9pbiB5b3VyIHZvaWNlIGNoYW5uZWwnKSwKCiAgLy8g4pSA4pSAIC9sZWF2ZXZjIOKAlCBCb3QgbGVhdmVzIHZvaWNlIGNoYW5uZWwg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgbmV3IFNsYXNoQ29tbWFuZEJ1aWxkZXIoKQogICAgLnNldE5hbWUoJ2xlYXZldmMnKQogICAgLnNldERlc2NyaXB0aW9uKCdBc2sgUUFOQVQgR3VhcmRpYW4gdG8gbGVhdmUgdGhlIHZvaWNlIGNoYW5uZWwnKSwKCiAgLy8g4pSA4pSAIC9oZWxwIOKAlCBCb3QgaGVscCAmIGZlYXR1cmUgb3ZlcnZpZXcg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgbmV3IFNsYXNoQ29tbWFuZEJ1aWxkZXIoKQogICAgLnNldE5hbWUoJ2hlbHAnKQogICAgLnNldERlc2NyaXB0aW9uKCdMZWFybiBhYm91dCBRQU5BVCBHdWFyZGlhbiBhbmQgYXZhaWxhYmxlIGNvbW1hbmRzJyksCgogIC8vIOKUgOKUgCAveGNoZWNrIOKAlCBDaGVjayBYIGVuZ2FnZW1lbnQgc3RhdHVzIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogIG5ldyBTbGFzaENvbW1hbmRCdWlsZGVyKCkKICAgIC5zZXROYW1lKCd4Y2hlY2snKQogICAgLnNldERlc2NyaXB0aW9uKCdDaGVjayB5b3VyIFggZW5nYWdlbWVudCBwb2ludCBicmVha2Rvd24nKQogICAgLmFkZFVzZXJPcHRpb24ob3B0ID0+CiAgICAgIG9wdC5zZXROYW1lKCd1c2VyJykKICAgICAgICAuc2V0RGVzY3JpcHRpb24oJ0NoZWNrIGFub3RoZXIgbWVtYmVyXCdzIFggZW5nYWdlbWVudCcpCiAgICAgICAgLnNldFJlcXVpcmVkKGZhbHNlKQogICAgKSwKCiAgLy8g4pSA4pSAIC9teXByb2ZpbGUg4oCUIFZpZXcgZnVsbCBtZW1iZXIgcHJvZmlsZSDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAKICBuZXcgU2xhc2hDb21tYW5kQnVpbGRlcigpCiAgICAuc2V0TmFtZSgnbXlwcm9maWxlJykKICAgIC5zZXREZXNjcmlwdGlvbignVmlldyB5b3VyIGNvbXBsZXRlIFFBTkFUIGNvbW11bml0eSBwcm9maWxlJyksCgogIC8vIOKUgOKUgCAvbW9kc3RhdHMg4oCUIE1vZGVyYXRpb24gc3RhdHMgKGFkbWluIG9ubHkpIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogIG5ldyBTbGFzaENvbW1hbmRCdWlsZGVyKCkKICAgIC5zZXROYW1lKCdtb2RzdGF0cycpCiAgICAuc2V0RGVzY3JpcHRpb24oJ1ZpZXcgcmVjZW50IG1vZGVyYXRpb24gYWN0aW9ucyAoYWRtaW4gb25seSknKQogICAgLmFkZEludGVnZXJPcHRpb24ob3B0ID0+CiAgICAgIG9wdC5zZXROYW1lKCdsaW1pdCcpCiAgICAgICAgLnNldERlc2NyaXB0aW9uKCdOdW1iZXIgb2YgYWN0aW9ucyB0byBzaG93IChkZWZhdWx0OiAxMCknKQogICAgICAgIC5zZXRNaW5WYWx1ZSg1KQogICAgICAgIC5zZXRNYXhWYWx1ZSg1MCkKICAgICAgICAuc2V0UmVxdWlyZWQoZmFsc2UpCiAgICApLAoKICAvLyDilIDilIAgL2Fubm91bmNlIOKAlCBTZW5kIGFuIGVtYmVkIGFubm91bmNlbWVudCAoYWRtaW4gb25seSkKICBuZXcgU2xhc2hDb21tYW5kQnVpbGRlcigpCiAgICAuc2V0TmFtZSgnYW5ub3VuY2UnKQogICAgLnNldERlc2NyaXB0aW9uKCdTZW5kIGEgcmljaCBlbWJlZCBhbm5vdW5jZW1lbnQgKGFkbWluIG9ubHkpJykKICAgIC5hZGRTdHJpbmdPcHRpb24ob3B0ID0+CiAgICAgIG9wdC5zZXROYW1lKCd0aXRsZScpCiAgICAgICAgLnNldERlc2NyaXB0aW9uKCdBbm5vdW5jZW1lbnQgdGl0bGUnKQogICAgICAgIC5zZXRSZXF1aXJlZCh0cnVlKQogICAgKQogICAgLmFkZFN0cmluZ09wdGlvbihvcHQgPT4KICAgICAgb3B0LnNldE5hbWUoJ2JvZHknKQogICAgICAgIC5zZXREZXNjcmlwdGlvbignQW5ub3VuY2VtZW50IGJvZHkgdGV4dCAoc3VwcG9ydHMgRGlzY29yZCBtYXJrZG93biknKQogICAgICAgIC5zZXRSZXF1aXJlZCh0cnVlKQogICAgKQogICAgLmFkZENoYW5uZWxPcHRpb24ob3B0ID0+CiAgICAgIG9wdC5zZXROYW1lKCdjaGFubmVsJykKICAgICAgICAuc2V0RGVzY3JpcHRpb24oJ0NoYW5uZWwgdG8gc2VuZCB0byAoZGVmYXVsdDogYW5ub3VuY2VtZW50cyknKQogICAgICAgIC5zZXRSZXF1aXJlZChmYWxzZSkKICAgICkKICAgIC5hZGRTdHJpbmdPcHRpb24ob3B0ID0+CiAgICAgIG9wdC5zZXROYW1lKCdjb2xvcicpCiAgICAgICAgLnNldERlc2NyaXB0aW9uKCdFbWJlZCBjb2xvcicpCiAgICAgICAgLmFkZENob2ljZXMoCiAgICAgICAgICB7IG5hbWU6ICfwn5S1IEJsdWUgKERlZmF1bHQpJywgdmFsdWU6ICcjMDBBOEU4JyB9LAogICAgICAgICAgeyBuYW1lOiAn8J+foiBHcmVlbicsIHZhbHVlOiAnIzU3RjI4NycgfSwKICAgICAgICAgIHsgbmFtZTogJ/CflLQgUmVkIC8gVXJnZW50JywgdmFsdWU6ICcjRUQ0MjQ1JyB9LAogICAgICAgICAgeyBuYW1lOiAn8J+foSBZZWxsb3cgLyBXYXJuaW5nJywgdmFsdWU6ICcjRkVFNzVDJyB9LAogICAgICAgICAgeyBuYW1lOiAn8J+foyBQdXJwbGUnLCB2YWx1ZTogJyM5QjU5QjYnIH0sCiAgICAgICAgICB7IG5hbWU6ICfwn5+gIE9yYW5nZScsIHZhbHVlOiAnI0U2N0UyMicgfSwKICAgICAgICAgIHsgbmFtZTogJ+KaqiBXaGl0ZScsIHZhbHVlOiAnI0ZGRkZGRicgfSwKICAgICAgICApCiAgICAgICAgLnNldFJlcXVpcmVkKGZhbHNlKQogICAgKQogICAgLmFkZEJvb2xlYW5PcHRpb24ob3B0ID0+CiAgICAgIG9wdC5zZXROYW1lKCdwaW5nX2V2ZXJ5b25lJykKICAgICAgICAuc2V0RGVzY3JpcHRpb24oJ1BpbmcgQGV2ZXJ5b25lPyAoZGVmYXVsdDogZmFsc2UpJykKICAgICAgICAuc2V0UmVxdWlyZWQoZmFsc2UpCiAgICApCiAgICAuYWRkU3RyaW5nT3B0aW9uKG9wdCA9PgogICAgICBvcHQuc2V0TmFtZSgnaW1hZ2UnKQogICAgICAgIC5zZXREZXNjcmlwdGlvbignSW1hZ2UgVVJMIHRvIGluY2x1ZGUgKG9wdGlvbmFsKScpCiAgICAgICAgLnNldFJlcXVpcmVkKGZhbHNlKQogICAgKQogICAgLmFkZFN0cmluZ09wdGlvbihvcHQgPT4KICAgICAgb3B0LnNldE5hbWUoJ2Zvb3RlcicpCiAgICAgICAgLnNldERlc2NyaXB0aW9uKCdGb290ZXIgdGV4dCAob3B0aW9uYWwpJykKICAgICAgICAuc2V0UmVxdWlyZWQoZmFsc2UpCiAgICApLApdOwoKbW9kdWxlLmV4cG9ydHMgPSBjb21tYW5kczsK
+// ═══════════════════════════════════════════════════════════════
+// QANAT Bot — Slash Command Definitions
+// ═══════════════════════════════════════════════════════════════
+
+const { SlashCommandBuilder } = require('discord.js');
+
+const commands = [
+  // ── /points — Check your engagement points ─────────────
+  new SlashCommandBuilder()
+    .setName('points')
+    .setDescription('Check your QANAT engagement points')
+    .addUserOption(opt =>
+      opt.setName('user')
+        .setDescription('Check another member\'s points')
+        .setRequired(false)
+    ),
+
+  // ── /leaderboard — Top point holders ───────────────────
+  new SlashCommandBuilder()
+    .setName('leaderboard')
+    .setDescription('View the top QANAT engagement leaderboard')
+    .addIntegerOption(opt =>
+      opt.setName('limit')
+        .setDescription('Number of entries to show (default: 10)')
+        .setMinValue(5)
+        .setMaxValue(25)
+        .setRequired(false)
+    ),
+
+  // ── /invites — Check your invite count ─────────────────
+  new SlashCommandBuilder()
+    .setName('invites')
+    .setDescription('Check your invite count')
+    .addUserOption(opt =>
+      opt.setName('user')
+        .setDescription('Check another member\'s invites')
+        .setRequired(false)
+    ),
+
+  // ── /invitesleaderboard — Top inviters ────────────────
+  new SlashCommandBuilder()
+    .setName('invitesleaderboard')
+    .setDescription('View the top inviters leaderboard')
+    .addIntegerOption(opt =>
+      opt.setName('limit')
+        .setDescription('Number of entries to show (default: 10)')
+        .setMinValue(5)
+        .setMaxValue(25)
+        .setRequired(false)
+    ),
+
+  // ── /linkx — Link your X/Twitter account ──────────────
+  new SlashCommandBuilder()
+    .setName('linkx')
+    .setDescription('Link your X/Twitter account to earn engagement points')
+    .addStringOption(opt =>
+      opt.setName('handle')
+        .setDescription('Your X handle (e.g. QANAT_IO)')
+        .setRequired(true)
+    ),
+
+  // ── /faq — Ask a question ─────────────────────────────
+  new SlashCommandBuilder()
+    .setName('faq')
+    .setDescription('Get answers to frequently asked questions about QANAT')
+    .addStringOption(opt =>
+      opt.setName('question')
+        .setDescription('Your question about QANAT')
+        .setRequired(false)
+    ),
+
+  // ── /joinvc — Bot joins your voice channel ────────────
+  new SlashCommandBuilder()
+    .setName('joinvc')
+    .setDescription('Invite QANAT Guardian to join your voice channel'),
+
+  // ── /leavevc — Bot leaves voice channel ───────────────
+  new SlashCommandBuilder()
+    .setName('leavevc')
+    .setDescription('Ask QANAT Guardian to leave the voice channel'),
+
+  // ── /help — Bot help & feature overview ───────────────
+  new SlashCommandBuilder()
+    .setName('help')
+    .setDescription('Learn about QANAT Guardian and available commands'),
+
+  // ── /xcheck — Check X engagement status ───────────────
+  new SlashCommandBuilder()
+    .setName('xcheck')
+    .setDescription('Check your X engagement point breakdown')
+    .addUserOption(opt =>
+      opt.setName('user')
+        .setDescription('Check another member\'s X engagement')
+        .setRequired(false)
+    ),
+
+  // ── /myprofile — View full member profile ─────────────
+  new SlashCommandBuilder()
+    .setName('myprofile')
+    .setDescription('View your complete QANAT community profile'),
+
+  // ── /modstats — Moderation stats (admin only) ─────────
+  new SlashCommandBuilder()
+    .setName('modstats')
+    .setDescription('View recent moderation actions (admin only)')
+    .addIntegerOption(opt =>
+      opt.setName('limit')
+        .setDescription('Number of actions to show (default: 10)')
+        .setMinValue(5)
+        .setMaxValue(50)
+        .setRequired(false)
+    ),
+
+  // ── /announce — Send an embed announcement (admin only)
+  new SlashCommandBuilder()
+    .setName('announce')
+    .setDescription('Send a rich embed announcement (admin only)')
+    .addStringOption(opt =>
+      opt.setName('title')
+        .setDescription('Announcement title')
+        .setRequired(true)
+    )
+    .addStringOption(opt =>
+      opt.setName('body')
+        .setDescription('Announcement body text (supports Discord markdown)')
+        .setRequired(true)
+    )
+    .addChannelOption(opt =>
+      opt.setName('channel')
+        .setDescription('Channel to send to (default: announcements)')
+        .setRequired(false)
+    )
+    .addStringOption(opt =>
+      opt.setName('color')
+        .setDescription('Embed color')
+        .addChoices(
+          { name: '🔵 Blue (Default)', value: '#00A8E8' },
+          { name: '🟢 Green', value: '#57F287' },
+          { name: '🔴 Red / Urgent', value: '#ED4245' },
+          { name: '🟡 Yellow / Warning', value: '#FEE75C' },
+          { name: '🟣 Purple', value: '#9B59B6' },
+          { name: '🟠 Orange', value: '#E67E22' },
+          { name: '⚪ White', value: '#FFFFFF' },
+        )
+        .setRequired(false)
+    )
+    .addBooleanOption(opt =>
+      opt.setName('ping_everyone')
+        .setDescription('Ping @everyone? (default: false)')
+        .setRequired(false)
+    )
+    .addStringOption(opt =>
+      opt.setName('image')
+        .setDescription('Image URL to include (optional)')
+        .setRequired(false)
+    )
+    .addStringOption(opt =>
+      opt.setName('footer')
+        .setDescription('Footer text (optional)')
+        .setRequired(false)
+    ),
+];
+
+module.exports = commands;
