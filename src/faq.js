@@ -1,1 +1,133 @@
-Ly8g4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQCi8vIFFBTkFUIEJvdCDigJQgRkFRIERhdGEgJiBTbWFydCBNYXRjaGVyCi8vIOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkAoKY29uc3QgRkFRX0RBVEEgPSBbCiAgewogICAga2V5d29yZHM6IFsnd2hhdCBpcyBxYW5hdCcsICdhYm91dCBxYW5hdCcsICdxYW5hdCBtZWFuaW5nJywgJ3RlbGwgbWUgYWJvdXQgcWFuYXQnXSwKICAgIHF1ZXN0aW9uOiAnV2hhdCBpcyBRQU5BVD8nLAogICAgYW5zd2VyOiAnKipRQU5BVCoqIGlzIHRoZSBicmFuZCBvZiBRQU5BVCBUZWNobm9sb2d5IGFuZCBvZmZlcnMgKipEaWdpdGFsIFNvdmVyZWlnbnR5IGJ5IERlc2lnbiEqKiDigJQgVW5icmVha2FibGUuIFVuc3RvcHBhYmxlLiBVbmNoYWluZWQuXG5cbvCfjJAgVmlzaXQgW3FhbmF0LmlvXShodHRwczovL3FhbmF0LmlvKSB0byBsZWFybiBtb3JlLicsCiAgfSwKICB7CiAgICBrZXl3b3JkczogWydwcm9ibGVtJywgJ3NvbHZpbmcnLCAnd2hhdCBwcm9ibGVtJywgJ3doeSBxYW5hdCcsICdwdXJwb3NlJ10sCiAgICBxdWVzdGlvbjogJ1doYXQgcHJvYmxlbSBpcyBRQU5BVCBzb2x2aW5nPycsCiAgICBhbnN3ZXI6ICdRQU5BVCBzb2x2ZXMgdGhlIHByb2JsZW0gb2YgKipkaWdpdGFsIGlkZW50aXR5IGFuZCBkYXRhIHByb3RlY3Rpb24qKiBpbiBhbiBpbmNyZWFzaW5nbHkgdnVsbmVyYWJsZSBvbmxpbmUgd29ybGQuIFdoaWxlIHlvdSBjYW4gbG9jayB5b3VyIHBoeXNpY2FsIGhvbWUsIHlvdXIgcGVyc29uYWwgZGF0YSBpcyBzaWxlbnRseSBzdG9sZW4gYW5kIGV4cGxvaXRlZCBieSBsYXJnZSBjZW50cmFsaXplZCBlbnRpdGllcyBpbiB0aGUgZGlnaXRhbCByZWFsbS5cblxuUUFOQVQgZW1wb3dlcnMgdXNlcnMgdG8gcmVnYWluIGNvbnRyb2wgYnkgY3JlYXRpbmcgYSAqKnNlY3VyZSwgdXNlci1jZW50cmljIHBsYXRmb3JtKiogdGhhdCB0cmVhdHMgZGlnaXRhbCBpZGVudGl0eSBhbmQgZGF0YSB3aXRoIHRoZSBzYW1lIHJlc3BlY3QgYW5kIHByb3RlY3Rpb24gYXMgeW91ciBwaHlzaWNhbCBob21lLicsCiAgfSwKICB7CiAgICBrZXl3b3JkczogWydnb2FsJywgJ3FhbmF0IGdvYWwnLCAnb2JqZWN0aXZlJ10sCiAgICBxdWVzdGlvbjogIldoYXQgaXMgUUFOQVQncyBHb2FsPyIsCiAgICBhbnN3ZXI6ICdXaXRoICoqV2ViIFguIE9TKiosIFFBTkFUIGlzIGVzdGFibGlzaGluZyB0aGUgZGVjZW50cmFsaXplZCBvcGVyYXRpbmcgc3lzdGVtIGZvciBzZWN1cmUsIHRyYW5zcGFyZW50LCBhbmQgc2VsZi1kZXRlcm1pbmVkIGRpZ2l0YWwgaW50ZXJhY3Rpb25zIHRoYXQgZ2l2ZXMgcGVvcGxlIGJhY2sgY29udHJvbCBvdmVyIHRoZWlyIGRhdGEuJywKICB9LAogIHsKICAgIGtleXdvcmRzOiBbJ21pc3Npb24nLCAncWFuYXQgbWlzc2lvbiddLAogICAgcXVlc3Rpb246ICJXaGF0IGlzIFFBTkFUJ3MgTWlzc2lvbj8iLAogICAgYW5zd2VyOiAnV2UgZW1wb3dlciBwZW9wbGUgdG8gdGFrZSAqKmNvbXBsZXRlIGNvbnRyb2wqKiBvZiB0aGVpciBkaWdpdGFsIGlkZW50aXRpZXMgYW5kIGRhdGEsIGNyZWF0aW5nIGEgZmFpciBkaWdpdGFsIGVjb3N5c3RlbSB3aGVyZSB0aGV5IG93biB0aGVpciBtb3N0IHZhbHVhYmxlIGFzc2V0cy4nLAogIH0sCiAgewogICAga2V5d29yZHM6IFsndmlzaW9uJywgJ3FhbmF0IHZpc2lvbiddLAogICAgcXVlc3Rpb246ICJXaGF0IGlzIFFBTkFUJ3MgVmlzaW9uPyIsCiAgICBhbnN3ZXI6ICdBIGRpZ2l0YWwgd29ybGQgaW4gd2hpY2ggKipkYXRhIHNvdmVyZWlnbnR5IGlzIHRoZSBub3JtKiogYW5kIGV2ZXJ5IGluZGl2aWR1YWwgY2FuIHNoYXBlIHRoZWlyIGRpZ2l0YWwgaWRlbnRpdHkgZnJlZWx5LCBzZWN1cmVseSwgYW5kIGF1dG9ub21vdXNseS4nLAogIH0sCiAgewogICAga2V5d29yZHM6IFsnd2ViIHgnLCAnd2VieCcsICd3ZWIgeCBvcycsICdkZWNlbnRyYWxpemVkIG9zJywgJ29wZXJhdGluZyBzeXN0ZW0nLCAnd2VieG9zJ10sCiAgICBxdWVzdGlvbjogJ1doYXQgaXMgV0VCIFguIE9TPycsCiAgICBhbnN3ZXI6ICcqKldFQiBYLiBPUyoqIGlzIGEgRGVjZW50cmFsaXplZCBPcGVyYXRpbmcgU3lzdGVtIGFuZCBRQU5BVFwncyBtYWluIGluZnJhc3RydWN0dXJlIHByb2plY3QuIEl0IGlzIGEgcmV2b2x1dGlvbmFyeSBkZWNlbnRyYWxpemVkIHBsYXRmb3JtIHRoYXQgZ2l2ZXMgcGVvcGxlIGJhY2sgY29tcGxldGUgY29udHJvbCBvdmVyIHRoZWlyIGRpZ2l0YWwgaWRlbnRpdGllcyBhbmQgcGVyc29uYWwgZGF0YS4nLAogIH0sCiAgewogICAga2V5d29yZHM6IFsnbGl2ZScsICdzb2Z0d2FyZSBsaXZlJywgJ2xhdW5jaGVkJywgJ3JlYWR5JywgJ21haW5uZXQnLCAnYmV0YScsICdyZWxlYXNlIGRhdGUnLCAnd2hlbiBsYXVuY2gnXSwKICAgIHF1ZXN0aW9uOiAiSXMgUUFOQVQncyBzb2Z0d2FyZSBsaXZlPyIsCiAgICBhbnN3ZXI6ICdUaGUgc29mdHdhcmUgaXMgYWxtb3N0IHJlYWR5IHRvIGJlIHJvbGxlZCBvdXQhIPCfmoBcblxu4oCiICoqQmV0YSBUZXN0aW5nOioqIFExIDIwMjZcbuKAoiAqKk1haW5uZXQgUmVsZWFzZToqKiBRMyAyMDI2XG5cbllvdSBhcmUgc3RpbGwgZWFybHkhIPCfjq8nLAogIH0sCiAgewogICAga2V5d29yZHM6IFsndG9rZW4nLCAnY29pbicsICdjcnlwdG8nLCAncWFuYXQgdG9rZW4nLCAndG9rZW5vbWljcyddLAogICAgcXVlc3Rpb246ICdXaWxsIHRoZXJlIGJlIGEgUUFOQVQgVG9rZW4/JywKICAgIGFuc3dlcjogJ0luZm9ybWF0aW9uIHdpbGwgZm9sbG93IHNvb24uIFN0YXkgdHVuZWQhIPCfkYAnLAogIH0sCiAgewogICAga2V5d29yZHM6IFsnZ2V0IHN0YXJ0ZWQnLCAnaG93IHRvIHN0YXJ0JywgJ2JlZ2luJywgJ25ldyBoZXJlJywgJ2pvaW4nLCAnZ2V0dGluZyBzdGFydGVkJ10sCiAgICBxdWVzdGlvbjogJ0hvdyBkbyBJIGdldCBzdGFydGVkIHdpdGggUUFOQVQ/JywKICAgIGFuc3dlcjogJ1dlbGNvbWUgdG8gUUFOQVQhIEhlcmVcJ3MgaG93IHRvIGdldCBzdGFydGVkOlxuXG4x77iP4oOjIFZpc2l0IFtxYW5hdC5pb10oaHR0cHM6Ly93d3cucWFuYXQuaW8vKSBmb3IgaW50cm9kdWN0b3J5IGluZm8sIGJsb2cgJiBXaGl0ZXBhcGVyXG4y77iP4oOjIEZvbGxvdyB1cyBvbiBbWC9Ud2l0dGVyXShodHRwczovL3guY29tL1FBTkFUX0lPKVxuM++4j+KDoyBFbmdhZ2Ugd2l0aCB0aGUgY29tbXVuaXR5ICYgUUFOQVQgdGVhbSByaWdodCBoZXJlIG9uIERpc2NvcmQhJywKICB9LAogIHsKICAgIGtleXdvcmRzOiBbJ2hlbHAnLCAnaXNzdWUnLCAncHJvYmxlbScsICdzdHVjaycsICd3aGVyZSBoZWxwJywgJ2dldCBoZWxwJ10sCiAgICBxdWVzdGlvbjogJ1doZXJlIGNhbiBJIGdldCBoZWxwPycsCiAgICBhbnN3ZXI6ICdQb3N0IHlvdXIgcXVlc3Rpb24gaW4gPCMxMzUxNjU5MzE2NDk4NzkyNTI5PiB3aXRoIGRldGFpbHMgYWJvdXQgeW91ciBpc3N1ZS4gSW5jbHVkZSBlcnJvciBtZXNzYWdlcyBhbmQgc2NyZWVuc2hvdHMgaWYgcG9zc2libGUhIPCfm6DvuI8nLAogIH0sCiAgewogICAga2V5d29yZHM6IFsnYnVnJywgJ3JlcG9ydCBidWcnLCAnZXJyb3InLCAnYnJva2VuJywgJ25vdCB3b3JraW5nJ10sCiAgICBxdWVzdGlvbjogJ0hvdyBkbyBJIHJlcG9ydCBhIGJ1Zz8nLAogICAgYW5zd2VyOiAnUG9zdCBpbiA8IzEzNTE2NTkzMTY0OTg3OTI1Mjk+IHdpdGg6XG7igKIgU3RlcHMgdG8gcmVwcm9kdWNlXG7igKIgRXhwZWN0ZWQgdnMgYWN0dWFsIGJlaGF2aW9yXG7igKIgWW91ciBlbnZpcm9ubWVudCBkZXRhaWxzXG5cblRoZSB0ZWFtIHdpbGwgbG9vayBpbnRvIGl0ISDwn5CbJywKICB9LAogIHsKICAgIGtleXdvcmRzOiBbJ3NoYXJlIHByb2plY3QnLCAnc2hvdyBwcm9qZWN0JywgJ215IHByb2plY3QnLCAnYnVpbHQgc29tZXRoaW5nJywgJ2NyZWF0aW9uJ10sCiAgICBxdWVzdGlvbjogJ0NhbiBJIHNoYXJlIG15IFFBTkFUIHByb2plY3QgaGVyZT8nLAogICAgYW5zd2VyOiAnWWVzISBVc2UgPCMxNDUwMTQ5NTk1MTYxMDM5MDUzPiB0byBzaGFyZSB3aGF0IHlvdVwndmUgYnVpbHQuIFdlIGxvdmUgc2VlaW5nIGNvbW11bml0eSBjcmVhdGlvbnMhIPCfjqgnLAogIH0sCiAgewogICAga2V5d29yZHM6IFsnc3VnZ2VzdCcsICdmZWF0dXJlIHJlcXVlc3QnLCAnbmV3IGZlYXR1cmUnLCAnaWRlYScsICdzdWdnZXN0aW9uJ10sCiAgICBxdWVzdGlvbjogJ0hvdyBkbyBJIHN1Z2dlc3QgbmV3IGZlYXR1cmVzPycsCiAgICBhbnN3ZXI6ICdTaGFyZSB5b3VyIGlkZWFzIGluIDwjMTQ1MDE0OTg0NTQxODM3NzM5Nz4uIFdlIHJldmlldyBhbGwgc3VnZ2VzdGlvbnMgcmVndWxhcmx5ISDwn5KhJywKICB9LAogIHsKICAgIGtleXdvcmRzOiBbJ3Byb21vdGUnLCAncHJvbW90aW9uJywgJ2FkdmVydGlzZScsICdzZWxmIHByb21vJywgJ3NlbGwnLCAnc2VydmljZXMnXSwKICAgIHF1ZXN0aW9uOiAnQ2FuIEkgcHJvbW90ZSBteSBzZXJ2aWNlcyBvciBwcm9kdWN0cz8nLAogICAgYW5zd2VyOiAn4p2MICoqTm8qKiwgc2VsZi1wcm9tb3Rpb24gcmVxdWlyZXMgZXhwbGljaXQgc3RhZmYgcGVybWlzc2lvbi4gUGxlYXNlIGFzayBhIHN0YWZmIG1lbWJlciBmaXJzdCBiZWZvcmUgcHJvbW90aW5nIGFueXRoaW5nLicsCiAgfSwKICB7CiAgICBrZXl3b3JkczogWydyZXBvcnQnLCAndmlvbGF0aW9uJywgJ3J1bGUgYnJlYWsnLCAncmVwb3J0IHVzZXInLCAnYWJ1c2UnXSwKICAgIHF1ZXN0aW9uOiAnSG93IGRvIEkgcmVwb3J0IHJ1bGUgdmlvbGF0aW9ucz8nLAogICAgYW5zd2VyOiAnRE0gYW55IHN0YWZmIG1lbWJlciBvciB1c2UgRGlzY29yZFwncyBidWlsdC1pbiByZXBvcnQgZnVuY3Rpb24uIFdlIHRha2UgY29tbXVuaXR5IHNhZmV0eSBzZXJpb3VzbHkhIPCfm6HvuI8nLAogIH0sCl07CgovLyDilIDilIAgTWF0Y2hpbmcgRW5naW5lIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAoKLyoqCiAqIEZpbmQgdGhlIGJlc3QgRkFRIG1hdGNoIGZvciBhIHVzZXIgbWVzc2FnZS4KICogUmV0dXJucyB7IHF1ZXN0aW9uLCBhbnN3ZXIsIHNjb3JlIH0gb3IgbnVsbCBpZiBubyBtYXRjaC4KICovCmZ1bmN0aW9uIG1hdGNoRkFRKG1lc3NhZ2UpIHsKICBjb25zdCBub3JtYWxpemVkID0gbWVzc2FnZS50b0xvd2VyQ2FzZSgpLnJlcGxhY2UoL1teXHdcc10vZywgJycpLnRyaW0oKTsKICBpZiAobm9ybWFsaXplZC5sZW5ndGggPCAzKSByZXR1cm4gbnVsbDsKCiAgbGV0IGJlc3RNYXRjaCA9IG51bGw7CiAgbGV0IGJlc3RTY29yZSA9IDA7CgogIGZvciAoY29uc3QgZmFxIG9mIEZBUV9EQVRBKSB7CiAgICBsZXQgc2NvcmUgPSAwOwoKICAgIGZvciAoY29uc3Qga2V5d29yZCBvZiBmYXEua2V5d29yZHMpIHsKICAgICAgY29uc3Qga3dQYXJ0cyA9IGtleXdvcmQudG9Mb3dlckNhc2UoKS5zcGxpdCgvXHMrLyk7CiAgICAgIGNvbnN0IGFsbFByZXNlbnQgPSBrd1BhcnRzLmV2ZXJ5KHBhcnQgPT4gbm9ybWFsaXplZC5pbmNsdWRlcyhwYXJ0KSk7CgogICAgICBpZiAoYWxsUHJlc2VudCkgewogICAgICAgIC8vIExvbmdlciBrZXl3b3JkIG1hdGNoZXMgPSBoaWdoZXIgc2NvcmUKICAgICAgICBzY29yZSArPSBrd1BhcnRzLmxlbmd0aCAqIDI7CiAgICAgIH0gZWxzZSB7CiAgICAgICAgLy8gUGFydGlhbCBtYXRjaCDigJQgY291bnQgaG93IG1hbnkgcGFydHMgbWF0Y2gKICAgICAgICBjb25zdCBwYXJ0aWFsQ291bnQgPSBrd1BhcnRzLmZpbHRlcihwID0+IG5vcm1hbGl6ZWQuaW5jbHVkZXMocCkpLmxlbmd0aDsKICAgICAgICBzY29yZSArPSBwYXJ0aWFsQ291bnQgKiAwLjU7CiAgICAgIH0KICAgIH0KCiAgICBpZiAoc2NvcmUgPiBiZXN0U2NvcmUgJiYgc2NvcmUgPj0gMikgewogICAgICBiZXN0U2NvcmUgPSBzY29yZTsKICAgICAgYmVzdE1hdGNoID0geyBxdWVzdGlvbjogZmFxLnF1ZXN0aW9uLCBhbnN3ZXI6IGZhcS5hbnN3ZXIsIHNjb3JlIH07CiAgICB9CiAgfQoKICByZXR1cm4gYmVzdE1hdGNoOwp9CgovKioKICogR2V0IGFsbCBGQVEgZW50cmllcyBmb3IgZGlzcGxheS4KICovCmZ1bmN0aW9uIGdldEFsbEZBUSgpIHsKICByZXR1cm4gRkFRX0RBVEEubWFwKChmYXEsIGkpID0+ICh7CiAgICBpbmRleDogaSArIDEsCiAgICBxdWVzdGlvbjogZmFxLnF1ZXN0aW9uLAogICAgYW5zd2VyOiBmYXEuYW5zd2VyLAogIH0pKTsKfQoKbW9kdWxlLmV4cG9ydHMgPSB7IG1hdGNoRkFRLCBnZXRBbGxGQVEsIEZBUV9EQVRBIH07Cg==
+// ═══════════════════════════════════════════════════════════════
+// QANAT Bot — FAQ Data & Smart Matcher
+// ═══════════════════════════════════════════════════════════════
+
+const FAQ_DATA = [
+  {
+    keywords: ['what is qanat', 'about qanat', 'qanat meaning', 'tell me about qanat'],
+    question: 'What is QANAT?',
+    answer: '**QANAT** is the brand of QANAT Technology and offers **Digital Sovereignty by Design!** — Unbreakable. Unstoppable. Unchained.\n\n🌐 Visit [qanat.io](https://qanat.io) to learn more.',
+  },
+  {
+    keywords: ['problem', 'solving', 'what problem', 'why qanat', 'purpose'],
+    question: 'What problem is QANAT solving?',
+    answer: 'QANAT solves the problem of **digital identity and data protection** in an increasingly vulnerable online world. While you can lock your physical home, your personal data is silently stolen and exploited by large centralized entities in the digital realm.\n\nQANAT empowers users to regain control by creating a **secure, user-centric platform** that treats digital identity and data with the same respect and protection as your physical home.',
+  },
+  {
+    keywords: ['goal', 'qanat goal', 'objective'],
+    question: "What is QANAT's Goal?",
+    answer: 'With **Web X. OS**, QANAT is establishing the decentralized operating system for secure, transparent, and self-determined digital interactions that gives people back control over their data.',
+  },
+  {
+    keywords: ['mission', 'qanat mission'],
+    question: "What is QANAT's Mission?",
+    answer: 'We empower people to take **complete control** of their digital identities and data, creating a fair digital ecosystem where they own their most valuable assets.',
+  },
+  {
+    keywords: ['vision', 'qanat vision'],
+    question: "What is QANAT's Vision?",
+    answer: 'A digital world in which **data sovereignty is the norm** and every individual can shape their digital identity freely, securely, and autonomously.',
+  },
+  {
+    keywords: ['web x', 'webx', 'web x os', 'decentralized os', 'operating system', 'webxos'],
+    question: 'What is WEB X. OS?',
+    answer: '**WEB X. OS** is a Decentralized Operating System and QANAT\'s main infrastructure project. It is a revolutionary decentralized platform that gives people back complete control over their digital identities and personal data.',
+  },
+  {
+    keywords: ['live', 'software live', 'launched', 'ready', 'mainnet', 'beta', 'release date', 'when launch'],
+    question: "Is QANAT's software live?",
+    answer: 'The software is almost ready to be rolled out! 🚀\n\n• **Beta Testing:** Q1 2026\n• **Mainnet Release:** Q3 2026\n\nYou are still early! 🎯',
+  },
+  {
+    keywords: ['token', 'coin', 'crypto', 'qanat token', 'tokenomics'],
+    question: 'Will there be a QANAT Token?',
+    answer: 'Information will follow soon. Stay tuned! 👀',
+  },
+  {
+    keywords: ['get started', 'how to start', 'begin', 'new here', 'join', 'getting started'],
+    question: 'How do I get started with QANAT?',
+    answer: 'Welcome to QANAT! Here\'s how to get started:\n\n1️⃣ Visit [qanat.io](https://www.qanat.io/) for introductory info, blog & Whitepaper\n2️⃣ Follow us on [X/Twitter](https://x.com/QANAT_IO)\n3️⃣ Engage with the community & QANAT team right here on Discord!',
+  },
+  {
+    keywords: ['help', 'issue', 'problem', 'stuck', 'where help', 'get help'],
+    question: 'Where can I get help?',
+    answer: 'Post your question in <#1351659316498792529> with details about your issue. Include error messages and screenshots if possible! 🛠️',
+  },
+  {
+    keywords: ['bug', 'report bug', 'error', 'broken', 'not working'],
+    question: 'How do I report a bug?',
+    answer: 'Post in <#1351659316498792529> with:\n• Steps to reproduce\n• Expected vs actual behavior\n• Your environment details\n\nThe team will look into it! 🐛',
+  },
+  {
+    keywords: ['share project', 'show project', 'my project', 'built something', 'creation'],
+    question: 'Can I share my QANAT project here?',
+    answer: 'Yes! Use <#1450149595161039053> to share what you\'ve built. We love seeing community creations! 🎨',
+  },
+  {
+    keywords: ['suggest', 'feature request', 'new feature', 'idea', 'suggestion'],
+    question: 'How do I suggest new features?',
+    answer: 'Share your ideas in <#1450149845418377397>. We review all suggestions regularly! 💡',
+  },
+  {
+    keywords: ['promote', 'promotion', 'advertise', 'self promo', 'sell', 'services'],
+    question: 'Can I promote my services or products?',
+    answer: '❌ **No**, self-promotion requires explicit staff permission. Please ask a staff member first before promoting anything.',
+  },
+  {
+    keywords: ['report', 'violation', 'rule break', 'report user', 'abuse'],
+    question: 'How do I report rule violations?',
+    answer: 'DM any staff member or use Discord\'s built-in report function. We take community safety seriously! 🛡️',
+  },
+];
+
+// ── Matching Engine ──────────────────────────────────────────
+
+/**
+ * Find the best FAQ match for a user message.
+ * Returns { question, answer, score } or null if no match.
+ */
+function matchFAQ(message) {
+  const normalized = message.toLowerCase().replace(/[^\w\s]/g, '').trim();
+  if (normalized.length < 3) return null;
+
+  let bestMatch = null;
+  let bestScore = 0;
+
+  for (const faq of FAQ_DATA) {
+    let score = 0;
+
+    for (const keyword of faq.keywords) {
+      const kwParts = keyword.toLowerCase().split(/\s+/);
+      const allPresent = kwParts.every(part => normalized.includes(part));
+
+      if (allPresent) {
+        // Longer keyword matches = higher score
+        score += kwParts.length * 2;
+      } else {
+        // Partial match — count how many parts match
+        const partialCount = kwParts.filter(p => normalized.includes(p)).length;
+        score += partialCount * 0.5;
+      }
+    }
+
+    if (score > bestScore && score >= 2) {
+      bestScore = score;
+      bestMatch = { question: faq.question, answer: faq.answer, score };
+    }
+  }
+
+  return bestMatch;
+}
+
+/**
+ * Get all FAQ entries for display.
+ */
+function getAllFAQ() {
+  return FAQ_DATA.map((faq, i) => ({
+    index: i + 1,
+    question: faq.question,
+    answer: faq.answer,
+  }));
+}
+
+module.exports = { matchFAQ, getAllFAQ, FAQ_DATA };
