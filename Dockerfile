@@ -1,1 +1,7 @@
-RlJPTSBub2RlOjIwLXNsaW0KUlVOIGFwdC1nZXQgdXBkYXRlICYmIGFwdC1nZXQgaW5zdGFsbCAteSBweXRob24zIG1ha2UgZysrICYmIHJtIC1yZiAvdmFyL2xpYi9hcHQvbGlzdHMvKgpXT1JLRElSIC9hcHAKQ09QWSBwYWNrYWdlKi5qc29uIC4vClJVTiBucG0gY2kgLS1wcm9kdWN0aW9uCkNPUFkgLiAuCkNNRCBbIm5vZGUiLCAic3JjL2JvdC5qcyJdCg==
+FROM node:20-slim
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --production
+COPY . .
+CMD ["node", "src/bot.js"]
