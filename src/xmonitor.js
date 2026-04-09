@@ -1,1 +1,155 @@
-Ly8g4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQCi8vIFFBTkFUIEJvdCDigJQgWC9Ud2l0dGVyIE1vbml0b3IgTW9kdWxlCi8vIFBvbGxzIEBRQU5BVF9JTyBmb3IgbmV3IHBvc3RzIGFuZCBub3RpZmllcyB0aGUgY29tbXVuaXR5Ci8vIOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkAoKY29uc3QgeyBFbWJlZEJ1aWxkZXIsIEFjdGlvblJvd0J1aWxkZXIsIEJ1dHRvbkJ1aWxkZXIsIEJ1dHRvblN0eWxlIH0gPSByZXF1aXJlKCdkaXNjb3JkLmpzJyk7CmNvbnN0IGNvbmZpZyA9IHJlcXVpcmUoJy4vY29uZmlnJyk7CmNvbnN0IHsgcXVlcmllczogcSB9ID0gcmVxdWlyZSgnLi9kYicpOwoKbGV0IGxhc3RDaGVja2VkSWQgPSBudWxsOwoKLyoqCiAqIEluaXRpYWxpemUgdGhlIFggbW9uaXRvciDigJQgbG9hZHMgdGhlIGxhc3Qga25vd24gdHdlZXQgZnJvbSBEQi4KICovCmZ1bmN0aW9uIGluaXRYTW9uaXRvcigpIHsKICBjb25zdCBsYXRlc3QgPSBxLmdldExhdGVzdFR3ZWV0SWQuZ2V0KCk7CiAgaWYgKGxhdGVzdCkgbGFzdENoZWNrZWRJZCA9IGxhdGVzdC50d2VldF9pZDsKICBjb25zb2xlLmxvZyhgW1ggTW9uaXRvcl0gSW5pdGlhbGl6ZWQuIExhc3Qga25vd24gdHdlZXQ6ICR7bGFzdENoZWNrZWRJZCB8fCAnbm9uZSd9YCk7Cn0KCi8qKgogKiBGZXRjaCByZWNlbnQgdHdlZXRzIGZyb20gQFFBTkFUX0lPIHVzaW5nIFggQVBJIHYyLgogKiBSZXR1cm5zIGFycmF5IG9mIHsgaWQsIHRleHQsIGNyZWF0ZWRfYXQgfSBvciBlbXB0eSBhcnJheSBvbiBmYWlsdXJlLgogKi8KYXN5bmMgZnVuY3Rpb24gZmV0Y2hMYXRlc3RUd2VldHMoKSB7CiAgaWYgKCFjb25maWcuWF9CRUFSRVIpIHsKICAgIHJldHVybiBbXTsKICB9CgogIHRyeSB7CiAgICBjb25zdCB1cmwgPSBgaHR0cHM6Ly9hcGkueC5jb20vMi91c2Vycy9ieS91c2VybmFtZS8ke2NvbmZpZy5YX0FDQ09VTlR9YDsKICAgIGNvbnN0IHVzZXJSZXMgPSBhd2FpdCBmZXRjaCh1cmwsIHsKICAgICAgaGVhZGVyczogeyAnQXV0aG9yaXphdGlvbic6IGBCZWFyZXIgJHtjb25maWcuWF9CRUFSRVJ9YCB9LAogICAgfSk7CgogICAgaWYgKCF1c2VyUmVzLm9rKSB7CiAgICAgIGNvbnNvbGUuZXJyb3IoYFtYIE1vbml0b3JdIEZhaWxlZCB0byBnZXQgdXNlcjogJHt1c2VyUmVzLnN0YXR1c31gKTsKICAgICAgcmV0dXJuIFtdOwogICAgfQoKICAgIGNvbnN0IHVzZXJEYXRhID0gYXdhaXQgdXNlclJlcy5qc29uKCk7CiAgICBjb25zdCB1c2VySWQgPSB1c2VyRGF0YS5kYXRhPy5pZDsKICAgIGlmICghdXNlcklkKSByZXR1cm4gW107CgogICAgY29uc3QgdHdlZXRzVXJsID0gYGh0dHBzOi8vYXBpLnguY29tLzIvdXNlcnMvJHt1c2VySWR9L3R3ZWV0cz9tYXhfcmVzdWx0cz01JnR3ZWV0LmZpZWxkcz1jcmVhdGVkX2F0LHRleHRgOwogICAgY29uc3QgdHdlZXRzUmVzID0gYXdhaXQgZmV0Y2godHdlZXRzVXJsLCB7CiAgICAgIGhlYWRlcnM6IHsgJ0F1dGhvcml6YXRpb24nOiBgQmVhcmVyICR7Y29uZmlnLlhfQkVBUkVSfWAgfSwKICAgIH0pOwoKICAgIGlmICghdHdlZXRzUmVzLm9rKSB7CiAgICAgIGNvbnNvbGUuZXJyb3IoYFtYIE1vbml0b3JdIEZhaWxlZCB0byBnZXQgdHdlZXRzOiAke3R3ZWV0c1Jlcy5zdGF0dXN9YCk7CiAgICAgIHJldHVybiBbXTsKICAgIH0KCiAgICBjb25zdCB0d2VldHNEYXRhID0gYXdhaXQgdHdlZXRzUmVzLmpzb24oKTsKICAgIHJldHVybiB0d2VldHNEYXRhLmRhdGEgfHwgW107CiAgfSBjYXRjaCAoZXJyKSB7CiAgICBjb25zb2xlLmVycm9yKCdbWCBNb25pdG9yXSBFcnJvciBmZXRjaGluZyB0d2VldHM6JywgZXJyLm1lc3NhZ2UpOwogICAgcmV0dXJuIFtdOwogIH0KfQoKLyoqCiAqIFBvbGwgZm9yIG5ldyB0d2VldHMgYW5kIHBvc3Qgbm90aWZpY2F0aW9ucyBpbiB0aGUgWCB0YXNrcyBjaGFubmVsLgogKiBAcGFyYW0ge0NsaWVudH0gY2xpZW50IC0gRGlzY29yZCBjbGllbnQKICovCmFzeW5jIGZ1bmN0aW9uIHBvbGxYQWNjb3VudChjbGllbnQpIHsKICBjb25zdCB0d2VldHMgPSBhd2FpdCBmZXRjaExhdGVzdFR3ZWV0cygpOwogIGlmICh0d2VldHMubGVuZ3RoID09PSAwKSByZXR1cm47CgogIGNvbnN0IGd1aWxkID0gY2xpZW50Lmd1aWxkcy5jYWNoZS5nZXQoY29uZmlnLkdVSUxEX0lEKTsKICBpZiAoIWd1aWxkKSByZXR1cm47CgogIGNvbnN0IHRhc2tDaGFubmVsID0gZ3VpbGQuY2hhbm5lbHMuY2FjaGUuZ2V0KGNvbmZpZy5DSEFOTkVMUy5YX1RBU0tTKTsKICBpZiAoIXRhc2tDaGFubmVsKSByZXR1cm47CgogIC8vIEZpbmQgbmV3IHR3ZWV0cyAocG9zdGVkIGFmdGVyIG91ciBsYXN0IGNoZWNrKQogIGNvbnN0IG5ld1R3ZWV0cyA9IFtdOwogIGZvciAoY29uc3QgdHdlZXQgb2YgdHdlZXRzKSB7CiAgICBpZiAodHdlZXQuaWQgPT09IGxhc3RDaGVja2VkSWQpIGJyZWFrOwogICAgY29uc3QgZXhpc3RpbmcgPSBxLmdldFR3ZWV0LmdldCh0d2VldC5pZCk7CiAgICBpZiAoIWV4aXN0aW5nKSBuZXdUd2VldHMucHVzaCh0d2VldCk7CiAgfQoKICBpZiAobmV3VHdlZXRzLmxlbmd0aCA9PT0gMCkgcmV0dXJuOwoKICAvLyBQcm9jZXNzIG5ldyB0d2VldHMgKG9sZGVzdCBmaXJzdCkKICBmb3IgKGNvbnN0IHR3ZWV0IG9mIG5ld1R3ZWV0cy5yZXZlcnNlKCkpIHsKICAgIGNvbnN0IHR3ZWV0VXJsID0gYGh0dHBzOi8veC5jb20vJHtjb25maWcuWF9BQ0NPVU5UfS9zdGF0dXMvJHt0d2VldC5pZH1gOwogICAgY29uc3Qgc2hvcnRUZXh0ID0gdHdlZXQudGV4dC5sZW5ndGggPiAyMDAKICAgICAgPyB0d2VldC50ZXh0LnN1YnN0cmluZygwLCAyMDApICsgJy4uLicKICAgICAgOiB0d2VldC50ZXh0OwoKICAgIGNvbnN0IGVtYmVkID0gbmV3IEVtYmVkQnVpbGRlcigpCiAgICAgIC5zZXRDb2xvcigweDFEQTFGMikKICAgICAgLnNldFRpdGxlKCfwn5qAIE5ldyBQb3N0IGZyb20gQFFBTkFUX0lPIScpCiAgICAgIC5zZXREZXNjcmlwdGlvbihzaG9ydFRleHQpCiAgICAgIC5hZGRGaWVsZHMoCiAgICAgICAgeyBuYW1lOiAn4p2k77iPIExpa2UnLCB2YWx1ZTogJysxIHBvaW50JywgaW5saW5lOiB0cnVlIH0sCiAgICAgICAgeyBuYW1lOiAn8J+SrCBDb21tZW50JywgdmFsdWU6ICcrMiBwb2ludHMnLCBpbmxpbmU6IHRydWUgfSwKICAgICAgICB7IG5hbWU6ICfwn5SBIFJldHdlZXQvUXVvdGUnLCB2YWx1ZTogJyszIHBvaW50cycsIGlubGluZTogdHJ1ZSB9LAogICAgICApCiAgICAgIC5zZXRGb290ZXIoeyB0ZXh0OiAn4pqg77iPIFlvdSBtdXN0IGZvbGxvdyBAUUFOQVRfSU8gYW5kIGxpbmsgeW91ciBYIHdpdGggL2xpbmt4IHRvIGVhcm4gcG9pbnRzJyB9KQogICAgICAuc2V0VGltZXN0YW1wKCk7CgogICAgY29uc3Qgcm93ID0gbmV3IEFjdGlvblJvd0J1aWxkZXIoKS5hZGRDb21wb25lbnRzKAogICAgICBuZXcgQnV0dG9uQnVpbGRlcigpCiAgICAgICAgLnNldExhYmVsKCdWaWV3IFBvc3QnKQogICAgICAgIC5zZXRTdHlsZShCdXR0b25TdHlsZS5MaW5rKQogICAgICAgIC5zZXRVUkwodHdlZXRVcmwpCiAgICAgICAgLnNldEVtb2ppKCfwn5SXJyksCiAgICApOwoKICAgIGNvbnN0IG1zZyA9IGF3YWl0IHRhc2tDaGFubmVsLnNlbmQoewogICAgICBjb250ZW50OiAn8J+ToiAqKkBldmVyeW9uZSBOZXcgUUFOQVQgcG9zdCBqdXN0IGRyb3BwZWQhKiogRW5nYWdlIHRvIGVhcm4gcG9pbnRzISDwn46vJywKICAgICAgZW1iZWRzOiBbZW1iZWRdLAogICAgICBjb21wb25lbnRzOiBbcm93XSwKICAgIH0pOwoKICAgIC8vIEFkZCByZWFjdGlvbiBlbW9qaXMgZm9yIGNsYWltaW5nCiAgICBhd2FpdCBtc2cucmVhY3QoY29uZmlnLkVNT0pJUy5MSUtFKTsKICAgIGF3YWl0IG1zZy5yZWFjdChjb25maWcuRU1PSklTLkNPTU1FTlQpOwogICAgYXdhaXQgbXNnLnJlYWN0KGNvbmZpZy5FTU9KSVMuUkVUV0VFVCk7CgogICAgLy8gU3RvcmUgaW4gREIKICAgIHEuYWRkVHdlZXQucnVuKHR3ZWV0LmlkLCB0d2VldFVybCwgdHdlZXQudGV4dCwgbXNnLmlkKTsKICAgIGNvbnNvbGUubG9nKGBbWCBNb25pdG9yXSBQb3N0ZWQgdHdlZXQgbm90aWZpY2F0aW9uOiAke3R3ZWV0LmlkfWApOwogIH0KCiAgLy8gVXBkYXRlIGxhc3QgY2hlY2tlZAogIGxhc3RDaGVja2VkSWQgPSB0d2VldHNbMF0uaWQ7Cn0KCi8qKgogKiBTdGFydCB0aGUgWCBwb2xsaW5nIGludGVydmFsLgogKiBAcGFyYW0ge0NsaWVudH0gY2xpZW50CiAqLwpmdW5jdGlvbiBzdGFydFhNb25pdG9yKGNsaWVudCkgewogIGluaXRYTW9uaXRvcigpOwoKICBpZiAoIWNvbmZpZy5YX0JFQVJFUikgewogICAgY29uc29sZS5sb2coJ1tYIE1vbml0b3JdIE5vIFR3aXR0ZXIgQmVhcmVyIFRva2VuIHNldCDigJQgWCBtb25pdG9yaW5nIGRpc2FibGVkLicpOwogICAgY29uc29sZS5sb2coJ1tYIE1vbml0b3JdIFNldCBUV0lUVEVSX0JFQVJFUl9UT0tFTiBpbiAuZW52IHRvIGVuYWJsZS4nKTsKICAgIHJldHVybjsKICB9CgogIC8vIEluaXRpYWwgcG9sbCBhZnRlciAzMHMKICBzZXRUaW1lb3V0KCgpID0+IHBvbGxYQWNjb3VudChjbGllbnQpLCAzMF8wMDApOwoKICAvLyBUaGVuIHBvbGwgZXZlcnkgNSBtaW51dGVzCiAgc2V0SW50ZXJ2YWwoKCkgPT4gcG9sbFhBY2NvdW50KGNsaWVudCksIGNvbmZpZy5YX1BPTExfSU5URVJWQUxfTVMpOwogIGNvbnNvbGUubG9nKGBbWCBNb25pdG9yXSBTdGFydGVkIHBvbGxpbmcgQCR7Y29uZmlnLlhfQUNDT1VOVH0gZXZlcnkgJHtjb25maWcuWF9QT0xMX0lOVEVSVkFMX01TIC8gNjAwMDB9IG1pbnV0ZXNgKTsKfQoKbW9kdWxlLmV4cG9ydHMgPSB7IHN0YXJ0WE1vbml0b3IsIHBvbGxYQWNjb3VudCwgaW5pdFhNb25pdG9yIH07Cg==
+// ═══════════════════════════════════════════════════════════════
+// QANAT Bot — X/Twitter Monitor Module
+// Polls @QANAT_IO for new posts and notifies the community
+// ═══════════════════════════════════════════════════════════════
+
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const config = require('./config');
+const { queries: q } = require('./db');
+
+let lastCheckedId = null;
+
+/**
+ * Initialize the X monitor — loads the last known tweet from DB.
+ */
+function initXMonitor() {
+  const latest = q.getLatestTweetId.get();
+  if (latest) lastCheckedId = latest.tweet_id;
+  console.log(`[X Monitor] Initialized. Last known tweet: ${lastCheckedId || 'none'}`);
+}
+
+/**
+ * Fetch recent tweets from @QANAT_IO using X API v2.
+ * Returns array of { id, text, created_at } or empty array on failure.
+ */
+async function fetchLatestTweets() {
+  if (!config.X_BEARER) {
+    return [];
+  }
+
+  try {
+    const url = `https://api.x.com/2/users/by/username/${config.X_ACCOUNT}`;
+    const userRes = await fetch(url, {
+      headers: { 'Authorization': `Bearer ${config.X_BEARER}` },
+    });
+
+    if (!userRes.ok) {
+      console.error(`[X Monitor] Failed to get user: ${userRes.status}`);
+      return [];
+    }
+
+    const userData = await userRes.json();
+    const userId = userData.data?.id;
+    if (!userId) return [];
+
+    const tweetsUrl = `https://api.x.com/2/users/${userId}/tweets?max_results=5&tweet.fields=created_at,text`;
+    const tweetsRes = await fetch(tweetsUrl, {
+      headers: { 'Authorization': `Bearer ${config.X_BEARER}` },
+    });
+
+    if (!tweetsRes.ok) {
+      console.error(`[X Monitor] Failed to get tweets: ${tweetsRes.status}`);
+      return [];
+    }
+
+    const tweetsData = await tweetsRes.json();
+    return tweetsData.data || [];
+  } catch (err) {
+    console.error('[X Monitor] Error fetching tweets:', err.message);
+    return [];
+  }
+}
+
+/**
+ * Poll for new tweets and post notifications in the X tasks channel.
+ * @param {Client} client - Discord client
+ */
+async function pollXAccount(client) {
+  const tweets = await fetchLatestTweets();
+  if (tweets.length === 0) return;
+
+  const guild = client.guilds.cache.get(config.GUILD_ID);
+  if (!guild) return;
+
+  const taskChannel = guild.channels.cache.get(config.CHANNELS.X_TASKS);
+  if (!taskChannel) return;
+
+  // Find new tweets (posted after our last check)
+  const newTweets = [];
+  for (const tweet of tweets) {
+    if (tweet.id === lastCheckedId) break;
+    const existing = q.getTweet.get(tweet.id);
+    if (!existing) newTweets.push(tweet);
+  }
+
+  if (newTweets.length === 0) return;
+
+  // Process new tweets (oldest first)
+  for (const tweet of newTweets.reverse()) {
+    const tweetUrl = `https://x.com/${config.X_ACCOUNT}/status/${tweet.id}`;
+    const shortText = tweet.text.length > 200
+      ? tweet.text.substring(0, 200) + '...'
+      : tweet.text;
+
+    const embed = new EmbedBuilder()
+      .setColor(0x1DA1F2)
+      .setTitle('🚀 New Post from @QANAT_IO!')
+      .setDescription(shortText)
+      .addFields(
+        { name: '❤️ Like', value: '+1 point', inline: true },
+        { name: '💬 Comment', value: '+2 points', inline: true },
+        { name: '🔁 Retweet/Quote', value: '+3 points', inline: true },
+      )
+      .setFooter({ text: '⚠️ You must follow @QANAT_IO and link your X with /linkx to earn points' })
+      .setTimestamp();
+
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setLabel('View Post')
+        .setStyle(ButtonStyle.Link)
+        .setURL(tweetUrl)
+        .setEmoji('🔗'),
+    );
+
+    const msg = await taskChannel.send({
+      content: '📢 **@everyone New QANAT post just dropped!** Engage to earn points! 🎯',
+      embeds: [embed],
+      components: [row],
+    });
+
+    // Add reaction emojis for claiming
+    await msg.react(config.EMOJIS.LIKE);
+    await msg.react(config.EMOJIS.COMMENT);
+    await msg.react(config.EMOJIS.RETWEET);
+
+    // Store in DB
+    q.addTweet.run(tweet.id, tweetUrl, tweet.text, msg.id);
+    console.log(`[X Monitor] Posted tweet notification: ${tweet.id}`);
+  }
+
+  // Update last checked
+  lastCheckedId = tweets[0].id;
+}
+
+/**
+ * Start the X polling interval.
+ * @param {Client} client
+ */
+function startXMonitor(client) {
+  initXMonitor();
+
+  if (!config.X_BEARER) {
+    console.log('[X Monitor] No Twitter Bearer Token set — X monitoring disabled.');
+    console.log('[X Monitor] Set TWITTER_BEARER_TOKEN in .env to enable.');
+    return;
+  }
+
+  // Initial poll after 30s
+  setTimeout(() => pollXAccount(client), 30_000);
+
+  // Then poll every 5 minutes
+  setInterval(() => pollXAccount(client), config.X_POLL_INTERVAL_MS);
+  console.log(`[X Monitor] Started polling @${config.X_ACCOUNT} every ${config.X_POLL_INTERVAL_MS / 60000} minutes`);
+}
+
+module.exports = { startXMonitor, pollXAccount, initXMonitor };
