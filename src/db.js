@@ -1,1 +1,254 @@
-Ly8g4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQCi8vIFFBTkFUIEJvdCDigJQgU1FMaXRlIERhdGFiYXNlIExheWVyCi8vIOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkOKVkAoKY29uc3QgRGF0YWJhc2UgPSByZXF1aXJlKCdiZXR0ZXItc3FsaXRlMycpOwpjb25zdCBwYXRoID0gcmVxdWlyZSgncGF0aCcpOwoKY29uc3QgREJfUEFUSCA9IHBhdGguam9pbihfX2Rpcm5hbWUsICcuLicsICdkYXRhJywgJ3FhbmF0LmRiJyk7CgovLyBFbnN1cmUgZGF0YSBkaXJlY3RvcnkgZXhpc3RzCmNvbnN0IGZzID0gcmVxdWlyZSgnZnMnKTsKZnMubWtkaXJTeW5jKHBhdGguZGlybmFtZShEQl9QQVRIKSwgeyByZWN1cnNpdmU6IHRydWUgfSk7Cgpjb25zdCBkYiA9IG5ldyBEYXRhYmFzZShEQl9QQVRIKTsKZGIucHJhZ21hKCdqb3VybmFsX21vZGUgPSBXQUwnKTsKZGIucHJhZ21hKCdmb3JlaWduX2tleXMgPSBPTicpOwoKLy8g4pSA4pSAIFNjaGVtYSDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAKZGIuZXhlYyhgCiAgLS0gTWVtYmVycyB0YWJsZQogIENSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIG1lbWJlcnMgKAogICAgZGlzY29yZF9pZCAgICBURVhUIFBSSU1BUlkgS0VZLAogICAgdXNlcm5hbWUgICAgICBURVhULAogICAgeF9oYW5kbGUgICAgICBURVhULAogICAgeF92ZXJpZmllZCAgICBJTlRFR0VSIERFRkFVTFQgMCwKICAgIHRvdGFsX3BvaW50cyAgSU5URUdFUiBERUZBVUxUIDAsCiAgICBpbnZpdGVfY291bnQgIElOVEVHRVIgREVGQVVMVCAwLAogICAgam9pbmVkX2F0ICAgICBURVhUIERFRkFVTFQgKGRhdGV0aW1lKCdub3cnKSksCiAgICBsYXN0X2FjdGl2ZSAgIFRFWFQgREVGQVVMVCAoZGF0ZXRpbWUoJ25vdycpKQogICk7CgogIC0tIFBvaW50cyBsZWRnZXIgKGV2ZXJ5IHBvaW50IHRyYW5zYWN0aW9uKQogIENSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIHBvaW50c19sZWRnZXIgKAogICAgaWQgICAgICAgICAgSU5URUdFUiBQUklNQVJZIEtFWSBBVVRPSU5DUkVNRU5ULAogICAgZGlzY29yZF9pZCAgVEVYVCBOT1QgTlVMTCwKICAgIHBvaW50cyAgICAgIElOVEVHRVIgTk9UIE5VTEwsCiAgICByZWFzb24gICAgICBURVhUIE5PVCBOVUxMLAogICAgdHdlZXRfaWQgICAgVEVYVCwKICAgIGNyZWF0ZWRfYXQgIFRFWFQgREVGQVVMVCAoZGF0ZXRpbWUoJ25vdycpKSwKICAgIEZPUkVJR04gS0VZIChkaXNjb3JkX2lkKSBSRUZFUkVOQ0VTIG1lbWJlcnMoZGlzY29yZF9pZCkKICApOwoKICAtLSBUcmFja2VkIFggdHdlZXRzCiAgQ1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgeF90d2VldHMgKAogICAgdHdlZXRfaWQgICAgICBURVhUIFBSSU1BUlkgS0VZLAogICAgdHdlZXRfdXJsICAgICBURVhULAogICAgdHdlZXRfdGV4dCAgICBURVhULAogICAgbWVzc2FnZV9pZCAgICBURVhULAogICAgcG9zdGVkX2F0ICAgICBURVhUIERFRkFVTFQgKGRhdGV0aW1lKCdub3cnKSkKICApOwoKICAtLSBYIGVuZ2FnZW1lbnQgY2xhaW1zIChvbmUgcGVyIG1lbWJlciBwZXIgdHdlZXQgcGVyIGFjdGlvbikKICBDUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyB4X2VuZ2FnZW1lbnRzICgKICAgIGlkICAgICAgICAgIElOVEVHRVIgUFJJTUFSWSBLRVkgQVVUT0lOQ1JFTUVOVCwKICAgIGRpc2NvcmRfaWQgIFRFWFQgTk9UIE5VTEwsCiAgICB0d2VldF9pZCAgICBURVhUIE5PVCBOVUxMLAogICAgYWN0aW9uX3R5cGUgVEVYVCBOT1QgTlVMTCBDSEVDSyhhY3Rpb25fdHlwZSBJTiAoJ2xpa2UnLCdyZXR3ZWV0JywnY29tbWVudCcsJ3F1b3RlJykpLAogICAgcG9pbnRzICAgICAgSU5URUdFUiBOT1QgTlVMTCwKICAgIGNsYWltZWRfYXQgIFRFWFQgREVGQVVMVCAoZGF0ZXRpbWUoJ25vdycpKSwKICAgIFVOSVFVRShkaXNjb3JkX2lkLCB0d2VldF9pZCwgYWN0aW9uX3R5cGUpCiAgKTsKCiAgLS0gSW52aXRlIHRyYWNraW5nCiAgQ1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgaW52aXRlcyAoCiAgICBpZCAgICAgICAgICAgIElOVEVHRVIgUFJJTUFSWSBLRVkgQVVUT0lOQ1JFTUVOVCwKICAgIGludml0ZXJfaWQgICAgVEVYVCBOT1QgTlVMTCwKICAgIGludml0ZWRfaWQgICAgVEVYVCBOT1QgTlVMTCwKICAgIGludml0ZV9jb2RlICAgVEVYVCwKICAgIGpvaW5lZF9hdCAgICAgVEVYVCBERUZBVUxUIChkYXRldGltZSgnbm93JykpCiAgKTsKCiAgLS0gTW9kZXJhdGlvbiBhY3Rpb25zIGxvZwogIENSRUFURSBUQUJMRSBJRiBOT1QgRVhJU1RTIG1vZF9hY3Rpb25zICgKICAgIGlkICAgICAgICAgIElOVEVHRVIgUFJJTUFSWSBLRVkgQVVUT0lOQ1JFTUVOVCwKICAgIGRpc2NvcmRfaWQgIFRFWFQsCiAgICBhY3Rpb25fdHlwZSBURVhUIE5PVCBOVUxMLAogICAgcmVhc29uICAgICAgVEVYVCwKICAgIGNoYW5uZWxfaWQgIFRFWFQsCiAgICBjcmVhdGVkX2F0ICBURVhUIERFRkFVTFQgKGRhdGV0aW1lKCdub3cnKSkKICApOwoKICAtLSBHZW5lcmFsIGVuZ2FnZW1lbnQgdHJhY2tpbmcgKEdNL0dOIHN0cmVha3MsIGV0Yy4pCiAgQ1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgZGFpbHlfc3RyZWFrcyAoCiAgICBkaXNjb3JkX2lkICBURVhUIE5PVCBOVUxMLAogICAgc3RyZWFrX3R5cGUgVEVYVCBOT1QgTlVMTCwKICAgIHN0cmVha19jb3VudCBJTlRFR0VSIERFRkFVTFQgMSwKICAgIGxhc3RfZGF0ZSAgIFRFWFQsCiAgICBQUklNQVJZIEtFWSAoZGlzY29yZF9pZCwgc3RyZWFrX3R5cGUpCiAgKTsKYCk7CgovLyDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAKLy8gUXVlcnkgaGVscGVycwovLyDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZAKCmNvbnN0IHF1ZXJpZXMgPSB7CiAgLy8g4pSA4pSAIE1lbWJlcnMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgdXBzZXJ0TWVtYmVyOiBkYi5wcmVwYXJlKGAKICAgIElOU0VSVCBJTlRPIG1lbWJlcnMgKGRpc2NvcmRfaWQsIHVzZXJuYW1lKQogICAgVkFMVUVTICg/LCA/KQogICAgT04gQ09ORkxJQ1QoZGlzY29yZF9pZCkgRE8gVVBEQVRFIFNFVAogICAgICB1c2VybmFtZSA9IGV4Y2x1ZGVkLnVzZXJuYW1lLAogICAgICBsYXN0X2FjdGl2ZSA9IGRhdGV0aW1lKCdub3cnKQogIGApLAoKICBnZXRNZW1iZXI6IGRiLnByZXBhcmUoYFNFTEVDVCAqIEZST00gbWVtYmVycyBXSEVSRSBkaXNjb3JkX2lkID0gP2ApLAoKICBsaW5rWDogZGIucHJlcGFyZShgCiAgICBVUERBVEUgbWVtYmVycyBTRVQgeF9oYW5kbGUgPSA/LCB4X3ZlcmlmaWVkID0gMSBXSEVSRSBkaXNjb3JkX2lkID0gPwogIGApLAoKICAvLyDilIDilIAgUG9pbnRzIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogIGFkZFBvaW50czogZGIucHJlcGFyZShgCiAgICBJTlNFUlQgSU5UTyBwb2ludHNfbGVkZ2VyIChkaXNjb3JkX2lkLCBwb2ludHMsIHJlYXNvbiwgdHdlZXRfaWQpCiAgICBWQUxVRVMgKD8sID8sID8sID8pCiAgYCksCgogIHVwZGF0ZVRvdGFsUG9pbnRzOiBkYi5wcmVwYXJlKGAKICAgIFVQREFURSBtZW1iZXJzIFNFVCB0b3RhbF9wb2ludHMgPSAoCiAgICAgIFNFTEVDVCBDT0FMRVNDRShTVU0ocG9pbnRzKSwgMCkgRlJPTSBwb2ludHNfbGVkZ2VyIFdIRVJFIGRpc2NvcmRfaWQgPSA/CiAgICApIFdIRVJFIGRpc2NvcmRfaWQgPSA/CiAgYCksCgogIGdldFBvaW50czogZGIucHJlcGFyZShgCiAgICBTRUxFQ1QgdG90YWxfcG9pbnRzIEZST00gbWVtYmVycyBXSEVSRSBkaXNjb3JkX2lkID0gPwogIGApLAoKICBnZXRMZWFkZXJib2FyZDogZGIucHJlcGFyZShgCiAgICBTRUxFQ1QgZGlzY29yZF9pZCwgdXNlcm5hbWUsIHRvdGFsX3BvaW50cwogICAgRlJPTSBtZW1iZXJzCiAgICBXSEVSRSB0b3RhbF9wb2ludHMgPiAwCiAgICBPUkRFUiBCWSB0b3RhbF9wb2ludHMgREVTQwogICAgTElNSVQgPwogIGApLAoKICAvLyDilIDilIAgWCBFbmdhZ2VtZW50IOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogIGhhc0VuZ2FnZW1lbnQ6IGRiLnByZXBhcmUoYAogICAgU0VMRUNUIDEgRlJPTSB4X2VuZ2FnZW1lbnRzCiAgICBXSEVSRSBkaXNjb3JkX2lkID0gPyBBTkQgdHdlZXRfaWQgPSA/IEFORCBhY3Rpb25fdHlwZSA9ID8KICBgKSwKCiAgYWRkRW5nYWdlbWVudDogZGIucHJlcGFyZShgCiAgICBJTlNFUlQgT1IgSUdOT1JFIElOVE8geF9lbmdhZ2VtZW50cyAoZGlzY29yZF9pZCwgdHdlZXRfaWQsIGFjdGlvbl90eXBlLCBwb2ludHMpCiAgICBWQUxVRVMgKD8sID8sID8sID8pCiAgYCksCgogIC8vIOKUgOKUgCBYIFR3ZWV0cyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAKICBhZGRUd2VldDogZGIucHJlcGFyZShgCiAgICBJTlNFUlQgT1IgSUdOT1JFIElOVE8geF90d2VldHMgKHR3ZWV0X2lkLCB0d2VldF91cmwsIHR3ZWV0X3RleHQsIG1lc3NhZ2VfaWQpCiAgICBWQUxVRVMgKD8sID8sID8sID8pCiAgYCksCgogIGdldFR3ZWV0OiBkYi5wcmVwYXJlKGBTRUxFQ1QgKiBGUk9NIHhfdHdlZXRzIFdIRVJFIHR3ZWV0X2lkID0gP2ApLAoKICBnZXRMYXRlc3RUd2VldElkOiBkYi5wcmVwYXJlKGAKICAgIFNFTEVDVCB0d2VldF9pZCBGUk9NIHhfdHdlZXRzIE9SREVSIEJZIHBvc3RlZF9hdCBERVNDIExJTUlUIDEKICBgKSwKCiAgLy8g4pSA4pSAIEludml0ZXMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgYWRkSW52aXRlOiBkYi5wcmVwYXJlKGAKICAgIElOU0VSVCBJTlRPIGludml0ZXMgKGludml0ZXJfaWQsIGludml0ZWRfaWQsIGludml0ZV9jb2RlKSBWQUxVRVMgKD8sID8sID8pCiAgYCksCgogIHVwZGF0ZUludml0ZUNvdW50OiBkYi5wcmVwYXJlKGAKICAgIFVQREFURSBtZW1iZXJzIFNFVCBpbnZpdGVfY291bnQgPSAoCiAgICAgIFNFTEVDVCBDT1VOVCgqKSBGUk9NIGludml0ZXMgV0hFUkUgaW52aXRlcl9pZCA9ID8KICAgICkgV0hFUkUgZGlzY29yZF9pZCA9ID8KICBgKSwKCiAgZ2V0SW52aXRlQ291bnQ6IGRiLnByZXBhcmUoYAogICAgU0VMRUNUIGludml0ZV9jb3VudCBGUk9NIG1lbWJlcnMgV0hFUkUgZGlzY29yZF9pZCA9ID8KICBgKSwKCiAgZ2V0SW52aXRlTGVhZGVyYm9hcmQ6IGRiLnByZXBhcmUoYAogICAgU0VMRUNUIGRpc2NvcmRfaWQsIHVzZXJuYW1lLCBpbnZpdGVfY291bnQKICAgIEZST00gbWVtYmVycwogICAgV0hFUkUgaW52aXRlX2NvdW50ID4gMAogICAgT1JERVIgQlkgaW52aXRlX2NvdW50IERFU0MKICAgIExJTUlUID8KICBgKSwKCiAgLy8g4pSA4pSAIE1vZGVyYXRpb24g4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACiAgbG9nTW9kQWN0aW9uOiBkYi5wcmVwYXJlKGAKICAgIElOU0VSVCBJTlRPIG1vZF9hY3Rpb25zIChkaXNjb3JkX2lkLCBhY3Rpb25fdHlwZSwgcmVhc29uLCBjaGFubmVsX2lkKQogICAgVkFMVUVTICg/LCA/LCA/LCA/KQogIGApLAoKICBnZXRNb2RBY3Rpb25zOiBkYi5wcmVwYXJlKGAKICAgIFNFTEVDVCAqIEZST00gbW9kX2FjdGlvbnMgT1JERVIgQlkgY3JlYXRlZF9hdCBERVNDIExJTUlUID8KICBgKSwKCiAgZ2V0UmVjZW50T2ZmZW5zZXM6IGRiLnByZXBhcmUoYAogICAgU0VMRUNUIENPVU5UKCopIGFzIGNvdW50IEZST00gbW9kX2FjdGlvbnMKICAgIFdIRVJFIGRpc2NvcmRfaWQgPSA/IEFORCBhY3Rpb25fdHlwZSBJTiAoJ3RpbWVvdXQnLCAnYXV0b19kZWxldGUnLCAncGhpc2hpbmdfZGVsZXRlJykKICAgIEFORCBjcmVhdGVkX2F0ID4gZGF0ZXRpbWUoJ25vdycsICctMzAgZGF5cycpCiAgYCksCgogIC8vIOKUgOKUgCBTdHJlYWtzIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgAogIHVwc2VydFN0cmVhazogZGIucHJlcGFyZShgCiAgICBJTlNFUlQgSU5UTyBkYWlseV9zdHJlYWtzIChkaXNjb3JkX2lkLCBzdHJlYWtfdHlwZSwgc3RyZWFrX2NvdW50LCBsYXN0X2RhdGUpCiAgICBWQUxVRVMgKD8sID8sIDEsIGRhdGUoJ25vdycpKQogICAgT04gQ09ORkxJQ1QoZGlzY29yZF9pZCwgc3RyZWFrX3R5cGUpIERPIFVQREFURSBTRVQKICAgICAgc3RyZWFrX2NvdW50ID0gQ0FTRQogICAgICAgIFdIRU4gbGFzdF9kYXRlID0gZGF0ZSgnbm93JywgJy0xIGRheScpIFRIRU4gc3RyZWFrX2NvdW50ICsgMQogICAgICAgIFdIRU4gbGFzdF9kYXRlID0gZGF0ZSgnbm93JykgVEhFTiBzdHJlYWtfY291bnQKICAgICAgICBFTFNFIDEKICAgICAgRU5ELAogICAgICBsYXN0X2RhdGUgPSBkYXRlKCdub3cnKQogIGApLAoKICBnZXRTdHJlYWs6IGRiLnByZXBhcmUoYAogICAgU0VMRUNUIHN0cmVha19jb3VudCBGUk9NIGRhaWx5X3N0cmVha3MKICAgIFdIRVJFIGRpc2NvcmRfaWQgPSA/IEFORCBzdHJlYWtfdHlwZSA9ID8KICBgKSwKfTsKCi8vIOKUgOKUgCBUcmFuc2FjdGlvbmFsIGhlbHBlcnMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACgpmdW5jdGlvbiBhd2FyZFBvaW50cyhkaXNjb3JkSWQsIHBvaW50cywgcmVhc29uLCB0d2VldElkID0gbnVsbCkgewogIGNvbnN0IHR4biA9IGRiLnRyYW5zYWN0aW9uKCgpID0+IHsKICAgIHF1ZXJpZXMuYWRkUG9pbnRzLnJ1bihkaXNjb3JkSWQsIHBvaW50cywgcmVhc29uLCB0d2VldElkKTsKICAgIHF1ZXJpZXMudXBkYXRlVG90YWxQb2ludHMucnVuKGRpc2NvcmRJZCwgZGlzY29yZElkKTsKICB9KTsKICB0eG4oKTsKfQoKZnVuY3Rpb24gcmVjb3JkRW5nYWdlbWVudChkaXNjb3JkSWQsIHR3ZWV0SWQsIGFjdGlvblR5cGUsIHBvaW50cykgewogIGNvbnN0IGV4aXN0aW5nID0gcXVlcmllcy5oYXNFbmdhZ2VtZW50LmdldChkaXNjb3JkSWQsIHR3ZWV0SWQsIGFjdGlvblR5cGUpOwogIGlmIChleGlzdGluZykgcmV0dXJuIGZhbHNlOwoKICBjb25zdCB0eG4gPSBkYi50cmFuc2FjdGlvbigoKSA9PiB7CiAgICBxdWVyaWVzLmFkZEVuZ2FnZW1lbnQucnVuKGRpc2NvcmRJZCwgdHdlZXRJZCwgYWN0aW9uVHlwZSwgcG9pbnRzKTsKICAgIHF1ZXJpZXMuYWRkUG9pbnRzLnJ1bihkaXNjb3JkSWQsIHBvaW50cywgYHhfJHthY3Rpb25UeXBlfWAsIHR3ZWV0SWQpOwogICAgcXVlcmllcy51cGRhdGVUb3RhbFBvaW50cy5ydW4oZGlzY29yZElkLCBkaXNjb3JkSWQpOwogIH0pOwogIHR4bigpOwogIHJldHVybiB0cnVlOwp9CgpmdW5jdGlvbiByZWNvcmRJbnZpdGUoaW52aXRlcklkLCBpbnZpdGVkSWQsIGNvZGUpIHsKICBjb25zdCB0eG4gPSBkYi50cmFuc2FjdGlvbigoKSA9PiB7CiAgICBxdWVyaWVzLmFkZEludml0ZS5ydW4oaW52aXRlcklkLCBpbnZpdGVkSWQsIGNvZGUpOwogICAgcXVlcmllcy51cGRhdGVJbnZpdGVDb3VudC5ydW4oaW52aXRlcklkLCBpbnZpdGVySWQpOwogIH0pOwogIHR4bigpOwp9Cgptb2R1bGUuZXhwb3J0cyA9IHsKICBkYiwKICBxdWVyaWVzLAogIGF3YXJkUG9pbnRzLAogIHJlY29yZEVuZ2FnZW1lbnQsCiAgcmVjb3JkSW52aXRlLAp9Owo=
+// ═══════════════════════════════════════════════════════════════
+// QANAT Bot — SQLite Database Layer
+// ═══════════════════════════════════════════════════════════════
+
+const Database = require('better-sqlite3');
+const path = require('path');
+
+const DB_PATH = path.join(__dirname, '..', 'data', 'qanat.db');
+
+// Ensure data directory exists
+const fs = require('fs');
+fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+
+const db = new Database(DB_PATH);
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+
+// ── Schema ────────────────────────────────────────────────────
+db.exec(`
+  -- Members table
+  CREATE TABLE IF NOT EXISTS members (
+    discord_id    TEXT PRIMARY KEY,
+    username      TEXT,
+    x_handle      TEXT,
+    x_verified    INTEGER DEFAULT 0,
+    total_points  INTEGER DEFAULT 0,
+    invite_count  INTEGER DEFAULT 0,
+    joined_at     TEXT DEFAULT (datetime('now')),
+    last_active   TEXT DEFAULT (datetime('now'))
+  );
+
+  -- Points ledger (every point transaction)
+  CREATE TABLE IF NOT EXISTS points_ledger (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id  TEXT NOT NULL,
+    points      INTEGER NOT NULL,
+    reason      TEXT NOT NULL,
+    tweet_id    TEXT,
+    created_at  TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (discord_id) REFERENCES members(discord_id)
+  );
+
+  -- Tracked X tweets
+  CREATE TABLE IF NOT EXISTS x_tweets (
+    tweet_id      TEXT PRIMARY KEY,
+    tweet_url     TEXT,
+    tweet_text    TEXT,
+    message_id    TEXT,
+    posted_at     TEXT DEFAULT (datetime('now'))
+  );
+
+  -- X engagement claims (one per member per tweet per action)
+  CREATE TABLE IF NOT EXISTS x_engagements (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id  TEXT NOT NULL,
+    tweet_id    TEXT NOT NULL,
+    action_type TEXT NOT NULL CHECK(action_type IN ('like','retweet','comment','quote')),
+    points      INTEGER NOT NULL,
+    claimed_at  TEXT DEFAULT (datetime('now')),
+    UNIQUE(discord_id, tweet_id, action_type)
+  );
+
+  -- Invite tracking
+  CREATE TABLE IF NOT EXISTS invites (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    inviter_id    TEXT NOT NULL,
+    invited_id    TEXT NOT NULL,
+    invite_code   TEXT,
+    joined_at     TEXT DEFAULT (datetime('now'))
+  );
+
+  -- Moderation actions log
+  CREATE TABLE IF NOT EXISTS mod_actions (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    discord_id  TEXT,
+    action_type TEXT NOT NULL,
+    reason      TEXT,
+    channel_id  TEXT,
+    created_at  TEXT DEFAULT (datetime('now'))
+  );
+
+  -- General engagement tracking (GM/GN streaks, etc.)
+  CREATE TABLE IF NOT EXISTS daily_streaks (
+    discord_id  TEXT NOT NULL,
+    streak_type TEXT NOT NULL,
+    streak_count INTEGER DEFAULT 1,
+    last_date   TEXT,
+    PRIMARY KEY (discord_id, streak_type)
+  );
+`);
+
+// ═══════════════════════════════════════════════════════════════
+// Query helpers
+// ═══════════════════════════════════════════════════════════════
+
+const queries = {
+  // ── Members ──────────────────────────────────────────────
+  upsertMember: db.prepare(`
+    INSERT INTO members (discord_id, username)
+    VALUES (?, ?)
+    ON CONFLICT(discord_id) DO UPDATE SET
+      username = excluded.username,
+      last_active = datetime('now')
+  `),
+
+  getMember: db.prepare(`SELECT * FROM members WHERE discord_id = ?`),
+
+  linkX: db.prepare(`
+    UPDATE members SET x_handle = ?, x_verified = 1 WHERE discord_id = ?
+  `),
+
+  // ── Points ──────────────────────────────────────────────
+  addPoints: db.prepare(`
+    INSERT INTO points_ledger (discord_id, points, reason, tweet_id)
+    VALUES (?, ?, ?, ?)
+  `),
+
+  updateTotalPoints: db.prepare(`
+    UPDATE members SET total_points = (
+      SELECT COALESCE(SUM(points), 0) FROM points_ledger WHERE discord_id = ?
+    ) WHERE discord_id = ?
+  `),
+
+  getPoints: db.prepare(`
+    SELECT total_points FROM members WHERE discord_id = ?
+  `),
+
+  getLeaderboard: db.prepare(`
+    SELECT discord_id, username, total_points
+    FROM members
+    WHERE total_points > 0
+    ORDER BY total_points DESC
+    LIMIT ?
+  `),
+
+  // ── X Engagement ────────────────────────────────────────
+  hasEngagement: db.prepare(`
+    SELECT 1 FROM x_engagements
+    WHERE discord_id = ? AND tweet_id = ? AND action_type = ?
+  `),
+
+  addEngagement: db.prepare(`
+    INSERT OR IGNORE INTO x_engagements (discord_id, tweet_id, action_type, points)
+    VALUES (?, ?, ?, ?)
+  `),
+
+  // ── X Tweets ────────────────────────────────────────────
+  addTweet: db.prepare(`
+    INSERT OR IGNORE INTO x_tweets (tweet_id, tweet_url, tweet_text, message_id)
+    VALUES (?, ?, ?, ?)
+  `),
+
+  getTweet: db.prepare(`SELECT * FROM x_tweets WHERE tweet_id = ?`),
+
+  getLatestTweetId: db.prepare(`
+    SELECT tweet_id FROM x_tweets ORDER BY posted_at DESC LIMIT 1
+  `),
+
+  // ── Invites ─────────────────────────────────────────────
+  addInvite: db.prepare(`
+    INSERT INTO invites (inviter_id, invited_id, invite_code) VALUES (?, ?, ?)
+  `),
+
+  updateInviteCount: db.prepare(`
+    UPDATE members SET invite_count = (
+      SELECT COUNT(*) FROM invites WHERE inviter_id = ?
+    ) WHERE discord_id = ?
+  `),
+
+  getInviteCount: db.prepare(`
+    SELECT invite_count FROM members WHERE discord_id = ?
+  `),
+
+  getInviteLeaderboard: db.prepare(`
+    SELECT discord_id, username, invite_count
+    FROM members
+    WHERE invite_count > 0
+    ORDER BY invite_count DESC
+    LIMIT ?
+  `),
+
+  // ── Moderation ──────────────────────────────────────────
+  logModAction: db.prepare(`
+    INSERT INTO mod_actions (discord_id, action_type, reason, channel_id)
+    VALUES (?, ?, ?, ?)
+  `),
+
+  getModActions: db.prepare(`
+    SELECT * FROM mod_actions ORDER BY created_at DESC LIMIT ?
+  `),
+
+  getRecentOffenses: db.prepare(`
+    SELECT COUNT(*) as count FROM mod_actions
+    WHERE discord_id = ? AND action_type IN ('timeout', 'auto_delete', 'phishing_delete')
+    AND created_at > datetime('now', '-30 days')
+  `),
+
+  // ── Streaks ─────────────────────────────────────────────
+  upsertStreak: db.prepare(`
+    INSERT INTO daily_streaks (discord_id, streak_type, streak_count, last_date)
+    VALUES (?, ?, 1, date('now'))
+    ON CONFLICT(discord_id, streak_type) DO UPDATE SET
+      streak_count = CASE
+        WHEN last_date = date('now', '-1 day') THEN streak_count + 1
+        WHEN last_date = date('now') THEN streak_count
+        ELSE 1
+      END,
+      last_date = date('now')
+  `),
+
+  getStreak: db.prepare(`
+    SELECT streak_count FROM daily_streaks
+    WHERE discord_id = ? AND streak_type = ?
+  `),
+};
+
+// ── Transactional helpers ────────────────────────────────────
+
+function awardPoints(discordId, points, reason, tweetId = null) {
+  const txn = db.transaction(() => {
+    queries.addPoints.run(discordId, points, reason, tweetId);
+    queries.updateTotalPoints.run(discordId, discordId);
+  });
+  txn();
+}
+
+function recordEngagement(discordId, tweetId, actionType, points) {
+  const existing = queries.hasEngagement.get(discordId, tweetId, actionType);
+  if (existing) return false;
+
+  const txn = db.transaction(() => {
+    queries.addEngagement.run(discordId, tweetId, actionType, points);
+    queries.addPoints.run(discordId, points, `x_${actionType}`, tweetId);
+    queries.updateTotalPoints.run(discordId, discordId);
+  });
+  txn();
+  return true;
+}
+
+function recordInvite(inviterId, invitedId, code) {
+  const txn = db.transaction(() => {
+    queries.addInvite.run(inviterId, invitedId, code);
+    queries.updateInviteCount.run(inviterId, inviterId);
+  });
+  txn();
+}
+
+module.exports = {
+  db,
+  queries,
+  awardPoints,
+  recordEngagement,
+  recordInvite,
+};
