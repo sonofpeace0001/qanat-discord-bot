@@ -1,1 +1,24 @@
-ewogICJuYW1lIjogInFhbmF0LWRpc2NvcmQtYm90IiwKICAidmVyc2lvbiI6ICIxLjAuMCIsCiAgImRlc2NyaXB0aW9uIjogIlFBTkFUIENvbW11bml0eSBNYW5hZ2VyICYgTW9kZXJhdG9yIERpc2NvcmQgQm90IiwKICAibWFpbiI6ICJzcmMvYm90LmpzIiwKICAic2NyaXB0cyI6IHsKICAgICJzdGFydCI6ICJub2RlIHNyYy9ib3QuanMiLAogICAgImRlcGxveSI6ICJub2RlIHNyYy9kZXBsb3kuanMiLAogICAgImRldiI6ICJub2RlIC0td2F0Y2ggc3JjL2JvdC5qcyIKICB9LAogICJkZXBlbmRlbmNpZXMiOiB7CiAgICAiQGRpc2NvcmRqcy9yZXN0IjogIl4yLjQuMCIsCiAgICAiQGRpc2NvcmRqcy92b2ljZSI6ICJeMC4xNy4wIiwKICAgICJiZXR0ZXItc3FsaXRlMyI6ICJeMTEuNy4wIiwKICAgICJkaXNjb3JkLmpzIjogIl4xNC4xNi4zIiwKICAgICJkb3RlbnYiOiAiXjE2LjQuNyIsCiAgICAibm9kZS1jcm9uIjogIl4zLjAuMyIsCiAgICAib3B1c3NjcmlwdCI6ICJeMC4xLjEiLAogICAgImxpYnNvZGl1bS13cmFwcGVycyI6ICJeMC43LjE1IgogIH0sCiAgImVuZ2luZXMiOiB7CiAgICAibm9kZSI6ICI+PTE4LjAuMCIKICB9Cn0K
+{
+  "name": "qanat-discord-bot",
+  "version": "1.0.0",
+  "description": "QANAT Community Manager & Moderator Discord Bot",
+  "main": "src/bot.js",
+  "scripts": {
+    "start": "node src/bot.js",
+    "deploy": "node src/deploy.js",
+    "dev": "node --watch src/bot.js"
+  },
+  "dependencies": {
+    "@discordjs/rest": "^2.4.0",
+    "@discordjs/voice": "^0.17.0",
+    "better-sqlite3": "^11.7.0",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "node-cron": "^3.0.3",
+    "opusscript": "^0.1.1",
+    "libsodium-wrappers": "^0.7.15"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
