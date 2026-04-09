@@ -1,1 +1,170 @@
-IyDwn5uh77iPIFFBTkFUIEd1YXJkaWFuIOKAlCBEaXNjb3JkIENvbW11bml0eSBNYW5hZ2VyICYgTW9kZXJhdG9yIEJvdAoKQSBjb21wcmVoZW5zaXZlIERpc2NvcmQgYm90IGZvciB0aGUgUUFOQVQgY29tbXVuaXR5IHRoYXQgaGFuZGxlcyBjb21tdW5pdHkgbWFuYWdlbWVudCwgbW9kZXJhdGlvbiwgWC9Ud2l0dGVyIGVuZ2FnZW1lbnQgdHJhY2tpbmcgd2l0aCBwb2ludHMgc3lzdGVtLCBpbnZpdGUgdHJhY2tpbmcsIHZvaWNlIGNoYW5uZWwgcGFydGljaXBhdGlvbiwgYW5kIHNjaGVkdWxlZCBjb21tdW5pdHkgZW5nYWdlbWVudC4KCiMjIOKcqCBGZWF0dXJlcwoKIyMjIENvbW11bml0eSBNYW5hZ2VtZW50Ci0gKipXZWxjb21lIFN5c3RlbSoqIOKAlCBHcmVldHMgbmV3IG1lbWJlcnMgd2l0aCBwZXJzb25hbGl6ZWQgZW1iZWQsIGludHJvZHVjZXMgdGhlIGNvbW11bml0eSwgYW5kIGd1aWRlcyB0aGVtIHRvIEludHJvZHVjdGlvbi9SdWxlcy9WZXJpZnkgY2hhbm5lbHMKLSAqKkZBUSBFbmdpbmUqKiDigJQgU21hcnQga2V5d29yZCBtYXRjaGluZyB0byBhdXRvLWFuc3dlciBjb21tdW5pdHkgcXVlc3Rpb25zIGZyb20gYSBjb21wcmVoZW5zaXZlIEZBUSBkYXRhYmFzZQotICoqR00vR04gQ2hhbm5lbCoqIOKAlCBSZWFjdHMgdG8gR00g4piA77iPIGFuZCBHTiDwn4yZIG1lc3NhZ2VzLCB0cmFja3Mgc3RyZWFrcywgY29ycmVjdHMgb2ZmLXRvcGljIG1lc3NhZ2VzCi0gKipHZW5lcmFsIENoYXQgRW5nYWdlbWVudCoqIOKAlCBQZXJpb2RpYyBjb21tdW5pdHkgZW5nYWdlbWVudCBtZXNzYWdlcyBhYm91dCBRQU5BVAotICoqQ29udHJpYnV0b3IgTW90aXZhdGlvbioqIOKAlCBEYWlseSBtb3RpdmF0aW9uYWwgcGluZ3MgdG8gdGhlIENvbnRyaWJ1dG9yIHJvbGUKLSAqKkFubm91bmNlbWVudCBOb3RpZmljYXRpb25zKiog4oCUIEFsZXJ0cyBnZW5lcmFsIGNoYXQgd2hlbiBuZXcgYW5ub3VuY2VtZW50cyBkcm9wCgojIyMgWC9Ud2l0dGVyIEVuZ2FnZW1lbnQgVHJhY2tpbmcKLSAqKlggTW9uaXRvcioqIOKAlCBQb2xscyBAUUFOQVRfSU8gZm9yIG5ldyB0d2VldHMgYW5kIHBvc3RzIG5vdGlmaWNhdGlvbnMKLSAqKlBvaW50cyBTeXN0ZW0qKiDigJQgTWVtYmVycyBlYXJuIHBvaW50cyBmb3IgZW5nYWdpbmcgKOKdpO+4jyBMaWtlID0gMXB0LCDwn5KsIENvbW1lbnQgPSAycHQsIPCflIEgUlQgPSAzcHQpCi0gKipYIEFjY291bnQgTGlua2luZyoqIOKAlCBgL2xpbmt4YCBjb21tYW5kIHRvIGNvbm5lY3QgRGlzY29yZCB0byBYIGhhbmRsZQotICoqTGVhZGVyYm9hcmQqKiDigJQgUmVhbC10aW1lIHBvaW50cyBsZWFkZXJib2FyZCB3aXRoIG1lZGFsIHJhbmtpbmdzCi0gKipGb2xsb3cgUmVxdWlyZW1lbnQqKiDigJQgTWVtYmVycyBtdXN0IGZvbGxvdyBAUUFOQVRfSU8gdG8gZWFybiBwb2ludHMKCiMjIyBJbnZpdGUgVHJhY2tpbmcKLSAqKkF1dG8tRGV0ZWN0aW9uKiog4oCUIFRyYWNrcyB3aG8gaW52aXRlZCBlYWNoIG5ldyBtZW1iZXIKLSAqKkludml0ZSBOb3RpZmljYXRpb25zKiog4oCUIFBvc3RzIGludml0ZSBldmVudHMgaW4gdGhlIGludml0ZXMgY2hhbm5lbAotICoqSW52aXRlIExlYWRlcmJvYXJkKiog4oCUIGAvaW52aXRlc2xlYWRlcmJvYXJkYCBmb3IgdG9wIGludml0ZXJzCgojIyMgTW9kZXJhdGlvbgotICoqU3BhbSBEZXRlY3Rpb24qKiDigJQgQXV0by1kZWxldGVzIG1hc3MgbWVudGlvbnMgYW5kIHVuYXV0aG9yaXplZCBpbnZpdGUgbGlua3MKLSAqKlNlbGYtUHJvbW8gR3VhcmQqKiDigJQgV2FybnMgbWVtYmVycyBhdHRlbXB0aW5nIHNlbGYtcHJvbW90aW9uIHdpdGhvdXQgcGVybWlzc2lvbgotICoqTGluayBSZXN0cmljdGlvbnMqKiDigJQgQ29ycmVjdHMgb2ZmLXRvcGljIGxpbmtzIGluIHJlc3RyaWN0ZWQgY2hhbm5lbHMKLSAqKkFkbWluIEVzY2FsYXRpb24qKiDigJQgVGFncyBhZG1pbiByb2xlIGZvciBpc3N1ZXMgcmVxdWlyaW5nIGh1bWFuIGludGVydmVudGlvbgotICoqTW9kIFJlcG9ydCBMb2cqKiDigJQgQWxsIGFjdGlvbnMgbG9nZ2VkIHRvIHRoZSBtb2RlcmF0aW9uIHJlcG9ydCBjaGFubmVsCgojIyMgVm9pY2UgQ2hhbm5lbAotICoqVkMgSm9pbi9MZWF2ZSoqIOKAlCBCb3Qgam9pbnMgdm9pY2UgY2hhbm5lbHMgb24gY29tbWFuZAotICoqU3RhZ2UgU3VwcG9ydCoqIOKAlCBDYW4gam9pbiBzdGFnZXMgdG8gYmUgcHJlc2VudCBkdXJpbmcgY29tbXVuaXR5IGV2ZW50cwoKIyMjIFNsYXNoIENvbW1hbmRzCnwgQ29tbWFuZCB8IERlc2NyaXB0aW9uIHwKfC0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tfAp8IGAvcG9pbnRzIFtAdXNlcl1gIHwgQ2hlY2sgZW5nYWdlbWVudCBwb2ludHMgfAp8IGAvbGVhZGVyYm9hcmQgW2xpbWl0XWAgfCBWaWV3IHRvcCBwb2ludCBob2xkZXJzIHwKfCBgL2ludml0ZXMgW0B1c2VyXWAgfCBDaGVjayBpbnZpdGUgY291bnQgfAp8IGAvaW52aXRlc2xlYWRlcmJvYXJkIFtsaW1pdF1gIHwgVmlldyB0b3AgaW52aXRlcnMgfAp8IGAvbGlua3ggPGhhbmRsZT5gIHwgTGluayB5b3VyIFgvVHdpdHRlciBhY2NvdW50IHwKfCBgL2ZhcSBbcXVlc3Rpb25dYCB8IEJyb3dzZSBvciBzZWFyY2ggRkFRcyB8CnwgYC94Y2hlY2sgW0B1c2VyXWAgfCBYIGVuZ2FnZW1lbnQgYnJlYWtkb3duIHwKfCBgL215cHJvZmlsZWAgfCBWaWV3IHlvdXIgZnVsbCBjb21tdW5pdHkgcHJvZmlsZSB8CnwgYC9qb2ludmNgIHwgSW52aXRlIGJvdCB0byB5b3VyIHZvaWNlIGNoYW5uZWwgfAp8IGAvbGVhdmV2Y2AgfCBBc2sgYm90IHRvIGxlYXZlIHZvaWNlIGNoYW5uZWwgfAp8IGAvaGVscGAgfCBGdWxsIGZlYXR1cmUgb3ZlcnZpZXcgfAp8IGAvbW9kc3RhdHMgW2xpbWl0XWAgfCBWaWV3IHJlY2VudCBtb2QgYWN0aW9ucyAoYWRtaW4gb25seSkgfAoKIyMg8J+agCBEZXBsb3ltZW50CgojIyMgUHJlcmVxdWlzaXRlcwotIE5vZGUuanMgMTgrCi0gQSBEaXNjb3JkIEJvdCB3aXRoIHRoZSBmb2xsb3dpbmcgcGVybWlzc2lvbnM6CiAgLSBTZW5kIE1lc3NhZ2VzLCBFbWJlZCBMaW5rcywgQWRkIFJlYWN0aW9ucywgUmVhZCBNZXNzYWdlIEhpc3RvcnkKICAtIE1hbmFnZSBNZXNzYWdlcyAoZm9yIG1vZGVyYXRpb24pCiAgLSBDb25uZWN0LCBTcGVhayAoZm9yIHZvaWNlIGNoYW5uZWxzKQogIC0gVXNlIEFwcGxpY2F0aW9uIENvbW1hbmRzCiAgLSBSZWFkIE1lbWJlcnMgKHByaXZpbGVnZWQgaW50ZW50KQogIC0gTWVzc2FnZSBDb250ZW50IChwcml2aWxlZ2VkIGludGVudCkKCiMjIyAxLiBDcmVhdGUgYSBEaXNjb3JkIEJvdAoKMS4gR28gdG8gW0Rpc2NvcmQgRGV2ZWxvcGVyIFBvcnRhbF0oaHR0cHM6Ly9kaXNjb3JkLmNvbS9kZXZlbG9wZXJzL2FwcGxpY2F0aW9ucykKMi4gQ2xpY2sgIk5ldyBBcHBsaWNhdGlvbiIg4oaSIE5hbWUgaXQgIlFBTkFUIEd1YXJkaWFuIgozLiBHbyB0byAqKkJvdCoqIHRhYjoKICAgLSBDbGljayAiQWRkIEJvdCIKICAgLSBFbmFibGUgKipQcml2aWxlZ2VkIEdhdGV3YXkgSW50ZW50cyoqOiBgU0VSVkVSIE1FTUJFUlNgLCBgTUVTU0FHRSBDT05URU5UYCwgYFBSRVNFTkNFYAogICAtIENvcHkgdGhlICoqQm90IFRva2VuKioKNC4gR28gdG8gKipPQXV0aDIqKiDihpIgKipVUkwgR2VuZXJhdG9yKio6CiAgIC0gU2NvcGVzOiBgYm90YCwgYGFwcGxpY2F0aW9ucy5jb21tYW5kc2AKICAgLSBQZXJtaXNzaW9uczogYEFkbWluaXN0cmF0b3JgIChvciBzZWxlY3QgaW5kaXZpZHVhbCBwZXJtaXNzaW9ucyBhYm92ZSkKICAgLSBDb3B5IHRoZSBnZW5lcmF0ZWQgVVJMIGFuZCBpbnZpdGUgdGhlIGJvdCB0byB5b3VyIHNlcnZlcgoKIyMjIDIuIENvbmZpZ3VyZSBFbnZpcm9ubWVudAoKYGBgYmFzaApjcCAuZW52LmV4YW1wbGUgLmVudgpgYGAKCkVkaXQgYC5lbnZgIHdpdGggeW91ciB2YWx1ZXM6CmBgYGVudgpESVNDT1JEX1RPS0VOPXlvdXJfYm90X3Rva2VuX2hlcmUKRElTQ09SRF9DTElFTlRfSUQ9eW91cl9hcHBsaWNhdGlvbl9pZF9oZXJlCkRJU0NPUkRfR1VJTERfSUQ9MTM1MTE3NDU4NzUxNzUwMTQ0MApBRE1JTl9ST0xFX0lEPXlvdXJfYWRtaW5fcm9sZV9pZApWRVJJRklFRF9ST0xFX0lEPXlvdXJfdmVyaWZpZWRfcm9sZV9pZAoKIyBPcHRpb25hbCDigJQgZW5hYmxlcyBYIG1vbml0b3JpbmcgJiB2ZXJpZmljYXRpb24KVFdJVFRFUl9CRUFSRVJfVE9LRU49eW91cl90d2l0dGVyX2JlYXJlcl90b2tlbgpgYGAKCiMjIyAzLiBJbnN0YWxsICYgUnVuCgpgYGBiYXNoCm5wbSBpbnN0YWxsCm5vZGUgc3JjL2RlcGxveS5qcyAgICMgUmVnaXN0ZXIgc2xhc2ggY29tbWFuZHMKbm9kZSBzcmMvYm90LmpzICAgICAgICMgU3RhcnQgdGhlIGJvdApgYGAKCiMjIyA0LiBIb3N0aW5nICgyNC83KQoKVGhlIGJvdCBuZWVkcyB0byBydW4gY29udGludW91c2x5LiBSZWNvbW1lbmRlZCBwbGF0Zm9ybXM6CgotICoqUmFpbHdheSoqIOKAlCBgcmFpbHdheSB1cGAgKGZyZWUgdGllciBhdmFpbGFibGUpCi0gKipSZW5kZXIqKiDigJQgQWRkIGFzIGEgV29ya2VyIHNlcnZpY2UKLSAqKlZQUyoqIOKAlCBVc2UgUE0yOiBgcG0yIHN0YXJ0IHNyYy9ib3QuanMgLS1uYW1lIHFhbmF0LWd1YXJkaWFuYAotICoqRG9ja2VyKiog4oCUIFNlZSBEb2NrZXJmaWxlIGJlbG93CgojIyMjIFBNMiAoVlBTKQpgYGBiYXNoCm5wbSBpbnN0YWxsIC1nIHBtMgpwbTIgc3RhcnQgc3JjL2JvdC5qcyAtLW5hbWUgcWFuYXQtZ3VhcmRpYW4KcG0yIHNhdmUKcG0yIHN0YXJ0dXAKYGBgCgojIyMjIERvY2tlcgpgYGBkb2NrZXJmaWxlCkZST00gbm9kZToyMC1hbHBpbmUKV09SS0RJUiAvYXBwCkNPUFkgcGFja2FnZSouanNvbiAuLwpSVU4gbnBtIGNpIC0tcHJvZHVjdGlvbgpDT1BZIC4gLgpDTUQgWyJub2RlIiwgInNyYy9ib3QuanMiXQpgYGAKCiMjIyA1LiBHZXQgYSBUd2l0dGVyL1ggQmVhcmVyIFRva2VuIChPcHRpb25hbCkKCjEuIEdvIHRvIFtYIERldmVsb3BlciBQb3J0YWxdKGh0dHBzOi8vZGV2ZWxvcGVyLnguY29tL2VuL3BvcnRhbC9kYXNoYm9hcmQpCjIuIENyZWF0ZSBhIHByb2plY3QgYW5kIGFwcAozLiBHZW5lcmF0ZSBhICoqQmVhcmVyIFRva2VuKiogKHJlYWQtb25seSBhY2Nlc3MgaXMgZmluZSkKNC4gQWRkIGl0IHRvIHlvdXIgYC5lbnZgIGZpbGUKCldpdGhvdXQgdGhlIFggQmVhcmVyIFRva2VuLCB0aGUgYm90IHdpbGwgc3RpbGwgd29yayDigJQgeW91J2xsIGp1c3QgbmVlZCB0byBtYW51YWxseSBwb3N0IHR3ZWV0IG5vdGlmaWNhdGlvbnMgaW4gdGhlIFggVGFza3MgY2hhbm5lbC4KCiMjIPCfk4EgUHJvamVjdCBTdHJ1Y3R1cmUKCmBgYApxYW5hdC1ib3QvCuKUnOKUgOKUgCBwYWNrYWdlLmpzb24gICAgICAgICAgIyBEZXBlbmRlbmNpZXMK4pSc4pSA4pSAIC5lbnYuZXhhbXBsZSAgICAgICAgICAjIEVudmlyb25tZW50IHRlbXBsYXRlCuKUnOKUgOKUgCBSRUFETUUubWQgICAgICAgICAgICAgIyBUaGlzIGZpbGUK4pSc4pSA4pSAIGRhdGEvCuKUgiAgIOKUlOKUgOKUgCBxYW5hdC5kYiAgICAgICAgICAjIFNRTGl0ZSBkYXRhYmFzZSAoYXV0by1jcmVhdGVkKQrilJTilIDilIAgc3JjLwogICAg4pSc4pSA4pSAIGJvdC5qcyAgICAgICAgICAgICMgTWFpbiBib3Qg4oCUIGV2ZW50cywgY29tbWFuZHMsIHNjaGVkdWxlcgogICAg4pSc4pSA4pSAIGNvbmZpZy5qcyAgICAgICAgICMgQ2hhbm5lbCBJRHMsIHJvbGUgSURzLCBjb25zdGFudHMKICAgIOKUnOKUgOKUgCBkYi5qcyAgICAgICAgICAgICAjIFNRTGl0ZSBkYXRhYmFzZSBsYXllcgogICAg4pSc4pSA4pSAIGZhcS5qcyAgICAgICAgICAgICMgRkFRIGRhdGEgJiBzbWFydCBtYXRjaGVyCiAgICDilJzilIDilIAgY29tbWFuZHMuanMgICAgICAgIyBTbGFzaCBjb21tYW5kIGRlZmluaXRpb25zCiAgICDilJzilIDilIAgeG1vbml0b3IuanMgICAgICAgIyBYL1R3aXR0ZXIgcG9sbGluZyBtb2R1bGUKICAgIOKUlOKUgOKUgCBkZXBsb3kuanMgICAgICAgICAjIFJlZ2lzdGVyIHNsYXNoIGNvbW1hbmRzCmBgYAoKIyMg4pqg77iPIE5vdGVzCgotICoqQ2hhbm5lbCBJRCBEdXBsaWNhdGUqKjogYDE0NTA3NDk5MjczMDE5NzIyMjFgIHdhcyBsaXN0ZWQgZm9yIGJvdGggVmVyaWZ5IGFuZCBNaW5pIFVwZGF0ZXMgY2hhbm5lbHMuIFVwZGF0ZSBgc3JjL2NvbmZpZy5qc2Ag4oaSIGBDSEFOTkVMUy5NSU5JX1VQREFURVNgIHdpdGggdGhlIGNvcnJlY3QgSUQuCi0gKipYIE1vbml0b3JpbmcqKiByZXF1aXJlcyBhIFR3aXR0ZXIvWCBCZWFyZXIgVG9rZW4uIFdpdGhvdXQgaXQsIHBvc3QgdHdlZXQgbGlua3MgbWFudWFsbHkgaW4gdGhlIFggVGFza3MgY2hhbm5lbC4KLSAqKlZvaWNlIEZlYXR1cmVzKio6IFRoZSBib3QgY2FuIGpvaW4gdm9pY2UgY2hhbm5lbHMuIEZvciBhZHZhbmNlZCB2b2ljZSB0cmFuc2NyaXB0aW9uICsgQUkgcmVzcG9uc2VzLCBhZGRpdGlvbmFsIEFQSSBzZXR1cCBpcyBuZWVkZWQgKE9wZW5BSSBXaGlzcGVyIEFQSSBrZXkpLgotIFRoZSBTUUxpdGUgZGF0YWJhc2UgaXMgY3JlYXRlZCBhdXRvbWF0aWNhbGx5IGluIGBkYXRhL3FhbmF0LmRiYC4KCiMjIPCfm6HvuI8gUUFOQVQKKipEaWdpdGFsIFNvdmVyZWlnbnR5IGJ5IERlc2lnbiDigJQgVW5icmVha2FibGUuIFVuc3RvcHBhYmxlLiBVbmNoYWluZWQuKioKClZpc2l0IFtxYW5hdC5pb10oaHR0cHM6Ly9xYW5hdC5pbykgfCBGb2xsb3cgW0BRQU5BVF9JT10oaHR0cHM6Ly94LmNvbS9RQU5BVF9JTykK
+# 🛡️ QANAT Guardian — Discord Community Manager & Moderator Bot
+
+A comprehensive Discord bot for the QANAT community that handles community management, moderation, X/Twitter engagement tracking with points system, invite tracking, voice channel participation, and scheduled community engagement.
+
+## ✨ Features
+
+### Community Management
+- **Welcome System** — Greets new members with personalized embed, introduces the community, and guides them to Introduction/Rules/Verify channels
+- **FAQ Engine** — Smart keyword matching to auto-answer community questions from a comprehensive FAQ database
+- **GM/GN Channel** — Reacts to GM ☀️ and GN 🌙 messages, tracks streaks, corrects off-topic messages
+- **General Chat Engagement** — Periodic community engagement messages about QANAT
+- **Contributor Motivation** — Daily motivational pings to the Contributor role
+- **Announcement Notifications** — Alerts general chat when new announcements drop
+
+### X/Twitter Engagement Tracking
+- **X Monitor** — Polls @QANAT_IO for new tweets and posts notifications
+- **Points System** — Members earn points for engaging (❤️ Like = 1pt, 💬 Comment = 2pt, 🔁 RT = 3pt)
+- **X Account Linking** — `/linkx` command to connect Discord to X handle
+- **Leaderboard** — Real-time points leaderboard with medal rankings
+- **Follow Requirement** — Members must follow @QANAT_IO to earn points
+
+### Invite Tracking
+- **Auto-Detection** — Tracks who invited each new member
+- **Invite Notifications** — Posts invite events in the invites channel
+- **Invite Leaderboard** — `/invitesleaderboard` for top inviters
+
+### Moderation
+- **Spam Detection** — Auto-deletes mass mentions and unauthorized invite links
+- **Self-Promo Guard** — Warns members attempting self-promotion without permission
+- **Link Restrictions** — Corrects off-topic links in restricted channels
+- **Admin Escalation** — Tags admin role for issues requiring human intervention
+- **Mod Report Log** — All actions logged to the moderation report channel
+
+### Voice Channel
+- **VC Join/Leave** — Bot joins voice channels on command
+- **Stage Support** — Can join stages to be present during community events
+
+### Slash Commands
+| Command | Description |
+|---------|-------------|
+| `/points [@user]` | Check engagement points |
+| `/leaderboard [limit]` | View top point holders |
+| `/invites [@user]` | Check invite count |
+| `/invitesleaderboard [limit]` | View top inviters |
+| `/linkx <handle>` | Link your X/Twitter account |
+| `/faq [question]` | Browse or search FAQs |
+| `/xcheck [@user]` | X engagement breakdown |
+| `/myprofile` | View your full community profile |
+| `/joinvc` | Invite bot to your voice channel |
+| `/leavevc` | Ask bot to leave voice channel |
+| `/help` | Full feature overview |
+| `/modstats [limit]` | View recent mod actions (admin only) |
+
+## 🚀 Deployment
+
+### Prerequisites
+- Node.js 18+
+- A Discord Bot with the following permissions:
+  - Send Messages, Embed Links, Add Reactions, Read Message History
+  - Manage Messages (for moderation)
+  - Connect, Speak (for voice channels)
+  - Use Application Commands
+  - Read Members (privileged intent)
+  - Message Content (privileged intent)
+
+### 1. Create a Discord Bot
+
+1. Go to [Discord Developer Portal](https://discord.com/developers/applications)
+2. Click "New Application" → Name it "QANAT Guardian"
+3. Go to **Bot** tab:
+   - Click "Add Bot"
+   - Enable **Privileged Gateway Intents**: `SERVER MEMBERS`, `MESSAGE CONTENT`, `PRESENCE`
+   - Copy the **Bot Token**
+4. Go to **OAuth2** → **URL Generator**:
+   - Scopes: `bot`, `applications.commands`
+   - Permissions: `Administrator` (or select individual permissions above)
+   - Copy the generated URL and invite the bot to your server
+
+### 2. Configure Environment
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your values:
+```env
+DISCORD_TOKEN=your_bot_token_here
+DISCORD_CLIENT_ID=your_application_id_here
+DISCORD_GUILD_ID=1351174587517501440
+ADMIN_ROLE_ID=your_admin_role_id
+VERIFIED_ROLE_ID=your_verified_role_id
+
+# Optional — enables X monitoring & verification
+TWITTER_BEARER_TOKEN=your_twitter_bearer_token
+```
+
+### 3. Install & Run
+
+```bash
+npm install
+node src/deploy.js   # Register slash commands
+node src/bot.js       # Start the bot
+```
+
+### 4. Hosting (24/7)
+
+The bot needs to run continuously. Recommended platforms:
+
+- **Railway** — `railway up` (free tier available)
+- **Render** — Add as a Worker service
+- **VPS** — Use PM2: `pm2 start src/bot.js --name qanat-guardian`
+- **Docker** — See Dockerfile below
+
+#### PM2 (VPS)
+```bash
+npm install -g pm2
+pm2 start src/bot.js --name qanat-guardian
+pm2 save
+pm2 startup
+```
+
+#### Docker
+```dockerfile
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --production
+COPY . .
+CMD ["node", "src/bot.js"]
+```
+
+### 5. Get a Twitter/X Bearer Token (Optional)
+
+1. Go to [X Developer Portal](https://developer.x.com/en/portal/dashboard)
+2. Create a project and app
+3. Generate a **Bearer Token** (read-only access is fine)
+4. Add it to your `.env` file
+
+Without the X Bearer Token, the bot will still work — you'll just need to manually post tweet notifications in the X Tasks channel.
+
+## 📁 Project Structure
+
+```
+qanat-bot/
+├── package.json          # Dependencies
+├── .env.example          # Environment template
+├── README.md             # This file
+├── data/
+│   └── qanat.db          # SQLite database (auto-created)
+└── src/
+    ├── bot.js            # Main bot — events, commands, scheduler
+    ├── config.js         # Channel IDs, role IDs, constants
+    ├── db.js             # SQLite database layer
+    ├── faq.js            # FAQ data & smart matcher
+    ├── commands.js       # Slash command definitions
+    ├── xmonitor.js       # X/Twitter polling module
+    └── deploy.js         # Register slash commands
+```
+
+## ⚠️ Notes
+
+- **Channel ID Duplicate**: `1450749927301972221` was listed for both Verify and Mini Updates channels. Update `src/config.js` → `CHANNELS.MINI_UPDATES` with the correct ID.
+- **X Monitoring** requires a Twitter/X Bearer Token. Without it, post tweet links manually in the X Tasks channel.
+- **Voice Features**: The bot can join voice channels. For advanced voice transcription + AI responses, additional API setup is needed (OpenAI Whisper API key).
+- The SQLite database is created automatically in `data/qanat.db`.
+
+## 🛡️ QANAT
+**Digital Sovereignty by Design — Unbreakable. Unstoppable. Unchained.**
+
+Visit [qanat.io](https://qanat.io) | Follow [@QANAT_IO](https://x.com/QANAT_IO)
