@@ -1,1 +1,1 @@
-d29ya2VyOiBub2RlIHNyYy9ib3QuanMK
+worker: node src/bot.js
