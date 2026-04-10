@@ -89,6 +89,7 @@ module.exports = {
   X_POLL_INTERVAL_MS: 5 * 60 * 1000,
   CONTRIBUTOR_MOTIVATION_CRON: '0 9 * * *',
   GENERAL_ENGAGEMENT_CRON: '0 */4 * * *',
+  CONVO_STARTER_CRON: '20 */2 * * *',  // Every 2 hours at :20 (offset from other crons)
   STAFF_REMINDER_CRON: '30 8 * * *',
   CONTRIBUTOR_SUMMARY_CRON: '0 8 * * *',
   GAME_NIGHT_ANNOUNCE_CRON: '0 9 * * 2,4,5',       // Tue, Thu, Fri 9AM UTC
