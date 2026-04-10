@@ -164,9 +164,9 @@ function getAvailableProviders() {
 }
 
 function markRateLimited(provider) {
-  // Cool down for 60 seconds, then try again
-  providerStatus[provider].cooldownUntil = Date.now() + 60_000;
-  console.log(`[AI] ${provider} rate limited, cooling down for 60s`);
+  // Cool down for 15 seconds, then try again
+  providerStatus[provider].cooldownUntil = Date.now() + 15_000;
+  console.log(`[AI] ${provider} rate limited, cooling down for 15s`);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -232,46 +232,37 @@ function shouldRespond(message, channelId) {
   const mentionsBot = message.mentions?.users?.has(message.client?.user?.id);
   if (mentionsBot) return true;
 
-  // Channel cooldown (shorter for high-engagement channels)
-  const highEngagement = [config.CHANNELS.GENERAL, config.CHANNELS.CONTRIBUTOR_CHAT];
-  const cooldownSec = highEngagement.includes(channelId) ? 15 : 30;
-  const lastCh = lastResponse.get(channelId) || 0;
-  if (Date.now() - lastCh < cooldownSec * 1000) return false;
-
-  // User cooldown (60s, was 90s)
+  // Only cooldown: don't reply to the SAME user in the SAME channel within 8 seconds
+  // This prevents double-responding to one person, but doesn't block other users
   const userKey = `${channelId}-${message.author.id}`;
   const lastU = lastUserResponse.get(userKey) || 0;
-  if (Date.now() - lastU < 60000) return false;
+  if (Date.now() - lastU < 8000) return false;
 
   // Skip emoji-only or very short
-  if (lower.length < 3) return false;
+  if (lower.length < 2) return false;
   if (/^[\u{1F000}-\u{1FFFF}\s]+$/u.test(lower)) return false;
 
-  // ── Always respond to these ────────────────────────────
-  // Direct questions
+  // ── Always respond ─────────────────────────────────────
   if (lower.includes('?')) return true;
-  // Someone greeting
-  if (/^(hey|hi|hello|yo|sup|what'?s? ?up|howdy)\b/i.test(lower)) return true;
-  // Asking for help
-  if (/\b(help|confused|how do i|where can|can someone|anyone know)\b/i.test(lower)) return true;
-  // Talking about QANAT
-  if (/\b(qanat|web ?x|sovereignty|whitepaper|mainnet|beta)\b/i.test(lower)) return true;
+  if (/^(hey|hi|hello|yo|sup|what'?s ?up|howdy|waddup)\b/i.test(lower)) return true;
+  if (/\b(help|confused|how do i|where can|can someone|anyone know|what is|who is)\b/i.test(lower)) return true;
+  if (/\b(qanat|web ?x|sovereignty|whitepaper|mainnet|beta|token)\b/i.test(lower)) return true;
+  if (/\b(anyone|somebody|who here|thoughts on|opinions on|what do you)\b/i.test(lower)) return true;
 
   // ── High probability ───────────────────────────────────
-  if (/\b(lfg|let'?s go|bullish|hyped|we'?re? early|fire|amazing)\b/i.test(lower)) return Math.random() < 0.7;
-  if (/\b(i think|i believe|honestly|personally|what do you think|imo)\b/i.test(lower)) return Math.random() < 0.7;
-  if (/\b(anyone|somebody|who here|thoughts on|opinions on)\b/i.test(lower)) return Math.random() < 0.8;
-  if (/\b(gm|good morning|morning everyone)\b/i.test(lower) && channelId !== config.CHANNELS.GM_GN) return Math.random() < 0.6;
-  if (/\b(thanks|thank you|appreciate|ty|thx)\b/i.test(lower)) return Math.random() < 0.5;
-  if (/\b(building|working on|coding|developing|shipping|launched)\b/i.test(lower)) return Math.random() < 0.6;
+  if (/\b(lfg|let'?s go|bullish|hyped|we'?re? early|fire|amazing|love)\b/i.test(lower)) return Math.random() < 0.8;
+  if (/\b(i think|i believe|honestly|personally|imo|tbh)\b/i.test(lower)) return Math.random() < 0.7;
+  if (/\b(gm|good morning|morning)\b/i.test(lower) && channelId !== config.CHANNELS.GM_GN) return Math.random() < 0.6;
+  if (/\b(thanks|thank you|appreciate|ty|thx)\b/i.test(lower)) return Math.random() < 0.6;
+  if (/\b(building|working on|coding|developing|shipping|launched|created)\b/i.test(lower)) return Math.random() < 0.7;
+  if (/\b(bye|later|gotta go|heading out|peace)\b/i.test(lower)) return Math.random() < 0.5;
 
-  // ── Base channel rates ─────────────────────────────────
-  if (highEngagement.includes(channelId)) return Math.random() < 0.35;
-  return Math.random() < 0.20;
+  // ── Base rate: respond to ~40% of everything else ──────
+  return Math.random() < 0.4;
 }
 
 function recordResponse(channelId, userId) {
-  lastResponse.set(channelId, Date.now());
+  // Only track per-user to prevent double-reply, no channel blocking
   lastUserResponse.set(`${channelId}-${userId}`, Date.now());
 }
 
