@@ -297,33 +297,40 @@ function shouldRespond(message, channelId) {
   const mentionsBot = message.mentions?.users?.has(message.client?.user?.id);
   if (mentionsBot) return true;
 
-  // Channel cooldown
-  const activeChannels = [config.CHANNELS.GENERAL, config.CHANNELS.CONTRIBUTOR_CHAT];
-  const cooldownSec = activeChannels.includes(channelId) ? 25 : 45;
+  // Channel cooldown (shorter for high-engagement channels)
+  const highEngagement = [config.CHANNELS.GENERAL, config.CHANNELS.CONTRIBUTOR_CHAT];
+  const cooldownSec = highEngagement.includes(channelId) ? 15 : 30;
   const lastCh = lastResponse.get(channelId) || 0;
   if (Date.now() - lastCh < cooldownSec * 1000) return false;
 
-  // User cooldown (90s)
+  // User cooldown (60s, was 90s)
   const userKey = `${channelId}-${message.author.id}`;
   const lastU = lastUserResponse.get(userKey) || 0;
-  if (Date.now() - lastU < 90000) return false;
+  if (Date.now() - lastU < 60000) return false;
 
+  // Skip emoji-only or very short
   if (lower.length < 3) return false;
   if (/^[\u{1F000}-\u{1FFFF}\s]+$/u.test(lower)) return false;
 
-  // Channel tiers
-  const highEngagement = [config.CHANNELS.GENERAL, config.CHANNELS.CONTRIBUTOR_CHAT];
+  // ── Always respond to these ────────────────────────────
+  // Direct questions
+  if (lower.includes('?')) return true;
+  // Someone greeting
+  if (/^(hey|hi|hello|yo|sup|what'?s? ?up|howdy)\b/i.test(lower)) return true;
+  // Asking for help
+  if (/\b(help|confused|how do i|where can|can someone|anyone know)\b/i.test(lower)) return true;
+  // Talking about QANAT
+  if (/\b(qanat|web ?x|sovereignty|whitepaper|mainnet|beta)\b/i.test(lower)) return true;
 
-  // Context boosts (stack with channel rate)
-  if (lower.includes('?')) return Math.random() < 0.85;
-  if (/^(hey|hi|hello|yo|sup|what'?s? ?up)\b/i.test(lower)) return Math.random() < 0.7;
-  if (/\b(qanat|web ?x|sovereignty|decentralized|whitepaper)\b/i.test(lower)) return Math.random() < 0.8;
-  if (/\b(lfg|let'?s go|bullish|hyped|we'?re? early|fire)\b/i.test(lower)) return Math.random() < 0.6;
-  if (/\b(i think|i believe|honestly|personally|what do you think)\b/i.test(lower)) return Math.random() < 0.6;
-  if (/\b(gm|good morning|morning everyone)\b/i.test(lower) && channelId !== config.CHANNELS.GM_GN) return Math.random() < 0.5;
-  if (/\b(anyone|somebody|who here|thoughts on|opinions on)\b/i.test(lower)) return Math.random() < 0.7;
+  // ── High probability ───────────────────────────────────
+  if (/\b(lfg|let'?s go|bullish|hyped|we'?re? early|fire|amazing)\b/i.test(lower)) return Math.random() < 0.7;
+  if (/\b(i think|i believe|honestly|personally|what do you think|imo)\b/i.test(lower)) return Math.random() < 0.7;
+  if (/\b(anyone|somebody|who here|thoughts on|opinions on)\b/i.test(lower)) return Math.random() < 0.8;
+  if (/\b(gm|good morning|morning everyone)\b/i.test(lower) && channelId !== config.CHANNELS.GM_GN) return Math.random() < 0.6;
+  if (/\b(thanks|thank you|appreciate|ty|thx)\b/i.test(lower)) return Math.random() < 0.5;
+  if (/\b(building|working on|coding|developing|shipping|launched)\b/i.test(lower)) return Math.random() < 0.6;
 
-  // Channel base rates
+  // ── Base channel rates ─────────────────────────────────
   if (highEngagement.includes(channelId)) return Math.random() < 0.35;
   return Math.random() < 0.20;
 }
