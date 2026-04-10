@@ -159,6 +159,20 @@ const commands = [
         .setDescription('Footer text (optional)')
         .setRequired(false)
     ),
+  // ── /posttweet — Post a tweet for engagement tracking (admin only)
+  new SlashCommandBuilder()
+    .setName('posttweet')
+    .setDescription('Create an engagement tracking post for a tweet (admin only)')
+    .addStringOption(opt =>
+      opt.setName('url')
+        .setDescription('Tweet URL (e.g. https://x.com/QANAT_IO/status/123456)')
+        .setRequired(true)
+    )
+    .addStringOption(opt =>
+      opt.setName('message')
+        .setDescription('Custom message to add (optional)')
+        .setRequired(false)
+    ),
 ];
 
 module.exports = commands;
