@@ -580,6 +580,25 @@ client.on('interactionCreate', async (interaction) => {
     return;
   }
 
+  // ── Follow confirmation button (from /linkx) ───────────
+  if (interaction.isButton() && interaction.customId.startsWith('confirm_follow_')) {
+    const handle = interaction.customId.replace('confirm_follow_', '');
+    try {
+      q.upsertMember.run(interaction.user.id, interaction.user.username);
+      q.linkX.run(handle, interaction.user.id);
+
+      // Remove the buttons from the message
+      await interaction.update({
+        content: `Linked **@${handle}** to your account. You're all set.\n\nWhen new @QANAT_IO posts drop in <#${config.CHANNELS.X_TASKS}>, engage on X then react to claim your points.\n\n👍 Like = 1pt | 💬 Comment = 2pt | 🔄 Retweet = 3pt | ⭐ All three = 6pt`,
+        components: [],
+      });
+    } catch (err) {
+      console.error('Follow confirm error:', err);
+      await interaction.reply({ content: 'Something went wrong. Try /linkx again.', ephemeral: true });
+    }
+    return;
+  }
+
   if (!interaction.isChatInputCommand()) return;
   try {
     switch (interaction.commandName) {
@@ -599,6 +618,7 @@ client.on('interactionCreate', async (interaction) => {
       case 'modstats':            await cmdModStats(interaction); break;
       case 'announce':            await cmdAnnounce(interaction); break;
       case 'posttweet':           await cmdPostTweet(interaction); break;
+      case 'verifyx':             await cmdVerifyX(interaction); break;
       default: await interaction.reply({ content: 'Unknown command.', ephemeral: true });
     }
   } catch (err) {
@@ -662,9 +682,50 @@ async function cmdInvitesLeaderboard(interaction) {
 async function cmdLinkX(interaction) {
   let handle = interaction.options.getString('handle').trim();
   if (handle.startsWith('@')) handle = handle.substring(1);
+  if (!/^[A-Za-z0-9_]{1,15}$/.test(handle)) {
+    return interaction.reply({ content: `That doesn't look like a valid X handle. Just the username, no @ symbol. Example: \`/linkx handle:QANAT_IO\``, ephemeral: true });
+  }
+
+  await interaction.deferReply({ ephemeral: true });
+
+  // Step 1: Verify the handle actually exists on X
+  try {
+    const checkUrl = `https://publish.twitter.com/oembed?url=https://x.com/${handle}&omit_script=true`;
+    const res = await fetch(checkUrl);
+    if (res.status === 404 || !res.ok) {
+      return interaction.editReply(`The handle **@${handle}** doesn't exist on X. Double check the spelling and try again.`);
+    }
+  } catch {
+    return interaction.editReply(`Couldn't verify that handle right now. Try again in a minute.`);
+  }
+
+  // Step 2: Check they're not linking someone else's already-linked handle
+  const db = require('./db').db;
+  const existingUser = db.prepare('SELECT discord_id FROM members WHERE x_handle = ? AND discord_id != ?').get(handle.toLowerCase(), interaction.user.id);
+  if (existingUser) {
+    return interaction.editReply(`That handle is already linked to another member. If this is your account, contact a staff member.`);
+  }
+
   q.upsertMember.run(interaction.user.id, interaction.user.username);
-  q.linkX.run(handle, interaction.user.id);
-  await interaction.reply({ content: `Linked **@${handle}**. Make sure you follow @QANAT_IO on X. When posts drop, engage then react here to claim points. Like = 1pt, comment = 2pt, retweet = 3pt.`, ephemeral: true });
+
+  // Step 3: Show follow confirmation button
+  const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+  const row = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setLabel('Open @QANAT_IO on X')
+      .setStyle(ButtonStyle.Link)
+      .setURL('https://x.com/QANAT_IO'),
+    new ButtonBuilder()
+      .setCustomId(`confirm_follow_${handle}`)
+      .setLabel('I follow @QANAT_IO')
+      .setStyle(ButtonStyle.Success)
+      .setEmoji('✅'),
+  );
+
+  await interaction.editReply({
+    content: `Found **@${handle}** on X.\n\nBefore I link your account, make sure you follow **@QANAT_IO**. If you haven't yet, click the button below to open their profile and follow them.\n\nOnce you're following, click **"I follow @QANAT_IO"** to confirm and link your account.`,
+    components: [row],
+  });
 }
 
 async function cmdFAQ(interaction) {
@@ -804,6 +865,48 @@ async function cmdAnnounce(interaction) {
     await interaction.reply({ content: `Sent to <#${targetChannel.id}>.`, ephemeral: true });
     logModAction(interaction.guild, interaction.user.id, 'announcement', `"${title}" in #${targetChannel.name}`);
   } catch { await interaction.reply({ content: 'Could not send. Check permissions.', ephemeral: true }); }
+}
+
+async function cmdVerifyX(interaction) {
+  if (!isAdmin(interaction.member)) return interaction.reply({ content: 'Staff only.', ephemeral: true });
+
+  const targetUser = interaction.options.getUser('user');
+  const revoke = interaction.options.getBoolean('revoke') || false;
+  const member = q.getMember.get(targetUser.id);
+
+  if (!member || !member.x_verified) {
+    return interaction.reply({ content: `<@${targetUser.id}> hasn't linked an X account.`, ephemeral: true });
+  }
+
+  if (revoke) {
+    const db = require('./db').db;
+    db.prepare('UPDATE members SET x_handle = NULL, x_verified = 0, total_points = 0 WHERE discord_id = ?').run(targetUser.id);
+    db.prepare('DELETE FROM x_engagements WHERE discord_id = ?').run(targetUser.id);
+    db.prepare('DELETE FROM points_ledger WHERE discord_id = ?').run(targetUser.id);
+
+    await interaction.reply({
+      content: `Revoked **@${member.x_handle}** from <@${targetUser.id}>. Their X link and all engagement points have been reset.`,
+      ephemeral: true,
+    });
+
+    logModAction(interaction.guild, targetUser.id, 'x_revoke',
+      `X link @${member.x_handle} revoked by ${interaction.user.tag}. Points reset.`);
+    return;
+  }
+
+  // Show info
+  const db = require('./db').db;
+  const engagements = db.prepare('SELECT COUNT(*) as count FROM x_engagements WHERE discord_id = ?').get(targetUser.id);
+
+  await interaction.reply({
+    content: `**X Verification Check**\n` +
+      `Member: <@${targetUser.id}>\n` +
+      `Linked handle: **@${member.x_handle}** ([view profile](https://x.com/${member.x_handle}))\n` +
+      `Points: **${member.total_points}**\n` +
+      `Engagements claimed: **${engagements?.count || 0}**\n\n` +
+      `Check their X profile to confirm they follow @QANAT_IO. Use \`/verifyx user:@${targetUser.username} revoke:True\` to remove their link and reset points if they're not following.`,
+    ephemeral: true,
+  });
 }
 
 async function cmdPostTweet(interaction) {
