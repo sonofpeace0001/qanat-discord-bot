@@ -90,8 +90,57 @@ client.once('ready', async () => {
 
   startXMonitor(client);
   startScheduledTasks();
+  await setupVerification(client);
   client.user.setPresence({ activities: [{ name: 'QANAT Community', type: 3 }], status: 'online' });
 });
+
+// ═══════════════════════════════════════════════════════════════
+// VERIFICATION SYSTEM
+// ═══════════════════════════════════════════════════════════════
+
+async function setupVerification(client) {
+  const guild = client.guilds.cache.get(config.GUILD_ID);
+  if (!guild) return;
+
+  const verifyChannel = guild.channels.cache.get(config.CHANNELS.VERIFY);
+  if (!verifyChannel) return;
+
+  // Check if bot already posted a verify message
+  try {
+    const messages = await verifyChannel.messages.fetch({ limit: 20 });
+    const existing = messages.find(m =>
+      m.author.id === client.user.id && m.components.length > 0
+    );
+
+    if (existing) {
+      console.log('  Verification message already exists');
+      return;
+    }
+  } catch {}
+
+  // Post the verification message with button
+  const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
+  const row = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId('qanat_verify')
+      .setLabel('Verify')
+      .setStyle(ButtonStyle.Success)
+      .setEmoji('✅')
+  );
+
+  await verifyChannel.send({
+    content:
+      `**Welcome to QANAT**\n\n` +
+      `To get full access to the server, hit the button below. ` +
+      `This confirms you've read the rules and you're ready to be part of the community.\n\n` +
+      `Once verified, you'll unlock all channels and can start earning engagement points, ` +
+      `participating in events, and connecting with the team.`,
+    components: [row],
+  });
+
+  console.log('  Verification message posted');
+}
 
 // ═══════════════════════════════════════════════════════════════
 // MEMBER JOIN
@@ -483,6 +532,35 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 // ═══════════════════════════════════════════════════════════════
 
 client.on('interactionCreate', async (interaction) => {
+  // ── Verify button ──────────────────────────────────────
+  if (interaction.isButton() && interaction.customId === 'qanat_verify') {
+    try {
+      const role = interaction.guild.roles.cache.get(config.ROLES.VERIFIED);
+      if (!role) {
+        return interaction.reply({ content: 'Verification role not found. Let a staff member know.', ephemeral: true });
+      }
+
+      if (interaction.member.roles.cache.has(role.id)) {
+        return interaction.reply({ content: 'You\'re already verified.', ephemeral: true });
+      }
+
+      await interaction.member.roles.add(role);
+      await interaction.reply({
+        content: `You're verified now. Welcome to the full QANAT experience. Head to <#${config.CHANNELS.GENERAL}> and say hi.`,
+        ephemeral: true,
+      });
+
+      // Log it
+      logModAction(interaction.guild, interaction.user.id, 'verification',
+        `${interaction.user.tag} verified themselves`);
+
+    } catch (err) {
+      console.error('Verification error:', err);
+      await interaction.reply({ content: 'Something went wrong. Tag a staff member for help.', ephemeral: true });
+    }
+    return;
+  }
+
   if (!interaction.isChatInputCommand()) return;
   try {
     switch (interaction.commandName) {
