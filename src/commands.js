@@ -159,6 +159,16 @@ const commands = [
         .setDescription('Footer text (optional)')
         .setRequired(false)
     ),
+  // ── /vcsummary — Get a summary of the current VC session
+  new SlashCommandBuilder()
+    .setName('vcsummary')
+    .setDescription('Get a summary of the current voice channel session'),
+
+  // ── /vcrecord — Toggle VC recording (admin only)
+  new SlashCommandBuilder()
+    .setName('vcrecord')
+    .setDescription('Toggle voice channel recording on/off (admin only)'),
+
   // ── /posttweet — Post a tweet for engagement tracking (admin only)
   new SlashCommandBuilder()
     .setName('posttweet')
