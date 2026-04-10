@@ -71,21 +71,23 @@ async function handleTweetLink(message) {
 
     // Create the engagement tracking post
     const trackingMsg = await message.channel.send({
-      content: `**New post from @${tweetUser} just dropped!** @everyone\n\nEngage on X, then react below to claim your points.\n\n` +
+      content: `**New post from @${tweetUser} just dropped!** @everyone\n\nGo engage on X, then come back and react below to claim your points.\n\n` +
         (tweetText ? `> ${tweetText.split('\n').join('\n> ')}\n\n` : '') +
-        `**How to earn:**\n` +
-        `${config.EMOJIS?.LIKE || '❤️'} Like = **1 point**\n` +
-        `${config.EMOJIS?.COMMENT || '💬'} Comment = **2 points**\n` +
-        `${config.EMOJIS?.RETWEET || '🔁'} Retweet = **3 points**\n\n` +
-        `Link your X with \`/linkx\` and follow @QANAT_IO first.\n\n` +
+        `**Claim your points:**\n` +
+        `👍 I liked it = **1 point**\n` +
+        `💬 I commented = **2 points**\n` +
+        `🔄 I retweeted/quoted = **3 points**\n` +
+        `⭐ I did all three = **6 points**\n\n` +
+        `You must follow @QANAT_IO and link your X with \`/linkx\` first.\n\n` +
         `${tweetUrl}`,
       allowedMentions: { parse: ['everyone'] },
     });
 
-    // Add reaction emojis
-    await trackingMsg.react('❤️');
+    // Add claim emojis
+    await trackingMsg.react('👍');
     await trackingMsg.react('💬');
-    await trackingMsg.react('🔁');
+    await trackingMsg.react('🔄');
+    await trackingMsg.react('⭐');
 
     // Store in DB
     q.addTweet.run(tweetId, tweetUrl, tweetText || 'No text available', trackingMsg.id);
@@ -147,20 +149,22 @@ async function pollXAccount(client) {
     const shortText = tweet.text.length > 300 ? tweet.text.substring(0, 297) + '...' : tweet.text;
 
     const msg = await taskChannel.send({
-      content: `**New post from @${config.X_ACCOUNT} just dropped!** @everyone\n\nEngage on X, then react below to claim your points.\n\n` +
+      content: `**New post from @${config.X_ACCOUNT} just dropped!** @everyone\n\nGo engage on X, then come back and react below to claim your points.\n\n` +
         `> ${shortText.split('\n').join('\n> ')}\n\n` +
-        `**How to earn:**\n` +
-        `❤️ Like = **1 point**\n` +
-        `💬 Comment = **2 points**\n` +
-        `🔁 Retweet = **3 points**\n\n` +
-        `Link your X with \`/linkx\` and follow @QANAT_IO first.\n\n` +
+        `**Claim your points:**\n` +
+        `👍 I liked it = **1 point**\n` +
+        `💬 I commented = **2 points**\n` +
+        `🔄 I retweeted/quoted = **3 points**\n` +
+        `⭐ I did all three = **6 points**\n\n` +
+        `You must follow @QANAT_IO and link your X with \`/linkx\` first.\n\n` +
         `${tweetUrl}`,
       allowedMentions: { parse: ['everyone'] },
     });
 
-    await msg.react('❤️');
+    await msg.react('👍');
     await msg.react('💬');
-    await msg.react('🔁');
+    await msg.react('🔄');
+    await msg.react('⭐');
 
     q.addTweet.run(tweet.id, tweetUrl, tweet.text, msg.id);
     console.log(`[X Monitor] Auto-posted tweet ${tweet.id}`);
