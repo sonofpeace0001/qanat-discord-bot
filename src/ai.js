@@ -311,22 +311,21 @@ function shouldRespond(message, channelId) {
   if (lower.length < 3) return false;
   if (/^[\u{1F000}-\u{1FFFF}\s]+$/u.test(lower)) return false;
 
-  // High-engagement channels
+  // Channel tiers
   const highEngagement = [config.CHANNELS.GENERAL, config.CHANNELS.CONTRIBUTOR_CHAT];
-  const medEngagement = [config.CHANNELS.FAQ, config.CHANNELS.INTRODUCTION, config.CHANNELS.ENGAGE_ARENA];
 
-  // Response probabilities by context
-  if (lower.includes('?')) return Math.random() < 0.75;
-  if (/^(hey|hi|hello|yo|sup|what'?s? ?up)\b/i.test(lower)) return Math.random() < 0.6;
-  if (/\b(qanat|web ?x|sovereignty|decentralized|whitepaper)\b/i.test(lower)) return Math.random() < 0.7;
-  if (/\b(lfg|let'?s go|bullish|hyped|we'?re? early|fire)\b/i.test(lower)) return Math.random() < 0.5;
-  if (/\b(i think|i believe|honestly|personally|what do you think)\b/i.test(lower)) return Math.random() < 0.5;
-  if (/\b(gm|good morning|morning everyone)\b/i.test(lower) && channelId !== config.CHANNELS.GM_GN) return Math.random() < 0.4;
+  // Context boosts (stack with channel rate)
+  if (lower.includes('?')) return Math.random() < 0.85;
+  if (/^(hey|hi|hello|yo|sup|what'?s? ?up)\b/i.test(lower)) return Math.random() < 0.7;
+  if (/\b(qanat|web ?x|sovereignty|decentralized|whitepaper)\b/i.test(lower)) return Math.random() < 0.8;
+  if (/\b(lfg|let'?s go|bullish|hyped|we'?re? early|fire)\b/i.test(lower)) return Math.random() < 0.6;
+  if (/\b(i think|i believe|honestly|personally|what do you think)\b/i.test(lower)) return Math.random() < 0.6;
+  if (/\b(gm|good morning|morning everyone)\b/i.test(lower) && channelId !== config.CHANNELS.GM_GN) return Math.random() < 0.5;
+  if (/\b(anyone|somebody|who here|thoughts on|opinions on)\b/i.test(lower)) return Math.random() < 0.7;
 
-  // Channel-based rates
-  if (highEngagement.includes(channelId)) return Math.random() < 0.25;
-  if (medEngagement.includes(channelId)) return Math.random() < 0.2;
-  return Math.random() < 0.12;
+  // Channel base rates
+  if (highEngagement.includes(channelId)) return Math.random() < 0.35;
+  return Math.random() < 0.20;
 }
 
 function recordResponse(channelId, userId) {
@@ -419,6 +418,49 @@ Only flag clear violations. Normal conversation, slang, mild language, and casua
   return null;
 }
 
+/**
+ * Generate a conversation starter for general chat.
+ * Topics: crypto, web3, tech, daily life, internet culture, building, privacy.
+ */
+async function generateConvoStarter() {
+  const providers = getAvailableProviders();
+  if (providers.length === 0) return null;
+
+  const topics = [
+    "a hot take or interesting thought about crypto, web3, or decentralization",
+    "something interesting happening in tech or AI right now",
+    "a casual question to the community about their day, what they're working on, or what's on their mind",
+    "an opinion on data privacy, digital ownership, or internet culture",
+    "a fun hypothetical question about the future of technology",
+    "a thought about building in public, side projects, or the creator economy",
+    "something relatable about daily life, productivity, or learning new skills",
+    "a take on social media, content creation, or online communities",
+  ];
+
+  const topic = topics[Math.floor(Math.random() * topics.length)];
+
+  const messages = [{
+    role: 'user',
+    content: `Write a single casual message for a Discord general chat as if you're a community manager just dropping a thought or starting a conversation. Topic: ${topic}. Keep it to 1-2 sentences. Sound natural, like a real person just typing something. No emdash. No hashtags. No "hey everyone" or "just thinking". Jump straight into the thought. Don't use quotation marks around it.`,
+  }];
+
+  for (const provider of providers) {
+    try {
+      const result = await providerFns[provider](messages, 'You are QANAT, a community manager. Write casual messages like a real person. Never use emdash. Short and natural.');
+      if (result) {
+        let clean = result.trim().replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',');
+        clean = clean.replace(/^["']|["']$/g, ''); // strip wrapping quotes
+        if (clean.length > 400) clean = clean.substring(0, 397) + '...';
+        return clean;
+      }
+    } catch (err) {
+      if (err.message === 'RATE_LIMITED') { markRateLimited(provider); continue; }
+      continue;
+    }
+  }
+  return null;
+}
+
 function isAIEnabled() {
   return !!(GROQ_KEY || GEMINI_KEY || OPENROUTER_KEY);
 }
@@ -440,6 +482,7 @@ module.exports = {
   recordResponse,
   summarizeText,
   checkModeration,
+  generateConvoStarter,
   isAIEnabled,
   getProviderStats,
 };
