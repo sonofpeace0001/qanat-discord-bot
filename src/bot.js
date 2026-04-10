@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
 //
-//  QANAT — Community Manager & Moderator Bot
+//  QANAT -- Community Manager & Moderator Bot
 //  Digital Sovereignty by Design
 //
 // ═══════════════════════════════════════════════════════════════
@@ -58,6 +58,155 @@ function isOnCooldown(key, seconds = 30) {
   return false;
 }
 
+// Track recent messages per channel to avoid repeating ourselves
+const recentBotMessages = new Map();
+
+function isAdmin(member) {
+  if (!member) return false;
+  return member.roles?.cache?.has(config.ROLES.ADMIN) ||
+    member.permissions?.has(PermissionFlagsBits.Administrator);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONVERSATIONAL ENGINE
+// Context-aware responses that sound like a real person
+// ═══════════════════════════════════════════════════════════════
+
+function generateReply(message, lower) {
+  const name = message.member?.displayName || message.author.displayName || 'friend';
+  const isAdminUser = isAdmin(message.member);
+
+  // Greetings
+  if (/^(hey|hi|hello|yo|sup|what'?s? ?up|howdy|hola)\b/i.test(lower)) {
+    const greetings = [
+      `Hey ${name}, how's it going?`,
+      `Yo ${name}! What's good?`,
+      `Hey! Good to see you around, ${name}.`,
+      `What's up ${name}`,
+      `Hey ${name}! How are things?`,
+    ];
+    return pick(greetings);
+  }
+
+  // Someone saying thanks
+  if (/\b(thanks|thank you|thx|ty|appreciate)\b/i.test(lower)) {
+    const thanks = [
+      `Anytime, ${name}.`,
+      `No problem at all.`,
+      `Happy to help.`,
+      `Of course! That's what I'm here for.`,
+      `You're welcome, ${name}.`,
+    ];
+    return pick(thanks);
+  }
+
+  // How are you / how's it going
+  if (/\b(how are you|how'?s? it going|how you doing|how do you do)\b/i.test(lower)) {
+    return `Doing good, ${name}. Keeping things running around here. How about you?`;
+  }
+
+  // What can you do / who are you
+  if (/\b(what can you do|what do you do|who are you|are you a bot|you a bot)\b/i.test(lower)) {
+    return `I'm QANAT, the community bot here. I help keep things organized, answer questions about the project, ` +
+      `track engagement points, and just generally keep the vibe going. If you need something specific, try /help to see my commands.`;
+  }
+
+  // Questions about QANAT (try FAQ first)
+  const faqMatch = matchFAQ(message.content);
+  if (faqMatch && faqMatch.score >= 3) {
+    // Make FAQ answers conversational, not copy-paste
+    return faqMatch.answer;
+  }
+
+  // Talking about price/moon/lambo/pump
+  if (/\b(price|moon|lambo|pump|when moon|token price|listing)\b/i.test(lower)) {
+    const priceReplies = [
+      `Token details haven't been announced yet. When there's news on that, it'll come through the official channels. For now, the focus is on building.`,
+      `Nothing on that front yet. The team is heads down on the product. When there's something to share, you'll hear about it here first.`,
+      `That info will come when it comes. Right now the priority is shipping Web X. OS. Best way to stay in the loop is to keep an eye on announcements.`,
+    ];
+    return pick(priceReplies);
+  }
+
+  // When launch / when mainnet / roadmap
+  if (/\b(when launch|when mainnet|when release|roadmap|timeline|when beta)\b/i.test(lower)) {
+    return `Beta testing is planned for Q1 2026, mainnet for Q3 2026. Still early, which is a good place to be.`;
+  }
+
+  // Someone is confused or lost
+  if (/\b(i'?m confused|don'?t understand|lost|help me|i need help|can someone help)\b/i.test(lower)) {
+    return `No worries, ${name}. What exactly are you trying to figure out? I can help with most things about QANAT, ` +
+      `or point you to the right person if it's something specific.`;
+  }
+
+  // Someone is excited / hyped
+  if (/\b(let'?s go|lfg|bullish|hyped|excited|fire|amazing|love this)\b/i.test(lower)) {
+    const hype = [
+      `The energy is real, ${name}.`,
+      `Love the energy.`,
+      `That's the spirit.`,
+      `${name} gets it.`,
+      `This is the kind of energy we need.`,
+    ];
+    return pick(hype);
+  }
+
+  // Someone mentions building/contributing
+  if (/\b(building|contributing|working on|coding|developing|creating content)\b/i.test(lower)) {
+    const build = [
+      `That's what it's about, ${name}. What are you working on?`,
+      `Respect. The builders are the ones who make this thing real.`,
+      `Good to hear. Drop some details, would love to know more about what you're building.`,
+    ];
+    return pick(build);
+  }
+
+  // Someone asking about roles
+  if (/\b(how.*(get|earn|unlock).*(role|roles)|what roles|role info)\b/i.test(lower)) {
+    return `Good question. The roles channel has a full breakdown of what's available and how to get them. Take a look when you get a chance.`;
+  }
+
+  // Compliments about the community or project
+  if (/\b(great community|love this community|this server is|nice server|cool project)\b/i.test(lower)) {
+    return `Appreciate that, ${name}. It's the people here that make it what it is. Glad you're part of it.`;
+  }
+
+  // Someone saying bye or leaving
+  if (/\b(bye|goodbye|see ya|gotta go|heading out|peace out|later)\b/i.test(lower)) {
+    return `Later, ${name}. Catch you around.`;
+  }
+
+  // Engagement/points questions
+  if (/\b(how.*(earn|get).*(points|rewards)|what are points|point system|engagement)\b/i.test(lower)) {
+    return `The point system is pretty straightforward. Link your X account with /linkx, follow @QANAT_IO, ` +
+      `then when new posts drop, engage on X (like, comment, retweet) and react on the notification here. ` +
+      `Like is 1 point, comment is 2, retweet is 3. Use /points to check where you're at.`;
+  }
+
+  // Invite questions
+  if (/\b(how.*(invite|invites)|invite link|bring friends)\b/i.test(lower)) {
+    return `You can create an invite link from Discord directly and share it. When someone joins through your link, ` +
+      `it gets tracked automatically. Use /invites to see your count or /invitesleaderboard for the rankings.`;
+  }
+
+  // Generic question we can't match
+  if (lower.includes('?')) {
+    const unknownQ = [
+      `Hmm, I'm not sure about that one, ${name}. Can you give me a bit more context?`,
+      `That's a good question. I don't have a clear answer on that, but the team might. Want me to flag it?`,
+      `Not sure I can answer that properly. What exactly are you looking for? I'll try to help.`,
+    ];
+    return pick(unknownQ);
+  }
+
+  // If none of the above matched, don't force a reply
+  return null;
+}
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 // ═══════════════════════════════════════════════════════════════
 // READY
 // ═══════════════════════════════════════════════════════════════
@@ -88,7 +237,7 @@ client.once('ready', async () => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// MEMBER JOIN — Welcome & Invite Tracking
+// MEMBER JOIN -- Welcome & Invite Tracking
 // ═══════════════════════════════════════════════════════════════
 
 client.on('guildMemberAdd', async (member) => {
@@ -96,20 +245,26 @@ client.on('guildMemberAdd', async (member) => {
 
   q.upsertMember.run(member.id, member.user.username);
 
-  // Welcome — plain text, human tone
+  // Welcome -- warm, step-by-step, not overwhelming
   const welcomeChannel = member.guild.channels.cache.get(config.CHANNELS.WELCOME);
   if (welcomeChannel) {
-    await welcomeChannel.send(
-      `Hey <@${member.id}>, welcome to QANAT. Glad you found us.\n\n` +
-      `We're a community building toward real digital sovereignty — a future where you actually own your data, not big tech. ` +
-      `Our main project is Web X. OS, a decentralized operating system that puts you in control.\n\n` +
-      `Here's what to do first:\n` +
-      `- Introduce yourself in <#${config.CHANNELS.INTRODUCTION}> — tell us who you are and what brought you here\n` +
-      `- Read through <#${config.CHANNELS.RULES}> so you know how things work\n` +
-      `- Get verified in <#${config.CHANNELS.VERIFY}> to unlock full access\n` +
-      `- Check <#${config.CHANNELS.ROLES}> for roles you might want\n\n` +
-      `If you need anything, just ask in <#${config.CHANNELS.SUPPORT}> or tag a staff member. We're friendly around here.`
-    );
+    const name = member.user.displayName;
+    const welcomes = [
+      `Hey <@${member.id}>, welcome to QANAT! Glad you're here.\n\n` +
+      `First thing, go say hi in <#${config.CHANNELS.INTRODUCTION}> so people know who you are. ` +
+      `After that, take a quick look at <#${config.CHANNELS.RULES}> and then verify yourself in <#${config.CHANNELS.VERIFY}> to get full access. ` +
+      `No rush though, settle in at your own pace.`,
+
+      `<@${member.id}> just joined, welcome! Good to have you.\n\n` +
+      `Quick start: drop an intro about yourself in <#${config.CHANNELS.INTRODUCTION}> and check out <#${config.CHANNELS.RULES}>. ` +
+      `Once you're verified in <#${config.CHANNELS.VERIFY}>, you'll have full access to everything. See you around.`,
+
+      `Welcome in, <@${member.id}>! You picked a good time to join.\n\n` +
+      `Start by introducing yourself in <#${config.CHANNELS.INTRODUCTION}>, then hop over to <#${config.CHANNELS.VERIFY}> to get your verified role. ` +
+      `If you want to know more about what QANAT is building, just ask. We're friendly here.`,
+    ];
+
+    await welcomeChannel.send(pick(welcomes));
   }
 
   // Invite tracking
@@ -133,8 +288,8 @@ client.on('guildMemberAdd', async (member) => {
       const inviteChannel = member.guild.channels.cache.get(config.CHANNELS.INVITES);
       if (inviteChannel) {
         await inviteChannel.send(
-          `**${member.user.displayName}** has been invited by <@${inviterId}> — ` +
-          `that's **${count}** invite${count !== 1 ? 's' : ''} now.`
+          `**${member.user.displayName}** just joined through <@${inviterId}>'s invite. ` +
+          `That's ${count} total now.`
         );
       }
     }
@@ -162,23 +317,28 @@ client.on('messageCreate', async (message) => {
 
   q.upsertMember.run(message.author.id, message.author.username);
 
+  // Respect admin -- never correct, moderate, or lecture admins
+  const memberIsAdmin = isAdmin(message.member);
+
   // ── GM/GN Channel ──────────────────────────────────────
   if (channelId === config.CHANNELS.GM_GN) {
-    await handleGMGN(message, lower);
+    await handleGMGN(message, lower, memberIsAdmin);
     return;
   }
 
-  // ── Moderation — phishing detection (runs everywhere) ──
-  const wasPhishing = await handlePhishingCheck(message, lower);
-  if (wasPhishing) return;
-
-  // ── General Chat ───────────────────────────────────────
-  if (channelId === config.CHANNELS.GENERAL) {
-    await handleGeneralChat(message, lower);
+  // ── Moderation -- phishing detection (skip admins) ─────
+  if (!memberIsAdmin) {
+    const wasPhishing = await handlePhishingCheck(message, lower);
+    if (wasPhishing) return;
   }
 
-  // ── FAQ auto-detect (FAQ, General, Introduction only) ──
-  const faqChannels = [config.CHANNELS.FAQ, config.CHANNELS.GENERAL, config.CHANNELS.INTRODUCTION];
+  // ── General Chat -- conversational engagement ──────────
+  if (channelId === config.CHANNELS.GENERAL) {
+    await handleGeneralChat(message, lower, memberIsAdmin);
+  }
+
+  // ── FAQ auto-detect (FAQ, Introduction channels) ───────
+  const faqChannels = [config.CHANNELS.FAQ, config.CHANNELS.INTRODUCTION];
   if (faqChannels.includes(channelId)) {
     if (lower.includes('?') || /^(what|how|where|when|why|can i|is qanat|does qanat|will there)\b/.test(lower)) {
       await handleFAQDetection(message, lower);
@@ -198,13 +358,15 @@ client.on('messageCreate', async (message) => {
     }
   }
 
-  // ── Self-promo detection (soft warning, no deletion) ───
-  await handleSelfPromoCheck(message, lower);
+  // ── Self-promo detection (warning only, skip admins) ───
+  if (!memberIsAdmin) {
+    await handleSelfPromoCheck(message, lower);
+  }
 });
 
 // ── GM/GN Handler ────────────────────────────────────────────
 
-async function handleGMGN(message, lower) {
+async function handleGMGN(message, lower, memberIsAdmin) {
   const isGM = /\bgm\b|good\s*morning/i.test(lower);
   const isGN = /\bgn\b|good\s*night/i.test(lower);
 
@@ -213,35 +375,54 @@ async function handleGMGN(message, lower) {
     q.upsertStreak.run(message.author.id, 'gm');
     const streak = q.getStreak.get(message.author.id, 'gm');
     if (streak && streak.streak_count > 0 && streak.streak_count % 7 === 0) {
-      await message.reply(`${streak.streak_count}-day GM streak. Respect.`);
+      await message.reply(`${streak.streak_count} days straight. Consistent.`);
     }
   } else if (isGN) {
     await message.react('🌙');
     q.upsertStreak.run(message.author.id, 'gn');
-  } else {
+  } else if (!memberIsAdmin) {
+    // Only correct non-admins, and keep it casual
     await message.reply(
-      `This channel is just for GM and GN — head over to <#${config.CHANNELS.GENERAL}> for everything else.`
+      `This one's just for GM and GN. General chat is over in <#${config.CHANNELS.GENERAL}>.`
     );
   }
 }
 
 // ── General Chat Handler ─────────────────────────────────────
+// The bot should engage naturally, not just when mentioned
 
-async function handleGeneralChat(message, lower) {
-  if (!message.mentions.has(client.user)) return;
+async function handleGeneralChat(message, lower, memberIsAdmin) {
+  const mentionsBot = message.mentions.has(client.user);
 
-  const faqMatch = matchFAQ(message.content);
-  if (faqMatch && faqMatch.score >= 3) {
-    await message.reply(
-      `**${faqMatch.question}**\n\n${faqMatch.answer}`
-    );
+  // Always respond when directly mentioned
+  if (mentionsBot) {
+    const reply = generateReply(message, lower);
+    if (reply) {
+      await message.reply(reply);
+    } else {
+      const name = message.member?.displayName || message.author.displayName;
+      await message.reply(`What's on your mind, ${name}?`);
+    }
     return;
   }
 
-  await message.reply(
-    `What's up? If you've got a question about QANAT, just ask and I'll do my best. ` +
-    `For support issues, head to <#${config.CHANNELS.SUPPORT}>.`
-  );
+  // Respond to direct questions in general (with cooldown to avoid spam)
+  if (lower.includes('?') && !isOnCooldown(`gen-q-${message.author.id}`, 120)) {
+    const reply = generateReply(message, lower);
+    if (reply) {
+      await message.reply(reply);
+      return;
+    }
+  }
+
+  // Occasionally engage with conversation (not every message)
+  // Only when someone is clearly talking about something we can add to
+  if (!isOnCooldown('gen-engage', 300)) {
+    // React to hype/excitement naturally
+    if (/\b(lfg|let'?s go|bullish|we'?re? early)\b/i.test(lower)) {
+      await message.react('🔥');
+    }
+  }
 }
 
 // ── FAQ Detection ────────────────────────────────────────────
@@ -251,28 +432,23 @@ async function handleFAQDetection(message, lower) {
 
   const faqMatch = matchFAQ(message.content);
   if (faqMatch && faqMatch.score >= 4) {
-    await message.reply(
-      `**${faqMatch.question}**\n\n${faqMatch.answer}`
-    );
+    // Conversational, not robotic copy-paste
+    const name = message.member?.displayName || message.author.displayName;
+    await message.reply(faqMatch.answer);
   }
 }
 
 // ── Phishing Detection ──────────────────────────────────────
 
 async function handlePhishingCheck(message, lower) {
-  // Don't check staff messages
-  if (message.member?.permissions.has(PermissionFlagsBits.ManageMessages)) return false;
-
-  // Check if message has URLs
   const urlRegex = /https?:\/\/[^\s<]+/gi;
   const urls = message.content.match(urlRegex);
   if (!urls || urls.length === 0) return false;
 
-  // Check each URL
   for (const url of urls) {
     const urlLower = url.toLowerCase();
 
-    // Skip safe domains
+    // Skip safe domains (X, GIFs, YouTube, etc.)
     const isSafe = config.SAFE_DOMAINS.some(domain => {
       try {
         const hostname = new URL(urlLower).hostname;
@@ -283,15 +459,15 @@ async function handlePhishingCheck(message, lower) {
     });
     if (isSafe) continue;
 
-    // Skip official QANAT Discord invite
+    // Skip official QANAT invite
     if (urlLower.includes(`discord.gg/${config.OFFICIAL_INVITE}`)) continue;
+    if (urlLower.includes(`discord.com/invite/${config.OFFICIAL_INVITE}`)) continue;
 
     // Check phishing patterns
     const isPhishing = config.PHISHING_PATTERNS.some(pattern => pattern.test(urlLower));
 
-    // Check unauthorized Discord invites (other servers)
-    const isUnauthorizedInvite = /discord\.gg\/(?!sfsgExKuUw)/i.test(urlLower) ||
-      /discord\.com\/invite\/(?!sfsgExKuUw)/i.test(urlLower);
+    // Unauthorized Discord invites to other servers
+    const isUnauthorizedInvite = /discord\.gg\/|discord\.com\/invite\//i.test(urlLower);
 
     if (isPhishing || isUnauthorizedInvite) {
       try {
@@ -300,7 +476,6 @@ async function handlePhishingCheck(message, lower) {
         const offenses = q.getRecentOffenses.get(message.author.id);
         const count = offenses?.count || 0;
 
-        // Determine timeout duration
         let timeoutMs, timeoutLabel;
         if (count >= 2) {
           timeoutMs = config.TIMEOUTS.THIRD;
@@ -313,17 +488,18 @@ async function handlePhishingCheck(message, lower) {
           timeoutLabel = '5 minutes';
         }
 
-        // Apply timeout
         try {
-          await message.member.timeout(timeoutMs, 'Phishing/spam link detected');
+          await message.member.timeout(timeoutMs, 'Suspicious/phishing link detected');
         } catch (e) {
           console.error('Timeout failed:', e.message);
         }
 
+        const warning = isPhishing
+          ? `Removed a suspicious link from <@${message.author.id}>. Timed out for ${timeoutLabel}.`
+          : `Removed an unauthorized server invite from <@${message.author.id}>. Timed out for ${timeoutLabel}.`;
+
         await message.channel.send(
-          `I removed a suspicious link from <@${message.author.id}> and timed them out for ${timeoutLabel}. ` +
-          `If that was a mistake, a staff member can review it.` +
-          (count >= 2 ? ` <@&${config.ROLES.ADMIN}> — this is their ${count + 1}rd offense.` : '')
+          warning + (count >= 2 ? ` <@&${config.ROLES.ADMIN}> heads up, repeat offense.` : '')
         );
 
         logModAction(message.guild, message.author.id,
@@ -342,19 +518,16 @@ async function handlePhishingCheck(message, lower) {
   return false;
 }
 
-// ── Self-Promo Check (warning only, no deletion) ─────────────
+// ── Self-Promo Check ─────────────────────────────────────────
 
 async function handleSelfPromoCheck(message, lower) {
-  if (message.member?.permissions.has(PermissionFlagsBits.ManageMessages)) return;
-
   const promoPatterns = /\b(buy now|check out my|subscribe to my|follow my|join my server|dm me for deals)\b/i;
   if (!promoPatterns.test(lower)) return;
-
   if (isOnCooldown(`promo-${message.author.id}`, 300)) return;
 
+  const name = message.member?.displayName || message.author.displayName;
   await message.reply(
-    `Just a heads up — self-promotion needs staff permission first. ` +
-    `Check <#${config.CHANNELS.RULES}> for the details on that.`
+    `Hey ${name}, just so you know, self-promotion needs staff approval first. Nothing personal, just how we keep things fair for everyone.`
   );
 
   logModAction(message.guild, message.author.id, 'warning',
@@ -362,7 +535,7 @@ async function handleSelfPromoCheck(message, lower) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// REACTION ADD — X Engagement Claims
+// REACTION ADD -- X Engagement Claims
 // ═══════════════════════════════════════════════════════════════
 
 client.on('messageReactionAdd', async (reaction, user) => {
@@ -382,8 +555,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
   if (!member || !member.x_verified) {
     try {
       await user.send(
-        `You need to link your X account first — use /linkx in the server with your handle. ` +
-        `Make sure you're following @QANAT_IO too.`
+        `You need to link your X account first. Use /linkx in the server with your handle, ` +
+        `and make sure you're following @QANAT_IO.`
       );
     } catch {}
     return;
@@ -405,7 +578,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
     const newTotal = q.getPoints.get(user.id);
     try {
       await user.send(
-        `+${points} point${points > 1 ? 's' : ''} for the ${actionType}. Total: ${newTotal?.total_points || points} points.`
+        `+${points} for the ${actionType}. You're at ${newTotal?.total_points || points} points total.`
       );
     } catch {}
   }
@@ -419,7 +592,7 @@ client.on('inviteCreate', (invite) => inviteCache.set(invite.code, invite.uses))
 client.on('inviteDelete', (invite) => inviteCache.delete(invite.code));
 
 // ═══════════════════════════════════════════════════════════════
-// VOICE STATE — track joins
+// VOICE STATE
 // ═══════════════════════════════════════════════════════════════
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
@@ -427,7 +600,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// INTERACTION CREATE — Slash Commands
+// INTERACTION CREATE -- Slash Commands
 // ═══════════════════════════════════════════════════════════════
 
 client.on('interactionCreate', async (interaction) => {
@@ -474,7 +647,7 @@ async function cmdPoints(interaction) {
     .addFields(
       { name: 'Member', value: `<@${targetUser.id}>`, inline: true },
       { name: 'Total Points', value: `**${member?.total_points || 0}**`, inline: true },
-      { name: 'X Account', value: member?.x_verified ? `@${member.x_handle}` : 'Not linked — use /linkx', inline: true },
+      { name: 'X Account', value: member?.x_verified ? `@${member.x_handle}` : 'Not linked', inline: true },
     );
 
   await interaction.reply({ embeds: [embed] });
@@ -485,19 +658,19 @@ async function cmdLeaderboard(interaction) {
   const rows = q.getLeaderboard.all(limit);
 
   if (rows.length === 0) {
-    return interaction.reply({ content: 'No points on the board yet. Be the first — engage with @QANAT_IO posts in the task channel.', ephemeral: true });
+    return interaction.reply({ content: 'No points on the board yet. Be the first.', ephemeral: true });
   }
 
   const lines = rows.map((r, i) => {
     const rank = i === 0 ? '1st' : i === 1 ? '2nd' : i === 2 ? '3rd' : `${i + 1}th`;
-    return `**${rank}** — <@${r.discord_id}> — ${r.total_points} pts`;
+    return `**${rank}** <@${r.discord_id}> ${r.total_points} pts`;
   });
 
   const embed = new EmbedBuilder()
     .setColor(0xFFD700)
     .setTitle('Engagement Leaderboard')
     .setDescription(lines.join('\n'))
-    .setFooter({ text: `Top ${rows.length} members` });
+    .setFooter({ text: `Top ${rows.length}` });
 
   await interaction.reply({ embeds: [embed] });
 }
@@ -522,14 +695,14 @@ async function cmdInvitesLeaderboard(interaction) {
 
   const lines = rows.map((r, i) => {
     const rank = i === 0 ? '1st' : i === 1 ? '2nd' : i === 2 ? '3rd' : `${i + 1}th`;
-    return `**${rank}** — <@${r.discord_id}> — ${r.invite_count} invites`;
+    return `**${rank}** <@${r.discord_id}> ${r.invite_count} invites`;
   });
 
   const embed = new EmbedBuilder()
     .setColor(0x57F287)
     .setTitle('Invite Leaderboard')
     .setDescription(lines.join('\n'))
-    .setFooter({ text: `Top ${rows.length} inviters` });
+    .setFooter({ text: `Top ${rows.length}` });
 
   await interaction.reply({ embeds: [embed] });
 }
@@ -543,9 +716,9 @@ async function cmdLinkX(interaction) {
 
   await interaction.reply({
     content:
-      `Your X account **@${handle}** is now linked.\n\n` +
-      `Make sure you follow [@QANAT_IO](https://x.com/QANAT_IO) on X, then react to tweet notifications ` +
-      `in <#${config.CHANNELS.X_TASKS}> after you engage. Points: like = 1, comment = 2, retweet = 3.`,
+      `Linked **@${handle}** to your account. Make sure you follow @QANAT_IO on X. ` +
+      `When new posts drop, engage on X then react on the notification here to claim your points. ` +
+      `Like is 1 point, comment is 2, retweet is 3.`,
     ephemeral: true,
   });
 }
@@ -557,7 +730,7 @@ async function cmdFAQ(interaction) {
     const faqs = getAllFAQ();
     const embed = new EmbedBuilder()
       .setColor(config.BOT_COLOR)
-      .setTitle('QANAT — Frequently Asked Questions')
+      .setTitle('QANAT FAQ')
       .setDescription(faqs.map(f => `**${f.index}.** ${f.question}`).join('\n'))
       .setFooter({ text: 'Use /faq followed by your question for a specific answer' });
 
@@ -567,12 +740,11 @@ async function cmdFAQ(interaction) {
   const faqMatch = matchFAQ(question);
 
   if (faqMatch) {
-    await interaction.reply(`**${faqMatch.question}**\n\n${faqMatch.answer}`);
+    await interaction.reply(faqMatch.answer);
   } else {
-    await interaction.reply({
-      content: `I don't have a specific answer for that one. Try asking in <#${config.CHANNELS.SUPPORT}> — ` +
-        `the team can help you out directly.`,
-    });
+    await interaction.reply(
+      `I don't have a specific answer for that one. Feel free to ask here though and someone from the team will get back to you.`
+    );
   }
 }
 
@@ -581,7 +753,7 @@ async function cmdJoinVC(interaction) {
 
   if (!memberVoice?.channel) {
     return interaction.reply({
-      content: 'You need to be in a voice channel first so I know where to join.',
+      content: 'Join a voice channel first so I know where to go.',
       ephemeral: true,
     });
   }
@@ -591,26 +763,24 @@ async function cmdJoinVC(interaction) {
       channelId: memberVoice.channel.id,
       guildId: interaction.guildId,
       adapterCreator: interaction.guild.voiceAdapterCreator,
-      selfDeaf: false,  // Not deafened — listening
-      selfMute: true,   // Muted — not speaking
+      selfDeaf: false,
+      selfMute: true,
     });
 
     await entersState(connection, VoiceConnectionStatus.Ready, 15_000);
 
-    // Subscribe to audio from all members so the bot "listens"
+    // Subscribe to audio streams so the bot actually listens
     connection.receiver.speaking.on('start', (userId) => {
-      // Audio reception is active — framework for future transcription
       const audioStream = connection.receiver.subscribe(userId, {
-        end: { behavior: 1, duration: 1000 }, // EndBehaviorType.AfterSilence
+        end: { behavior: 1, duration: 1000 },
       });
-      // For now, just consume the stream so the bot stays connected
       audioStream.on('data', () => {});
       audioStream.on('end', () => {});
     });
 
     await interaction.reply(
-      `Joined **${memberVoice.channel.name}**. I'm listening — if you want to ask me something, ` +
-      `just type in the text channel and mention me. Use /leavevc when you want me to go.`
+      `Joined **${memberVoice.channel.name}**. I'm listening. ` +
+      `If you want to ask me something, mention me in the text channel. /leavevc when you want me out.`
     );
 
     logModAction(interaction.guild, interaction.user.id, 'vc_join',
@@ -619,7 +789,7 @@ async function cmdJoinVC(interaction) {
   } catch (err) {
     console.error('VC join error:', err);
     await interaction.reply({
-      content: 'Couldn\'t join the channel. Make sure I have permission to connect.',
+      content: 'Could not join the channel. Check my permissions.',
       ephemeral: true,
     });
   }
@@ -633,47 +803,45 @@ async function cmdLeaveVC(interaction) {
   }
 
   connection.destroy();
-  await interaction.reply('Left the voice channel. Catch you later.');
+  await interaction.reply('Left the channel. Later.');
 }
 
 async function cmdHelp(interaction) {
   const embed = new EmbedBuilder()
     .setColor(config.BOT_COLOR)
-    .setTitle('QANAT Bot — Commands')
+    .setTitle('QANAT Bot')
     .addFields(
       {
         name: 'Engagement',
-        value: '`/points` — check your points\n`/leaderboard` — top point holders\n`/linkx` — connect your X account\n`/xcheck` — X engagement breakdown',
+        value: '`/points` check your points\n`/leaderboard` top holders\n`/linkx` connect X account\n`/xcheck` engagement breakdown',
         inline: false,
       },
       {
         name: 'Invites',
-        value: '`/invites` — your invite count\n`/invitesleaderboard` — top inviters',
+        value: '`/invites` your count\n`/invitesleaderboard` top inviters',
         inline: false,
       },
       {
         name: 'Info',
-        value: '`/faq` — browse FAQs\n`/myprofile` — your full profile\n`/help` — this message',
+        value: '`/faq` browse or search FAQs\n`/myprofile` your profile\n`/help` this',
         inline: false,
       },
       {
         name: 'Voice',
-        value: '`/joinvc` — I\'ll join your VC\n`/leavevc` — I\'ll leave',
+        value: '`/joinvc` join your VC\n`/leavevc` leave',
         inline: false,
       },
       {
         name: 'Staff',
-        value: '`/announce` — send an embed announcement\n`/modstats` — recent mod actions',
+        value: '`/announce` send an announcement\n`/modstats` mod log',
         inline: false,
       },
       {
         name: 'How Points Work',
         value:
-          '1. Link your X with `/linkx`\n' +
-          '2. Follow @QANAT_IO on X\n' +
-          `3. Watch for new posts in <#${config.CHANNELS.X_TASKS}>\n` +
-          '4. Engage on X, then react on the notification\n' +
-          '   Like = 1pt, Comment = 2pt, Retweet = 3pt',
+          'Link your X with /linkx, follow @QANAT_IO. ' +
+          'When posts drop, engage on X then react here. ' +
+          'Like = 1pt, Comment = 2pt, Retweet = 3pt.',
         inline: false,
       },
     );
@@ -687,7 +855,7 @@ async function cmdXCheck(interaction) {
 
   if (!member || !member.x_verified) {
     return interaction.reply({
-      content: `${targetUser.id === interaction.user.id ? 'You haven\'t' : 'They haven\'t'} linked an X account yet. Use /linkx to get started.`,
+      content: `${targetUser.id === interaction.user.id ? 'You haven\'t' : 'They haven\'t'} linked an X account yet. Use /linkx to start.`,
       ephemeral: true,
     });
   }
@@ -704,7 +872,7 @@ async function cmdXCheck(interaction) {
 
   const embed = new EmbedBuilder()
     .setColor(0x1DA1F2)
-    .setTitle(`X Engagement — @${member.x_handle}`)
+    .setTitle(`X Engagement for @${member.x_handle}`)
     .addFields(
       { name: 'Likes', value: `${likes.count} (${likes.total} pts)`, inline: true },
       { name: 'Comments', value: `${comments.count} (${comments.total} pts)`, inline: true },
@@ -735,7 +903,7 @@ async function cmdMyProfile(interaction) {
 }
 
 async function cmdModStats(interaction) {
-  if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+  if (!isAdmin(interaction.member)) {
     return interaction.reply({ content: 'Staff only.', ephemeral: true });
   }
 
@@ -743,26 +911,26 @@ async function cmdModStats(interaction) {
   const actions = q.getModActions.all(limit);
 
   if (actions.length === 0) {
-    return interaction.reply({ content: 'No moderation actions recorded yet.', ephemeral: true });
+    return interaction.reply({ content: 'No actions recorded yet.', ephemeral: true });
   }
 
   const lines = actions.map(a => {
     const time = `<t:${Math.floor(new Date(a.created_at).getTime() / 1000)}:R>`;
     const user = a.discord_id ? `<@${a.discord_id}>` : 'System';
-    return `${time} | **${a.action_type}** | ${user} — ${a.reason}`;
+    return `${time} **${a.action_type}** ${user}\n${a.reason}`;
   });
 
   const embed = new EmbedBuilder()
     .setColor(0xED4245)
     .setTitle('Moderation Log')
     .setDescription(lines.join('\n\n'))
-    .setFooter({ text: `Last ${actions.length} actions` });
+    .setFooter({ text: `Last ${actions.length}` });
 
   await interaction.reply({ embeds: [embed], ephemeral: true });
 }
 
 async function cmdAnnounce(interaction) {
-  if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+  if (!isAdmin(interaction.member)) {
     return interaction.reply({ content: 'Staff only.', ephemeral: true });
   }
 
@@ -783,7 +951,7 @@ async function cmdAnnounce(interaction) {
     .setTimestamp();
 
   if (imageUrl) embed.setImage(imageUrl);
-  embed.setFooter({ text: footerText || `— ${interaction.user.displayName}` });
+  embed.setFooter({ text: footerText || interaction.user.displayName });
 
   try {
     await targetChannel.send({
@@ -795,7 +963,7 @@ async function cmdAnnounce(interaction) {
     if (targetChannel.id === config.CHANNELS.ANNOUNCEMENTS) {
       const general = interaction.guild.channels.cache.get(config.CHANNELS.GENERAL);
       if (general) {
-        await general.send(`New announcement just dropped — check <#${config.CHANNELS.ANNOUNCEMENTS}>.`);
+        await general.send(`New announcement just went up, check it out.`);
       }
     }
 
@@ -805,7 +973,7 @@ async function cmdAnnounce(interaction) {
       `"${title}" posted to #${targetChannel.name}`);
   } catch (err) {
     console.error('Announce error:', err);
-    await interaction.reply({ content: 'Couldn\'t send to that channel. Check my permissions there.', ephemeral: true });
+    await interaction.reply({ content: 'Could not send to that channel. Check my permissions.', ephemeral: true });
   }
 }
 
@@ -823,7 +991,7 @@ async function logModAction(guild, discordId, actionType, reason, channelId = nu
       const user = discordId ? `<@${discordId}>` : 'System';
 
       await modChannel.send(
-        `**${actionType.replace(/_/g, ' ')}** — ${user}\n` +
+        `**${actionType.replace(/_/g, ' ')}** ${user}\n` +
         `${reason}\n` +
         `${timestamp}`
       );
@@ -852,20 +1020,11 @@ function startScheduledTasks() {
 
     await staffChannel.send({
       content:
-        `Morning team. <@&${config.ROLES.ADMIN}> Here's today's rundown (${day}):\n\n` +
-        `**Community**\n` +
-        `- Check <#${config.CHANNELS.SUPPORT}> for any open tickets\n` +
-        `- Review <#${config.CHANNELS.MOD_REPORT}> for overnight actions\n` +
-        `- Engage in <#${config.CHANNELS.GENERAL}> — keep things active\n` +
-        `- Look through new intros in <#${config.CHANNELS.INTRODUCTION}>\n\n` +
-        `**Growth**\n` +
-        `- Post on X @QANAT_IO and drop it in <#${config.CHANNELS.X_TASKS}>\n` +
-        `- Update <#${config.CHANNELS.WEEKLY_MISSION}> if there's a new mission\n` +
-        `- Check <#${config.CHANNELS.CONTENT_CREATION}> for new community content\n\n` +
-        `**Moderation**\n` +
-        `- Verify any pending members in <#${config.CHANNELS.VERIFY}>\n` +
-        `- Review any flagged messages\n\n` +
-        `Let's have a good one.`,
+        `Morning team. <@&${config.ROLES.ADMIN}> Quick rundown for ${day}:\n\n` +
+        `Community: check support tickets, review mod log, engage in general, check new intros\n` +
+        `Growth: post on @QANAT_IO, update weekly mission if needed, review community content\n` +
+        `Moderation: verify pending members, review any flagged messages\n\n` +
+        `Let's have a solid day.`,
       allowedMentions: { roles: [config.ROLES.ADMIN] },
     });
 
@@ -881,13 +1040,13 @@ function startScheduledTasks() {
     if (!channel) return;
 
     const messages = [
-      `Morning, <@&${config.ROLES.CONTRIBUTOR}>. Quick check-in — what's everyone working on today? Even small progress counts. Let's hear it.`,
-      `New day. <@&${config.ROLES.CONTRIBUTOR}>, QANAT doesn't build itself. What are you focused on? Drop it below so we can keep each other accountable.`,
-      `<@&${config.ROLES.CONTRIBUTOR}> — just a reminder that the work you're putting in matters. Every contribution moves us closer to real digital sovereignty. What's on your plate today?`,
-      `<@&${config.ROLES.CONTRIBUTOR}>, consistency is what separates those who talk about building from those who actually build. What's your focus today?`,
-      `Checking in, <@&${config.ROLES.CONTRIBUTOR}>. Whether you're writing code, creating content, or spreading the word — it all adds up. What's today's plan?`,
-      `<@&${config.ROLES.CONTRIBUTOR}> — another day, another chance to move the needle. Share what you're tackling and let's keep the energy going.`,
-      `GM <@&${config.ROLES.CONTRIBUTOR}>. The people who show up every day are the ones who shape the future. That's you. What are we building today?`,
+      `Morning <@&${config.ROLES.CONTRIBUTOR}>. What's everyone working on today? Drop it below.`,
+      `New day, <@&${config.ROLES.CONTRIBUTOR}>. Even small progress adds up. What's the focus?`,
+      `<@&${config.ROLES.CONTRIBUTOR}> check in. The builders are the ones who make this thing real. What are you tackling?`,
+      `<@&${config.ROLES.CONTRIBUTOR}>, consistency wins. What are you focused on today?`,
+      `Checking in <@&${config.ROLES.CONTRIBUTOR}>. Code, content, community, whatever it is, share what you're doing.`,
+      `<@&${config.ROLES.CONTRIBUTOR}> another day, another push forward. What's on the agenda?`,
+      `GM <@&${config.ROLES.CONTRIBUTOR}>. The ones who show up every day are the ones who shape what comes next. What are we building?`,
     ];
 
     const msg = messages[Math.floor(Math.random() * messages.length)];
@@ -908,14 +1067,14 @@ function startScheduledTasks() {
     if (!channel) return;
 
     const messages = [
-      `Something to think about — how many apps have access to your personal data right now? That's exactly what QANAT is solving with Web X. OS. A decentralized OS where you control everything. Worth looking into if you haven't yet: qanat.io`,
-      `The QANAT whitepaper breaks down exactly how we're approaching digital sovereignty. If you haven't read it, it's at qanat.io. Curious what you all think about the approach.`,
-      `Quick reminder — if you want to earn engagement points, link your X account with /linkx and start engaging with @QANAT_IO posts when they drop in <#${config.CHANNELS.X_TASKS}>.`,
-      `Beta testing is coming up and mainnet follows after that. If you're here now, you're early. Bring your friends in — the community is strongest when it grows organically.`,
-      `Anyone working on anything interesting lately? Doesn't have to be QANAT-related. Curious what people in this community are building.`,
-      `Just dropped a reminder — check <#${config.CHANNELS.OFFICIAL_LINKS}> for all the official QANAT resources. Whitepaper, socials, everything in one place.`,
-      `Digital sovereignty isn't just a concept — it's the direction the internet needs to go. QANAT is building the infrastructure to make it real. If you want to understand the vision deeper, the whitepaper is a solid starting point.`,
-      `Use /leaderboard to see where you stand. And if you've been engaging on X but haven't claimed your points, make sure to react to the posts in <#${config.CHANNELS.X_TASKS}>.`,
+      `Something worth thinking about: how many apps have access to your personal data right now? That's the problem QANAT is solving with Web X. OS. A decentralized OS where you control everything.`,
+      `The whitepaper breaks down exactly how QANAT approaches digital sovereignty. It's at qanat.io if you haven't checked it out.`,
+      `Quick reminder, if you want to earn engagement points, link your X with /linkx and engage with @QANAT_IO posts when they drop.`,
+      `Beta is coming, mainnet after that. If you're here now, you're ahead of most people. Bring your people in.`,
+      `Anyone building anything interesting lately? Doesn't have to be QANAT related. Curious what people in this community are up to.`,
+      `Digital sovereignty isn't just a concept. QANAT is building the infrastructure to make it real. The whitepaper is worth a read if you haven't gone through it.`,
+      `Use /leaderboard to see where you stand. And if you've been engaging on X but haven't claimed your points, react to the posts in the task channel.`,
+      `Every time you use an app without knowing what data they collect, you're giving something away for free. QANAT is building a world where that doesn't have to happen.`,
     ];
 
     const idx = Math.floor(Date.now() / (4 * 3600 * 1000)) % messages.length;
@@ -935,7 +1094,7 @@ function startScheduledTasks() {
     collector.on('collect', async () => {
       const general = guild.channels.cache.get(config.CHANNELS.GENERAL);
       if (general && !isOnCooldown('ann-notify', 300)) {
-        await general.send(`New announcement just dropped — check <#${config.CHANNELS.ANNOUNCEMENTS}>.`);
+        await general.send(`New announcement just went up, worth checking out.`);
       }
     });
   }, 5000);
@@ -944,11 +1103,7 @@ function startScheduledTasks() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// LOGIN
-// ═══════════════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════════
-// HEALTH CHECK — Railway needs a port to confirm the app is alive
+// HEALTH CHECK -- Railway port
 // ═══════════════════════════════════════════════════════════════
 
 const http = require('http');
