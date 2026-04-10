@@ -150,10 +150,16 @@ client.on('messageCreate', async (message) => {
     return;
   }
 
-  // ── Phishing check (skip admins) ───────────────────────
+  // ── Phishing/spam link check (skip admins) ──────────────
   if (!memberIsAdmin) {
     const wasPhishing = await handlePhishingCheck(message, lower);
     if (wasPhishing) return;
+  }
+
+  // ── AI-powered rule enforcement (skip admins) ──────────
+  if (!memberIsAdmin) {
+    const wasViolation = await handleRuleEnforcement(message, lower, authorName);
+    if (wasViolation) return;
   }
 
   // ── Meme & Content reactions ───────────────────────────
@@ -164,32 +170,27 @@ client.on('messageCreate', async (message) => {
     await message.react('😂');
   }
 
-  // ── Self-promo warning (skip admins) ───────────────────
-  if (!memberIsAdmin) await handleSelfPromoCheck(message, lower);
-
-  // ── AI Conversation (the core) ─────────────────────────
-  if (config.ACTIVE_CHAT_CHANNELS.includes(channelId) || message.mentions.has(client.user)) {
+  // ── AI Conversation (reads ALL channels except silent ones)
+  if (!config.SILENT_CHANNELS.includes(channelId)) {
     await handleConversation(message, channelId, lower, authorName);
   }
 });
 
-// ── AI Conversation Handler ──────────────────────────────────
+// ── AI Conversation Handler (reads ALL channels) ────────────
 
 async function handleConversation(message, channelId, lower, authorName) {
-  // Decide whether to respond
   const mentioned = message.mentions.has(client.user);
-  const shouldReply = mentioned || ai.shouldRespond(message, channelId);
 
+  // Always respond when mentioned, otherwise use probability
+  const shouldReply = mentioned || ai.shouldRespond(message, channelId);
   if (!shouldReply) return;
 
-  // Generate AI response
   const response = await ai.generateResponse(channelId, authorName, message.content);
 
   if (response) {
     ai.recordResponse(channelId, message.author.id);
     ai.addToBuffer(channelId, 'QANAT', response, true);
 
-    // Reply if mentioned, otherwise just send in channel for natural flow
     if (mentioned) {
       await message.reply(response);
     } else {
@@ -197,6 +198,143 @@ async function handleConversation(message, channelId, lower, authorName) {
     }
   }
 }
+
+// ── AI-Powered Rule Enforcement ──────────────────────────────
+
+async function handleRuleEnforcement(message, lower, authorName) {
+  // Quick pattern checks first (no AI needed for obvious stuff)
+
+  // Impersonation check (rule 12) - names with "staff" or "support"
+  const displayName = (message.member?.displayName || '').toLowerCase();
+  if (/\b(staff|support|admin|moderator|mod)\b/i.test(displayName) && !isAdmin(message.member)) {
+    await handleViolation(message, {
+      rule: 12,
+      severity: 'serious',
+      warning: `Your display name contains restricted words. Change it or you'll be removed. This is for everyone's safety.`,
+    });
+    return true;
+  }
+
+  // NSFW/obscene quick check (rule 5)
+  const nsfwPatterns = /\b(porn|hentai|nude|naked|xxx|onlyfans|sex ?tape)\b/i;
+  if (nsfwPatterns.test(lower)) {
+    await message.delete().catch(() => {});
+    await handleViolation(message, {
+      rule: 5,
+      severity: 'serious',
+      warning: `That kind of content isn't allowed here. Keep it clean.`,
+    }, true);
+    return true;
+  }
+
+  // Begging check (rule 10)
+  const beggingPatterns = /\b(send me|give me|donate|need money|send crypto|send sol|send eth|send btc|please send|i need \$|can someone send|help me with money)\b/i;
+  if (beggingPatterns.test(lower)) {
+    await handleViolation(message, {
+      rule: 10,
+      severity: 'moderate',
+      warning: `Asking for money or crypto isn't allowed here.`,
+    });
+    return true;
+  }
+
+  // Excessive mentions (rule 7)
+  const mentionCount = (message.content.match(/<@&?\d+>/g) || []).length;
+  if (mentionCount > 4) {
+    await message.delete().catch(() => {});
+    await handleViolation(message, {
+      rule: 7,
+      severity: 'moderate',
+      warning: `Easy on the tags. Only tag staff for actual emergencies.`,
+    }, true);
+    return true;
+  }
+
+  // For everything else, use AI moderation (throttled to save API calls)
+  // Only AI-check messages longer than 10 chars and not on cooldown
+  if (lower.length > 10 && !isOnCooldown(`mod-${message.author.id}`, 30)) {
+    const result = await ai.checkModeration(authorName, message.content);
+    if (result && result.violation) {
+      const shouldDelete = result.severity === 'serious';
+      if (shouldDelete) await message.delete().catch(() => {});
+      await handleViolation(message, result, shouldDelete);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// ── Handle Violation: warn publicly, auto-delete warning, log to mod channel ──
+
+async function handleViolation(message, result, messageDeleted = false) {
+  const { rule, severity, warning } = result;
+  const userId = message.author.id;
+  const channelName = message.channel?.name || 'unknown';
+
+  // Count recent offenses for escalation
+  const offenses = q.getRecentOffenses.get(userId);
+  const count = (offenses?.count || 0) + 1;
+
+  // Determine action based on severity + repeat offenses
+  let action = 'warning';
+  let timeoutMs = 0;
+  let timeoutLabel = '';
+
+  if (severity === 'serious' || count >= 3) {
+    timeoutMs = count >= 4 ? config.TIMEOUTS.THIRD : count >= 3 ? config.TIMEOUTS.SECOND : config.TIMEOUTS.FIRST;
+    timeoutLabel = count >= 4 ? '24 hours' : count >= 3 ? '1 hour' : '5 minutes';
+    action = 'timeout';
+  }
+
+  // Apply timeout if needed
+  if (timeoutMs > 0) {
+    try {
+      await message.member.timeout(timeoutMs, `Rule ${rule} violation (${severity})`);
+    } catch (e) {
+      console.error('Timeout failed:', e.message);
+    }
+  }
+
+  // Send public warning (then auto-delete after 60 seconds)
+  let warningMsg;
+  try {
+    const publicWarning = timeoutMs > 0
+      ? `<@${userId}> ${warning} Timed out for ${timeoutLabel}. (Rule ${rule})`
+      : `<@${userId}> ${warning} (Rule ${rule})`;
+
+    warningMsg = await message.channel.send(publicWarning);
+
+    // Auto-delete the warning after 60 seconds
+    setTimeout(async () => {
+      try { await warningMsg.delete(); } catch {}
+    }, 60_000);
+  } catch {}
+
+  // Log to mod report channel with full details
+  const guild = message.guild;
+  const modChannel = guild.channels.cache.get(config.CHANNELS.MOD_REPORT);
+  if (modChannel) {
+    const originalContent = messageDeleted ? message.content.substring(0, 500) : '[message not deleted]';
+    await modChannel.send(
+      `**Rule ${rule} Violation** (${severity}) <@&${config.ROLES.ADMIN}>\n` +
+      `**User:** <@${userId}> (${message.author.tag})\n` +
+      `**Channel:** #${channelName}\n` +
+      `**Action:** ${action}${timeoutLabel ? ` (${timeoutLabel})` : ''}\n` +
+      `**Offense #:** ${count} in last 30 days\n` +
+      `**Message:** ${originalContent}\n` +
+      `**Warning given:** ${warning}\n` +
+      `<t:${Math.floor(Date.now() / 1000)}:f>`
+    );
+  }
+
+  // Log to DB
+  logModAction(guild, userId, action,
+    `Rule ${rule} (${severity}) in #${channelName}: ${warning}${timeoutLabel ? ` Timeout: ${timeoutLabel}` : ''}`,
+    message.channel.id
+  );
+}
+
 
 // ── GM/GN Handler ────────────────────────────────────────────
 
@@ -262,15 +400,7 @@ async function handlePhishingCheck(message, lower) {
   return false;
 }
 
-// ── Self-Promo Check ─────────────────────────────────────────
-
-async function handleSelfPromoCheck(message, lower) {
-  if (!/\b(buy now|check out my|subscribe to my|follow my|join my server|dm me for deals)\b/i.test(lower)) return;
-  if (isOnCooldown(`promo-${message.author.id}`, 300)) return;
-  const name = message.member?.displayName || message.author.displayName;
-  await message.reply(`Hey ${name}, self-promotion needs staff approval first. Nothing personal, just how we keep things fair.`);
-  logModAction(message.guild, message.author.id, 'warning', `Self-promo in #${message.channel.name}`, message.channel.id);
-}
+// (Self-promo check removed, handled by AI moderation now)
 
 // ═══════════════════════════════════════════════════════════════
 // REACTION ADD -- X Engagement
