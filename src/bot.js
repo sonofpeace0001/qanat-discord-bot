@@ -947,6 +947,24 @@ function startScheduledTasks() {
 // LOGIN
 // ═══════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════
+// HEALTH CHECK — Railway needs a port to confirm the app is alive
+// ═══════════════════════════════════════════════════════════════
+
+const http = require('http');
+const PORT = process.env.PORT || 3000;
+
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('QANAT Bot is running');
+}).listen(PORT, () => {
+  console.log(`  Health check on port ${PORT}`);
+});
+
+// ═══════════════════════════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════════════════════════
+
 const TOKEN = process.env.DISCORD_TOKEN;
 if (!TOKEN) {
   console.error('Missing DISCORD_TOKEN in .env');
