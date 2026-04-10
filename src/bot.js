@@ -21,7 +21,7 @@ const cron = require('node-cron');
 const config = require('./config');
 const { queries: q, awardPoints, recordEngagement, recordInvite } = require('./db');
 const { matchFAQ, getAllFAQ } = require('./faq');
-const { startXMonitor } = require('./xmonitor');
+const { startXMonitor, handleTweetLink } = require('./xmonitor');
 const ai = require('./ai');
 
 // ═══════════════════════════════════════════════════════════════
@@ -143,6 +143,12 @@ client.on('messageCreate', async (message) => {
 
   // Always add to AI conversation buffer
   ai.addToBuffer(channelId, authorName, content, false);
+
+  // ── X Task: detect tweet links posted in #x-tasks ──────
+  if (channelId === config.CHANNELS.X_TASKS) {
+    const handled = await handleTweetLink(message);
+    if (handled) return;
+  }
 
   // ── GM/GN Channel ──────────────────────────────────────
   if (channelId === config.CHANNELS.GM_GN) {
