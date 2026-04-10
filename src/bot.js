@@ -12,12 +12,8 @@ const {
   EmbedBuilder, PermissionFlagsBits, Collection,
 } = require('discord.js');
 
-const {
-  joinVoiceChannel, getVoiceConnection,
-  VoiceConnectionStatus, entersState,
-} = require('@discordjs/voice');
-
 const cron = require('node-cron');
+const voice = require('./voice');
 const config = require('./config');
 const { queries: q, awardPoints, recordEngagement, recordInvite } = require('./db');
 const { matchFAQ, getAllFAQ } = require('./faq');
@@ -463,7 +459,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
 client.on('inviteCreate', (inv) => inviteCache.set(inv.code, inv.uses));
 client.on('inviteDelete', (inv) => inviteCache.delete(inv.code));
-client.on('voiceStateUpdate', () => {});
+client.on('voiceStateUpdate', (oldState, newState) => {
+  voice.handleVoiceStateUpdate(oldState, newState, client);
+});
 
 // ═══════════════════════════════════════════════════════════════
 // SLASH COMMANDS
@@ -481,6 +479,8 @@ client.on('interactionCreate', async (interaction) => {
       case 'faq':                 await cmdFAQ(interaction); break;
       case 'joinvc':              await cmdJoinVC(interaction); break;
       case 'leavevc':             await cmdLeaveVC(interaction); break;
+      case 'vcsummary':           await cmdVCSummary(interaction); break;
+      case 'vcrecord':            await cmdVCRecord(interaction); break;
       case 'help':                await cmdHelp(interaction); break;
       case 'xcheck':              await cmdXCheck(interaction); break;
       case 'myprofile':           await cmdMyProfile(interaction); break;
@@ -570,22 +570,43 @@ async function cmdFAQ(interaction) {
 }
 
 async function cmdJoinVC(interaction) {
-  const mv = interaction.member?.voice;
-  if (!mv?.channel) return interaction.reply({ content: 'Join a voice channel first.', ephemeral: true });
-  try {
-    const conn = joinVoiceChannel({ channelId: mv.channel.id, guildId: interaction.guildId, adapterCreator: interaction.guild.voiceAdapterCreator, selfDeaf: false, selfMute: true });
-    await entersState(conn, VoiceConnectionStatus.Ready, 15_000);
-    conn.receiver.speaking.on('start', (uid) => { const s = conn.receiver.subscribe(uid, { end: { behavior: 1, duration: 1000 } }); s.on('data', () => {}); s.on('end', () => {}); });
-    await interaction.reply(`Joined **${mv.channel.name}**. I'm listening. Mention me in text if you need something.`);
-    logModAction(interaction.guild, interaction.user.id, 'vc_join', `Joined VC: ${mv.channel.name}`);
-  } catch { await interaction.reply({ content: 'Could not join. Check permissions.', ephemeral: true }); }
+  const result = await voice.joinVC(interaction);
+  if (result.success) {
+    await interaction.reply(result.message);
+    logModAction(interaction.guild, interaction.user.id, 'vc_join', `Joined VC via command`);
+  } else {
+    await interaction.reply({ content: result.message, ephemeral: true });
+  }
 }
 
 async function cmdLeaveVC(interaction) {
-  const conn = getVoiceConnection(interaction.guildId);
-  if (!conn) return interaction.reply({ content: 'Not in a voice channel.', ephemeral: true });
-  conn.destroy();
-  await interaction.reply('Left. Later.');
+  if (!voice.isInVC(interaction.guildId)) {
+    return interaction.reply({ content: 'Not in a voice channel.', ephemeral: true });
+  }
+  await interaction.deferReply();
+  const summary = await voice.leaveVC(interaction.guildId);
+  if (summary) {
+    await interaction.editReply(`Left the channel.\n\n**Session Summary:**\n${summary}`);
+  } else {
+    await interaction.editReply('Left. Later.');
+  }
+}
+
+async function cmdVCSummary(interaction) {
+  if (!voice.isInVC(interaction.guildId)) {
+    return interaction.reply({ content: 'I\'m not in a voice channel right now.', ephemeral: true });
+  }
+  await interaction.deferReply();
+  const summary = await voice.getFullSummary(interaction.guildId);
+  await interaction.editReply(summary || 'No activity to summarize yet.');
+}
+
+async function cmdVCRecord(interaction) {
+  if (!isAdmin(interaction.member)) return interaction.reply({ content: 'Staff only.', ephemeral: true });
+  const session = voice.getSession(interaction.guildId);
+  if (!session) return interaction.reply({ content: 'I\'m not in a voice channel.', ephemeral: true });
+  session.recording = !session.recording;
+  await interaction.reply(`Recording is now **${session.recording ? 'ON' : 'OFF'}**.`);
 }
 
 async function cmdHelp(interaction) {
@@ -594,7 +615,7 @@ async function cmdHelp(interaction) {
       { name: 'Engagement', value: '`/points` `/leaderboard` `/linkx` `/xcheck`', inline: false },
       { name: 'Invites', value: '`/invites` `/invitesleaderboard`', inline: false },
       { name: 'Info', value: '`/faq` `/myprofile` `/help`', inline: false },
-      { name: 'Voice', value: '`/joinvc` `/leavevc`', inline: false },
+      { name: 'Voice', value: '`/joinvc` `/leavevc` `/vcsummary` `/vcrecord`', inline: false },
       { name: 'Staff', value: '`/announce` `/modstats`', inline: false },
       { name: 'Points', value: 'Link X with /linkx, follow @QANAT_IO, engage on X, react here. Like=1 Comment=2 RT=3', inline: false },
     );
