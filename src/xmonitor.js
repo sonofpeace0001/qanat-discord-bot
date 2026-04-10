@@ -1,6 +1,13 @@
 // ═══════════════════════════════════════════════════════════════
-// QANAT Bot — X/Twitter Monitor Module
-// Polls @QANAT_IO for new posts and notifies the community
+// QANAT Bot -- X/Twitter Task Monitor
+//
+// Two modes:
+// 1. ADMIN-TRIGGERED: Admin pastes a tweet link in #x-tasks,
+//    bot auto-creates engagement tracking post with reactions.
+//    No API needed. Works instantly.
+//
+// 2. API MODE: If TWITTER_BEARER_TOKEN is set, polls @QANAT_IO
+//    for new tweets automatically.
 // ═══════════════════════════════════════════════════════════════
 
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
@@ -9,61 +16,116 @@ const { queries: q } = require('./db');
 
 let lastCheckedId = null;
 
-/**
- * Initialize the X monitor — loads the last known tweet from DB.
- */
 function initXMonitor() {
   const latest = q.getLatestTweetId.get();
   if (latest) lastCheckedId = latest.tweet_id;
-  console.log(`[X Monitor] Initialized. Last known tweet: ${lastCheckedId || 'none'}`);
 }
 
-/**
- * Fetch recent tweets from @QANAT_IO using X API v2.
- * Returns array of { id, text, created_at } or empty array on failure.
- */
-async function fetchLatestTweets() {
-  if (!config.X_BEARER) {
-    return [];
-  }
+// ═══════════════════════════════════════════════════════════════
+// ADMIN-TRIGGERED MODE (primary, always active)
+// When admin posts a tweet link in #x-tasks, create tracking post
+// ═══════════════════════════════════════════════════════════════
 
-  try {
-    const url = `https://api.x.com/2/users/by/username/${config.X_ACCOUNT}`;
-    const userRes = await fetch(url, {
-      headers: { 'Authorization': `Bearer ${config.X_BEARER}` },
+async function handleTweetLink(message) {
+  // Only process in X Tasks channel
+  if (message.channel.id !== config.CHANNELS.X_TASKS) return false;
+
+  // Extract X/Twitter URLs
+  const tweetRegex = /https?:\/\/(?:x\.com|twitter\.com)\/(\w+)\/status\/(\d+)/gi;
+  const matches = [...message.content.matchAll(tweetRegex)];
+
+  if (matches.length === 0) return false;
+
+  for (const match of matches) {
+    const tweetUrl = match[0];
+    const tweetUser = match[1];
+    const tweetId = match[2];
+
+    // Skip if already tracked
+    const existing = q.getTweet.get(tweetId);
+    if (existing) continue;
+
+    // Try to get tweet text via oEmbed (free, no auth)
+    let tweetText = '';
+    try {
+      const oembedUrl = `https://publish.twitter.com/oembed?url=${encodeURIComponent(tweetUrl)}&omit_script=true`;
+      const res = await fetch(oembedUrl);
+      if (res.ok) {
+        const data = await res.json();
+        // Extract text from HTML
+        const htmlText = data.html || '';
+        tweetText = htmlText
+          .replace(/<[^>]+>/g, '')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/\n{3,}/g, '\n\n')
+          .trim();
+        if (tweetText.length > 300) tweetText = tweetText.substring(0, 297) + '...';
+      }
+    } catch {}
+
+    // Delete the admin's original message (clean look)
+    try { await message.delete(); } catch {}
+
+    // Create the engagement tracking post
+    const trackingMsg = await message.channel.send({
+      content: `**New post from @${tweetUser} just dropped!** @everyone\n\nEngage on X, then react below to claim your points.\n\n` +
+        (tweetText ? `> ${tweetText.split('\n').join('\n> ')}\n\n` : '') +
+        `**How to earn:**\n` +
+        `${config.EMOJIS?.LIKE || '❤️'} Like = **1 point**\n` +
+        `${config.EMOJIS?.COMMENT || '💬'} Comment = **2 points**\n` +
+        `${config.EMOJIS?.RETWEET || '🔁'} Retweet = **3 points**\n\n` +
+        `Link your X with \`/linkx\` and follow @QANAT_IO first.\n\n` +
+        `${tweetUrl}`,
+      allowedMentions: { parse: ['everyone'] },
     });
 
-    if (!userRes.ok) {
-      console.error(`[X Monitor] Failed to get user: ${userRes.status}`);
-      return [];
-    }
+    // Add reaction emojis
+    await trackingMsg.react('❤️');
+    await trackingMsg.react('💬');
+    await trackingMsg.react('🔁');
+
+    // Store in DB
+    q.addTweet.run(tweetId, tweetUrl, tweetText || 'No text available', trackingMsg.id);
+    console.log(`[X Monitor] Tracking post created for tweet ${tweetId}`);
+  }
+
+  return true;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// API MODE (optional, if bearer token available)
+// ═══════════════════════════════════════════════════════════════
+
+async function fetchLatestTweets() {
+  if (!config.X_BEARER) return [];
+
+  try {
+    const userRes = await fetch(`https://api.x.com/2/users/by/username/${config.X_ACCOUNT}`, {
+      headers: { 'Authorization': `Bearer ${config.X_BEARER}` },
+    });
+    if (!userRes.ok) return [];
 
     const userData = await userRes.json();
     const userId = userData.data?.id;
     if (!userId) return [];
 
-    const tweetsUrl = `https://api.x.com/2/users/${userId}/tweets?max_results=5&tweet.fields=created_at,text`;
-    const tweetsRes = await fetch(tweetsUrl, {
-      headers: { 'Authorization': `Bearer ${config.X_BEARER}` },
-    });
-
-    if (!tweetsRes.ok) {
-      console.error(`[X Monitor] Failed to get tweets: ${tweetsRes.status}`);
-      return [];
-    }
+    const tweetsRes = await fetch(
+      `https://api.x.com/2/users/${userId}/tweets?max_results=5&tweet.fields=created_at,text`,
+      { headers: { 'Authorization': `Bearer ${config.X_BEARER}` } }
+    );
+    if (!tweetsRes.ok) return [];
 
     const tweetsData = await tweetsRes.json();
     return tweetsData.data || [];
   } catch (err) {
-    console.error('[X Monitor] Error fetching tweets:', err.message);
+    console.error('[X Monitor] API error:', err.message);
     return [];
   }
 }
 
-/**
- * Poll for new tweets and post notifications in the X tasks channel.
- * @param {Client} client - Discord client
- */
 async function pollXAccount(client) {
   const tweets = await fetchLatestTweets();
   if (tweets.length === 0) return;
@@ -74,82 +136,54 @@ async function pollXAccount(client) {
   const taskChannel = guild.channels.cache.get(config.CHANNELS.X_TASKS);
   if (!taskChannel) return;
 
-  // Find new tweets (posted after our last check)
   const newTweets = [];
   for (const tweet of tweets) {
     if (tweet.id === lastCheckedId) break;
-    const existing = q.getTweet.get(tweet.id);
-    if (!existing) newTweets.push(tweet);
+    if (!q.getTweet.get(tweet.id)) newTweets.push(tweet);
   }
 
-  if (newTweets.length === 0) return;
-
-  // Process new tweets (oldest first)
   for (const tweet of newTweets.reverse()) {
     const tweetUrl = `https://x.com/${config.X_ACCOUNT}/status/${tweet.id}`;
-    const shortText = tweet.text.length > 200
-      ? tweet.text.substring(0, 200) + '...'
-      : tweet.text;
-
-    const embed = new EmbedBuilder()
-      .setColor(0x1DA1F2)
-      .setTitle('🚀 New Post from @QANAT_IO!')
-      .setDescription(shortText)
-      .addFields(
-        { name: '❤️ Like', value: '+1 point', inline: true },
-        { name: '💬 Comment', value: '+2 points', inline: true },
-        { name: '🔁 Retweet/Quote', value: '+3 points', inline: true },
-      )
-      .setFooter({ text: '⚠️ You must follow @QANAT_IO and link your X with /linkx to earn points' })
-      .setTimestamp();
-
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setLabel('View Post')
-        .setStyle(ButtonStyle.Link)
-        .setURL(tweetUrl)
-        .setEmoji('🔗'),
-    );
+    const shortText = tweet.text.length > 300 ? tweet.text.substring(0, 297) + '...' : tweet.text;
 
     const msg = await taskChannel.send({
-      content: '📢 **@everyone New QANAT post just dropped!** Engage to earn points! 🎯',
-      embeds: [embed],
-      components: [row],
+      content: `**New post from @${config.X_ACCOUNT} just dropped!** @everyone\n\nEngage on X, then react below to claim your points.\n\n` +
+        `> ${shortText.split('\n').join('\n> ')}\n\n` +
+        `**How to earn:**\n` +
+        `❤️ Like = **1 point**\n` +
+        `💬 Comment = **2 points**\n` +
+        `🔁 Retweet = **3 points**\n\n` +
+        `Link your X with \`/linkx\` and follow @QANAT_IO first.\n\n` +
+        `${tweetUrl}`,
+      allowedMentions: { parse: ['everyone'] },
     });
 
-    // Add reaction emojis for claiming
-    await msg.react(config.EMOJIS.LIKE);
-    await msg.react(config.EMOJIS.COMMENT);
-    await msg.react(config.EMOJIS.RETWEET);
+    await msg.react('❤️');
+    await msg.react('💬');
+    await msg.react('🔁');
 
-    // Store in DB
     q.addTweet.run(tweet.id, tweetUrl, tweet.text, msg.id);
-    console.log(`[X Monitor] Posted tweet notification: ${tweet.id}`);
+    console.log(`[X Monitor] Auto-posted tweet ${tweet.id}`);
   }
 
-  // Update last checked
-  lastCheckedId = tweets[0].id;
+  if (tweets.length > 0) lastCheckedId = tweets[0].id;
 }
 
-/**
- * Start the X polling interval.
- * @param {Client} client
- */
+// ═══════════════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════════════
+
 function startXMonitor(client) {
   initXMonitor();
 
-  if (!config.X_BEARER) {
-    console.log('[X Monitor] No Twitter Bearer Token set — X monitoring disabled.');
-    console.log('[X Monitor] Set TWITTER_BEARER_TOKEN in .env to enable.');
-    return;
+  if (config.X_BEARER) {
+    console.log(`[X Monitor] API mode active, polling @${config.X_ACCOUNT}`);
+    setTimeout(() => pollXAccount(client), 30_000);
+    setInterval(() => pollXAccount(client), config.X_POLL_INTERVAL_MS);
+  } else {
+    console.log(`[X Monitor] Admin-triggered mode. Post tweet links in #x-tasks to create tracking posts.`);
+    console.log(`[X Monitor] Set TWITTER_BEARER_TOKEN for auto-polling.`);
   }
-
-  // Initial poll after 30s
-  setTimeout(() => pollXAccount(client), 30_000);
-
-  // Then poll every 5 minutes
-  setInterval(() => pollXAccount(client), config.X_POLL_INTERVAL_MS);
-  console.log(`[X Monitor] Started polling @${config.X_ACCOUNT} every ${config.X_POLL_INTERVAL_MS / 60000} minutes`);
 }
 
-module.exports = { startXMonitor, pollXAccount, initXMonitor };
+module.exports = { startXMonitor, handleTweetLink };
