@@ -67,8 +67,22 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 client.once('ready', async () => {
   console.log(`\n  QANAT Bot online as ${client.user.tag}`);
-  console.log(`  AI: ${ai.isAIEnabled() ? 'Gemini enabled' : 'DISABLED (set GEMINI_API_KEY)'}`);
+  console.log(`  AI: ${ai.isAIEnabled() ? 'enabled' : 'DISABLED (set GEMINI_API_KEY)'}`);
   console.log(`  ${new Date().toISOString()}\n`);
+
+  // Auto-register slash commands on startup
+  try {
+    const { REST, Routes } = require('discord.js');
+    const commands = require('./commands');
+    const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+    await rest.put(
+      Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, config.GUILD_ID),
+      { body: commands.map(c => c.toJSON()) }
+    );
+    console.log(`  Registered ${commands.length} slash commands`);
+  } catch (err) {
+    console.error('  Command registration failed:', err.message);
+  }
 
   try {
     const guild = client.guilds.cache.get(config.GUILD_ID);
@@ -472,6 +486,7 @@ client.on('interactionCreate', async (interaction) => {
       case 'myprofile':           await cmdMyProfile(interaction); break;
       case 'modstats':            await cmdModStats(interaction); break;
       case 'announce':            await cmdAnnounce(interaction); break;
+      case 'posttweet':           await cmdPostTweet(interaction); break;
       default: await interaction.reply({ content: 'Unknown command.', ephemeral: true });
     }
   } catch (err) {
@@ -656,6 +671,77 @@ async function cmdAnnounce(interaction) {
     await interaction.reply({ content: `Sent to <#${targetChannel.id}>.`, ephemeral: true });
     logModAction(interaction.guild, interaction.user.id, 'announcement', `"${title}" in #${targetChannel.name}`);
   } catch { await interaction.reply({ content: 'Could not send. Check permissions.', ephemeral: true }); }
+}
+
+async function cmdPostTweet(interaction) {
+  if (!isAdmin(interaction.member)) return interaction.reply({ content: 'Staff only.', ephemeral: true });
+
+  const url = interaction.options.getString('url').trim();
+  const customMsg = interaction.options.getString('message') || '';
+
+  // Validate URL
+  const tweetMatch = url.match(/https?:\/\/(?:x\.com|twitter\.com)\/(\w+)\/status\/(\d+)/i);
+  if (!tweetMatch) {
+    return interaction.reply({ content: 'That doesn\'t look like a valid tweet URL. Use something like `https://x.com/QANAT_IO/status/123456`', ephemeral: true });
+  }
+
+  const tweetUser = tweetMatch[1];
+  const tweetId = tweetMatch[2];
+
+  // Check if already tracked
+  const { queries: dbq } = require('./db');
+  const existing = dbq.getTweet.get(tweetId);
+  if (existing) {
+    return interaction.reply({ content: 'That tweet is already being tracked.', ephemeral: true });
+  }
+
+  await interaction.deferReply({ ephemeral: true });
+
+  // Fetch tweet text via oEmbed
+  let tweetText = '';
+  try {
+    const oembedUrl = `https://publish.twitter.com/oembed?url=${encodeURIComponent(url)}&omit_script=true`;
+    const res = await fetch(oembedUrl);
+    if (res.ok) {
+      const data = await res.json();
+      tweetText = (data.html || '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+        .replace(/\n{3,}/g, '\n\n').trim();
+      if (tweetText.length > 300) tweetText = tweetText.substring(0, 297) + '...';
+    }
+  } catch {}
+
+  // Send to X Tasks channel
+  const taskChannel = interaction.guild.channels.cache.get(config.CHANNELS.X_TASKS);
+  if (!taskChannel) {
+    return interaction.editReply('Could not find the X Tasks channel.');
+  }
+
+  const postContent =
+    (customMsg ? `${customMsg}\n\n` : `**New post from @${tweetUser} just dropped!** @everyone\n\n`) +
+    `Engage on X, then react below to claim your points.\n\n` +
+    (tweetText ? `> ${tweetText.split('\n').join('\n> ')}\n\n` : '') +
+    `**How to earn:**\n` +
+    `❤️ Like = **1 point**\n` +
+    `💬 Comment = **2 points**\n` +
+    `🔁 Retweet = **3 points**\n\n` +
+    `Link your X with \`/linkx\` and follow @QANAT_IO first.\n\n` +
+    url;
+
+  const trackingMsg = await taskChannel.send({
+    content: postContent,
+    allowedMentions: { parse: ['everyone'] },
+  });
+
+  await trackingMsg.react('❤️');
+  await trackingMsg.react('💬');
+  await trackingMsg.react('🔁');
+
+  dbq.addTweet.run(tweetId, url, tweetText || 'No text', trackingMsg.id);
+
+  await interaction.editReply(`Posted in <#${config.CHANNELS.X_TASKS}>. Tracking engagement for tweet ${tweetId}.`);
+  logModAction(interaction.guild, interaction.user.id, 'tweet_post', `Posted tweet tracking for @${tweetUser}/status/${tweetId}`);
 }
 
 // ═══════════════════════════════════════════════════════════════
