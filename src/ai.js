@@ -54,6 +54,27 @@ About QANAT (your employer):
 FAQ Knowledge:
 ${faqKnowledge}
 
+SERVER RULES (you enforce these):
+1. Treat everyone with respect. No harassment, threats, witch hunting, sexism, racism, or hate speech.
+2. English only. No other languages.
+3. No cursing with negative intent or excessive cursing. "oh shit" is fine but keep it minimal.
+4. No spam or self-promotion without staff permission. Including DMing members.
+5. No NSFW or obscene content. Text, images, links, profile names, pictures, banners.
+6. Use channels for their intended purposes.
+7. Do not misuse tags. Tag staff only for emergencies.
+8. Do not spread FUD (fear, uncertainty, doubt).
+9. Report rule violations to staff.
+10. No begging for money (crypto or fiat).
+11. Respect privacy. Don't push for personal info.
+12. No impersonation or stealing usernames. Names with "staff" or "support" = immediate ban assumption.
+13. Follow Discord ToS and Community Guidelines.
+
+When you see a rule violation, your response should be:
+- For minor issues (wrong channel, mild language): Gently redirect them
+- For moderate issues (spam, self-promo, non-English, FUD): Warn them clearly but not aggressively
+- For serious issues (harassment, hate speech, NSFW, threats, begging, impersonation): Firm warning
+- Always be fair and human about it, not robotic
+
 Communication rules:
 - Keep responses SHORT. 1-2 sentences for casual chat. 3-4 max for real questions.
 - Use natural language and contractions (don't, can't, won't, it's, you'll, we're)
@@ -290,15 +311,22 @@ function shouldRespond(message, channelId) {
   if (lower.length < 3) return false;
   if (/^[\u{1F000}-\u{1FFFF}\s]+$/u.test(lower)) return false;
 
+  // High-engagement channels
+  const highEngagement = [config.CHANNELS.GENERAL, config.CHANNELS.CONTRIBUTOR_CHAT];
+  const medEngagement = [config.CHANNELS.FAQ, config.CHANNELS.INTRODUCTION, config.CHANNELS.ENGAGE_ARENA];
+
   // Response probabilities by context
   if (lower.includes('?')) return Math.random() < 0.75;
-  if (/^(hey|hi|hello|yo|sup|gm|gn|what'?s? ?up)\b/i.test(lower)) return Math.random() < 0.6;
+  if (/^(hey|hi|hello|yo|sup|what'?s? ?up)\b/i.test(lower)) return Math.random() < 0.6;
   if (/\b(qanat|web ?x|sovereignty|decentralized|whitepaper)\b/i.test(lower)) return Math.random() < 0.7;
   if (/\b(lfg|let'?s go|bullish|hyped|we'?re? early|fire)\b/i.test(lower)) return Math.random() < 0.5;
   if (/\b(i think|i believe|honestly|personally|what do you think)\b/i.test(lower)) return Math.random() < 0.5;
-  if (channelId === config.CHANNELS.CONTRIBUTOR_CHAT) return Math.random() < 0.35;
-  if (channelId === config.CHANNELS.GENERAL) return Math.random() < 0.2;
-  return Math.random() < 0.1;
+  if (/\b(gm|good morning|morning everyone)\b/i.test(lower) && channelId !== config.CHANNELS.GM_GN) return Math.random() < 0.4;
+
+  // Channel-based rates
+  if (highEngagement.includes(channelId)) return Math.random() < 0.25;
+  if (medEngagement.includes(channelId)) return Math.random() < 0.2;
+  return Math.random() < 0.12;
 }
 
 function recordResponse(channelId, userId) {
@@ -330,6 +358,67 @@ async function summarizeText(text) {
   return null;
 }
 
+/**
+ * AI-powered moderation check. Returns { violation, rule, severity, warning } or null.
+ */
+async function checkModeration(authorName, messageContent) {
+  const providers = getAvailableProviders();
+  if (providers.length === 0) return null;
+
+  const prompt = `You are a Discord moderator. Analyze this message for rule violations.
+
+Rules:
+1. Respect everyone. No harassment, threats, sexism, racism, hate speech.
+2. English only.
+3. No cursing with negative intent or excessive cursing.
+4. No spam or self-promotion.
+5. No NSFW/obscene content.
+6. Channels must be used for intended purpose.
+7. Don't misuse tags.
+8. No FUD (fear, uncertainty, doubt spreading).
+9. Report violations to staff.
+10. No begging for money.
+11. Respect privacy.
+12. No impersonation.
+13. Follow Discord ToS.
+
+Message from "${authorName}": "${messageContent}"
+
+If the message violates a rule, respond with EXACTLY this JSON format (nothing else):
+{"violation": true, "rule": <number>, "severity": "<minor|moderate|serious>", "warning": "<a short, human, casual warning to the user. no emdash. 1-2 sentences max>"}
+
+If no violation, respond with EXACTLY:
+{"violation": false}
+
+Only flag clear violations. Normal conversation, slang, mild language, and casual chat are fine. Don't be overly strict. "damn", "hell", "crap" are acceptable. Only flag actual harmful content, clear spam, non-English messages (more than a few words), hate speech, harassment, NSFW, threats, or begging.`;
+
+  const messages = [{ role: 'user', content: prompt }];
+
+  for (const provider of providers) {
+    try {
+      const result = await providerFns[provider](messages, 'You are a moderation analysis tool. Respond only in JSON.');
+      if (!result) continue;
+
+      // Extract JSON from response
+      const jsonMatch = result.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) continue;
+
+      const parsed = JSON.parse(jsonMatch[0]);
+      if (parsed.violation === false) return null;
+      if (parsed.violation === true && parsed.warning) {
+        // Clean warning
+        parsed.warning = parsed.warning.replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',');
+        return parsed;
+      }
+      return null;
+    } catch (err) {
+      if (err.message === 'RATE_LIMITED') { markRateLimited(provider); continue; }
+      continue;
+    }
+  }
+  return null;
+}
+
 function isAIEnabled() {
   return !!(GROQ_KEY || GEMINI_KEY || OPENROUTER_KEY);
 }
@@ -350,6 +439,7 @@ module.exports = {
   shouldRespond,
   recordResponse,
   summarizeText,
+  checkModeration,
   isAIEnabled,
   getProviderStats,
 };
