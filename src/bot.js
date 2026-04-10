@@ -236,9 +236,9 @@ client.on('messageCreate', async (message) => {
     if (wasPhishing) return;
   }
 
-  // ── AI-powered rule enforcement (skip admins) ──────────
+  // ── Quick rule checks (pattern-based, no AI call) ───────
   if (!memberIsAdmin) {
-    const wasViolation = await handleRuleEnforcement(message, lower, authorName);
+    const wasViolation = await handleQuickRuleCheck(message, lower, authorName);
     if (wasViolation) return;
   }
 
@@ -261,85 +261,72 @@ client.on('messageCreate', async (message) => {
 async function handleConversation(message, channelId, lower, authorName) {
   const mentioned = message.mentions.has(client.user);
 
-  // Always respond when mentioned, otherwise use probability
   const shouldReply = mentioned || ai.shouldRespond(message, channelId);
   if (!shouldReply) return;
 
-  const response = await ai.generateResponse(channelId, authorName, message.content);
+  try {
+    const response = await ai.generateResponse(channelId, authorName, message.content);
 
-  if (response) {
-    ai.recordResponse(channelId, message.author.id);
-    ai.addToBuffer(channelId, 'QANAT', response, true);
+    if (response) {
+      ai.recordResponse(channelId, message.author.id);
+      ai.addToBuffer(channelId, 'QANAT', response, true);
 
-    if (mentioned) {
-      await message.reply(response);
+      if (mentioned) {
+        await message.reply(response);
+      } else {
+        await message.channel.send(response);
+      }
     } else {
-      await message.channel.send(response);
+      console.log(`[Chat] No AI response for "${message.content.substring(0, 50)}..." in #${message.channel.name}`);
     }
+  } catch (err) {
+    console.error(`[Chat] Error responding:`, err.message);
   }
 }
 
 // ── AI-Powered Rule Enforcement ──────────────────────────────
 
-async function handleRuleEnforcement(message, lower, authorName) {
-  // Quick pattern checks first (no AI needed for obvious stuff)
+async function handleQuickRuleCheck(message, lower, authorName) {
+  // Fast pattern-based checks only. NO AI calls here.
+  // AI moderation only runs when patterns flag something suspicious.
 
-  // Impersonation check (rule 12) - names with "staff" or "support"
+  // Impersonation (rule 12)
   const displayName = (message.member?.displayName || '').toLowerCase();
-  if (/\b(staff|support|admin|moderator|mod)\b/i.test(displayName) && !isAdmin(message.member)) {
-    await handleViolation(message, {
-      rule: 12,
-      severity: 'serious',
-      warning: `Your display name contains restricted words. Change it or you'll be removed. This is for everyone's safety.`,
-    });
+  if (/\b(staff|support|admin|moderator)\b/i.test(displayName) && !isAdmin(message.member)) {
+    await handleViolation(message, { rule: 12, severity: 'serious',
+      warning: `Your display name contains restricted words. Change it or you'll be removed.` });
     return true;
   }
 
-  // NSFW/obscene quick check (rule 5)
-  const nsfwPatterns = /\b(porn|hentai|nude|naked|xxx|onlyfans|sex ?tape)\b/i;
-  if (nsfwPatterns.test(lower)) {
+  // NSFW (rule 5)
+  if (/\b(porn|hentai|nude|naked|xxx|onlyfans|sex ?tape)\b/i.test(lower)) {
     await message.delete().catch(() => {});
-    await handleViolation(message, {
-      rule: 5,
-      severity: 'serious',
-      warning: `That kind of content isn't allowed here. Keep it clean.`,
-    }, true);
+    await handleViolation(message, { rule: 5, severity: 'serious',
+      warning: `That kind of content isn't allowed here. Keep it clean.` }, true);
     return true;
   }
 
-  // Begging check (rule 10)
-  const beggingPatterns = /\b(send me|give me|donate|need money|send crypto|send sol|send eth|send btc|please send|i need \$|can someone send|help me with money)\b/i;
-  if (beggingPatterns.test(lower)) {
-    await handleViolation(message, {
-      rule: 10,
-      severity: 'moderate',
-      warning: `Asking for money or crypto isn't allowed here.`,
-    });
+  // Begging (rule 10)
+  if (/\b(send me|give me|donate|need money|send crypto|send sol|send eth|send btc|please send|i need \$|can someone send|help me with money)\b/i.test(lower)) {
+    await handleViolation(message, { rule: 10, severity: 'moderate',
+      warning: `Asking for money or crypto isn't allowed here.` });
     return true;
   }
 
   // Excessive mentions (rule 7)
-  const mentionCount = (message.content.match(/<@&?\d+>/g) || []).length;
-  if (mentionCount > 4) {
+  if ((message.content.match(/<@&?\d+>/g) || []).length > 4) {
     await message.delete().catch(() => {});
-    await handleViolation(message, {
-      rule: 7,
-      severity: 'moderate',
-      warning: `Easy on the tags. Only tag staff for actual emergencies.`,
-    }, true);
+    await handleViolation(message, { rule: 7, severity: 'moderate',
+      warning: `Easy on the tags. Only tag staff for actual emergencies.` }, true);
     return true;
   }
 
-  // For everything else, use AI moderation (throttled to save API calls)
-  // Only AI-check messages longer than 10 chars and not on cooldown
-  if (lower.length > 10 && !isOnCooldown(`mod-${message.author.id}`, 30)) {
-    const result = await ai.checkModeration(authorName, message.content);
-    if (result && result.violation) {
-      const shouldDelete = result.severity === 'serious';
-      if (shouldDelete) await message.delete().catch(() => {});
-      await handleViolation(message, result, shouldDelete);
-      return true;
-    }
+  // Hate speech / slurs (rule 1) - only the clearest patterns
+  if (/\b(n[i1]gg|f[a4]gg|k[yi]ke|sp[i1]c|ch[i1]nk|ret[a4]rd)\b/i.test(lower)) {
+    await message.delete().catch(() => {});
+    await handleViolation(message, { rule: 1, severity: 'serious',
+      warning: `That language isn't tolerated here. Respect everyone.` }, true);
+    return true;
   }
 
   return false;
@@ -494,9 +481,20 @@ client.on('messageReactionAdd', async (reaction, user) => {
   const msg = reaction.message;
   if (msg.channel.id !== config.CHANNELS.X_TASKS || msg.author.id !== client.user.id) return;
 
+  // Ensure member exists
+  q.upsertMember.run(user.id, user.username);
   const member = q.getMember.get(user.id);
-  if (!member?.x_verified) {
-    try { await user.send('Link your X account first with /linkx, and make sure you follow @QANAT_IO.'); } catch {}
+
+  if (!member || !member.x_verified) {
+    // Only DM once per hour per user to avoid spam
+    if (!isOnCooldown(`linkx-dm-${user.id}`, 3600)) {
+      try {
+        await user.send(
+          `To claim engagement points, you need to link your X account first. ` +
+          `Go to the server and use the \`/linkx\` command with your X handle.`
+        );
+      } catch {}
+    }
     return;
   }
 
@@ -584,17 +582,32 @@ client.on('interactionCreate', async (interaction) => {
   if (interaction.isButton() && interaction.customId.startsWith('confirm_follow_')) {
     const handle = interaction.customId.replace('confirm_follow_', '');
     try {
+      // Make sure user exists in DB first
       q.upsertMember.run(interaction.user.id, interaction.user.username);
-      q.linkX.run(handle, interaction.user.id);
+      // Set x_handle and x_verified directly to avoid UPDATE miss
+      const db = require('./db').db;
+      db.prepare('UPDATE members SET x_handle = ?, x_verified = 1 WHERE discord_id = ?')
+        .run(handle, interaction.user.id);
 
-      // Remove the buttons from the message
+      // Verify it actually saved
+      const check = q.getMember.get(interaction.user.id);
+      if (!check || !check.x_verified) {
+        // Force insert if update missed
+        db.prepare('INSERT OR REPLACE INTO members (discord_id, username, x_handle, x_verified) VALUES (?, ?, ?, 1)')
+          .run(interaction.user.id, interaction.user.username, handle);
+      }
+
       await interaction.update({
         content: `Linked **@${handle}** to your account. You're all set.\n\nWhen new @QANAT_IO posts drop in <#${config.CHANNELS.X_TASKS}>, engage on X then react to claim your points.\n\n👍 Like = 1pt | 💬 Comment = 2pt | 🔄 Retweet = 3pt | ⭐ All three = 6pt`,
         components: [],
       });
+
+      console.log(`[LinkX] ${interaction.user.tag} linked @${handle}`);
     } catch (err) {
       console.error('Follow confirm error:', err);
-      await interaction.reply({ content: 'Something went wrong. Try /linkx again.', ephemeral: true });
+      try {
+        await interaction.reply({ content: 'Something went wrong. Try /linkx again.', ephemeral: true });
+      } catch {}
     }
     return;
   }
