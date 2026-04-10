@@ -23,6 +23,7 @@ const config = require('./config');
 const { queries: q, awardPoints, recordEngagement, recordInvite } = require('./db');
 const { matchFAQ, getAllFAQ } = require('./faq');
 const { startXMonitor } = require('./xmonitor');
+const { thinkAndReply, isQANATRelated, isQuestion, findTopic, getTopicResponse } = require('./knowledge');
 
 // ═══════════════════════════════════════════════════════════════
 // Client
@@ -69,142 +70,27 @@ function isAdmin(member) {
 
 // ═══════════════════════════════════════════════════════════════
 // CONVERSATIONAL ENGINE
-// Context-aware responses that sound like a real person
+// Uses knowledge.js for deep QANAT understanding
+// Thinks before replying, never gives generic responses
 // ═══════════════════════════════════════════════════════════════
-
-function generateReply(message, lower) {
-  const name = message.member?.displayName || message.author.displayName || 'friend';
-  const isAdminUser = isAdmin(message.member);
-
-  // Greetings
-  if (/^(hey|hi|hello|yo|sup|what'?s? ?up|howdy|hola)\b/i.test(lower)) {
-    const greetings = [
-      `Hey ${name}, how's it going?`,
-      `Yo ${name}! What's good?`,
-      `Hey! Good to see you around, ${name}.`,
-      `What's up ${name}`,
-      `Hey ${name}! How are things?`,
-    ];
-    return pick(greetings);
-  }
-
-  // Someone saying thanks
-  if (/\b(thanks|thank you|thx|ty|appreciate)\b/i.test(lower)) {
-    const thanks = [
-      `Anytime, ${name}.`,
-      `No problem at all.`,
-      `Happy to help.`,
-      `Of course! That's what I'm here for.`,
-      `You're welcome, ${name}.`,
-    ];
-    return pick(thanks);
-  }
-
-  // How are you / how's it going
-  if (/\b(how are you|how'?s? it going|how you doing|how do you do)\b/i.test(lower)) {
-    return `Doing good, ${name}. Keeping things running around here. How about you?`;
-  }
-
-  // What can you do / who are you
-  if (/\b(what can you do|what do you do|who are you|are you a bot|you a bot)\b/i.test(lower)) {
-    return `I'm QANAT, the community bot here. I help keep things organized, answer questions about the project, ` +
-      `track engagement points, and just generally keep the vibe going. If you need something specific, try /help to see my commands.`;
-  }
-
-  // Questions about QANAT (try FAQ first)
-  const faqMatch = matchFAQ(message.content);
-  if (faqMatch && faqMatch.score >= 3) {
-    // Make FAQ answers conversational, not copy-paste
-    return faqMatch.answer;
-  }
-
-  // Talking about price/moon/lambo/pump
-  if (/\b(price|moon|lambo|pump|when moon|token price|listing)\b/i.test(lower)) {
-    const priceReplies = [
-      `Token details haven't been announced yet. When there's news on that, it'll come through the official channels. For now, the focus is on building.`,
-      `Nothing on that front yet. The team is heads down on the product. When there's something to share, you'll hear about it here first.`,
-      `That info will come when it comes. Right now the priority is shipping Web X. OS. Best way to stay in the loop is to keep an eye on announcements.`,
-    ];
-    return pick(priceReplies);
-  }
-
-  // When launch / when mainnet / roadmap
-  if (/\b(when launch|when mainnet|when release|roadmap|timeline|when beta)\b/i.test(lower)) {
-    return `Beta testing is planned for Q1 2026, mainnet for Q3 2026. Still early, which is a good place to be.`;
-  }
-
-  // Someone is confused or lost
-  if (/\b(i'?m confused|don'?t understand|lost|help me|i need help|can someone help)\b/i.test(lower)) {
-    return `No worries, ${name}. What exactly are you trying to figure out? I can help with most things about QANAT, ` +
-      `or point you to the right person if it's something specific.`;
-  }
-
-  // Someone is excited / hyped
-  if (/\b(let'?s go|lfg|bullish|hyped|excited|fire|amazing|love this)\b/i.test(lower)) {
-    const hype = [
-      `The energy is real, ${name}.`,
-      `Love the energy.`,
-      `That's the spirit.`,
-      `${name} gets it.`,
-      `This is the kind of energy we need.`,
-    ];
-    return pick(hype);
-  }
-
-  // Someone mentions building/contributing
-  if (/\b(building|contributing|working on|coding|developing|creating content)\b/i.test(lower)) {
-    const build = [
-      `That's what it's about, ${name}. What are you working on?`,
-      `Respect. The builders are the ones who make this thing real.`,
-      `Good to hear. Drop some details, would love to know more about what you're building.`,
-    ];
-    return pick(build);
-  }
-
-  // Someone asking about roles
-  if (/\b(how.*(get|earn|unlock).*(role|roles)|what roles|role info)\b/i.test(lower)) {
-    return `Good question. The roles channel has a full breakdown of what's available and how to get them. Take a look when you get a chance.`;
-  }
-
-  // Compliments about the community or project
-  if (/\b(great community|love this community|this server is|nice server|cool project)\b/i.test(lower)) {
-    return `Appreciate that, ${name}. It's the people here that make it what it is. Glad you're part of it.`;
-  }
-
-  // Someone saying bye or leaving
-  if (/\b(bye|goodbye|see ya|gotta go|heading out|peace out|later)\b/i.test(lower)) {
-    return `Later, ${name}. Catch you around.`;
-  }
-
-  // Engagement/points questions
-  if (/\b(how.*(earn|get).*(points|rewards)|what are points|point system|engagement)\b/i.test(lower)) {
-    return `The point system is pretty straightforward. Link your X account with /linkx, follow @QANAT_IO, ` +
-      `then when new posts drop, engage on X (like, comment, retweet) and react on the notification here. ` +
-      `Like is 1 point, comment is 2, retweet is 3. Use /points to check where you're at.`;
-  }
-
-  // Invite questions
-  if (/\b(how.*(invite|invites)|invite link|bring friends)\b/i.test(lower)) {
-    return `You can create an invite link from Discord directly and share it. When someone joins through your link, ` +
-      `it gets tracked automatically. Use /invites to see your count or /invitesleaderboard for the rankings.`;
-  }
-
-  // Generic question we can't match
-  if (lower.includes('?')) {
-    const unknownQ = [
-      `Hmm, I'm not sure about that one, ${name}. Can you give me a bit more context?`,
-      `That's a good question. I don't have a clear answer on that, but the team might. Want me to flag it?`,
-      `Not sure I can answer that properly. What exactly are you looking for? I'll try to help.`,
-    ];
-    return pick(unknownQ);
-  }
-
-  // If none of the above matched, don't force a reply
-  return null;
-}
 
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// Track recent messages to understand conversation flow
+const conversationHistory = [];
+const MAX_HISTORY = 20;
+
+function trackMessage(channelId, authorName, content) {
+  conversationHistory.push({ channelId, authorName, content, time: Date.now() });
+  if (conversationHistory.length > MAX_HISTORY) conversationHistory.shift();
+}
+
+function getRecentContext(channelId, limit = 5) {
+  return conversationHistory
+    .filter(m => m.channelId === channelId)
+    .slice(-limit);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -332,17 +218,14 @@ client.on('messageCreate', async (message) => {
     if (wasPhishing) return;
   }
 
-  // ── General Chat -- conversational engagement ──────────
-  if (channelId === config.CHANNELS.GENERAL) {
-    await handleGeneralChat(message, lower, memberIsAdmin);
-  }
+  // Track all messages for context awareness
+  const authorName = message.member?.displayName || message.author.displayName || message.author.username;
+  trackMessage(channelId, authorName, content);
 
-  // ── FAQ auto-detect (FAQ, Introduction channels) ───────
-  const faqChannels = [config.CHANNELS.FAQ, config.CHANNELS.INTRODUCTION];
-  if (faqChannels.includes(channelId)) {
-    if (lower.includes('?') || /^(what|how|where|when|why|can i|is qanat|does qanat|will there)\b/.test(lower)) {
-      await handleFAQDetection(message, lower);
-    }
+  // ── Conversational channels (General, FAQ, Introduction) ──
+  const talkChannels = [config.CHANNELS.GENERAL, config.CHANNELS.FAQ, config.CHANNELS.INTRODUCTION];
+  if (talkChannels.includes(channelId)) {
+    await handleConversation(message, lower, memberIsAdmin, authorName);
   }
 
   // ── Content & Meme reactions ───────────────────────────
@@ -388,53 +271,80 @@ async function handleGMGN(message, lower, memberIsAdmin) {
   }
 }
 
-// ── General Chat Handler ─────────────────────────────────────
-// The bot should engage naturally, not just when mentioned
+// ── Conversation Handler ─────────────────────────────────────
+// Reads messages, thinks, and replies only when it has something real to say
 
-async function handleGeneralChat(message, lower, memberIsAdmin) {
+async function handleConversation(message, lower, memberIsAdmin, authorName) {
   const mentionsBot = message.mentions.has(client.user);
+  const isBotQuestion = isQuestion(lower);
+  const isAboutQANAT = isQANATRelated(lower);
 
-  // Always respond when directly mentioned
+  // PRIORITY 1: Always respond when directly mentioned
   if (mentionsBot) {
-    const reply = generateReply(message, lower);
-    if (reply) {
-      await message.reply(reply);
+    // Clean the mention from the text for better matching
+    const cleanText = message.content.replace(/<@!?\d+>/g, '').trim();
+    const result = thinkAndReply(cleanText || lower, authorName);
+
+    if (result) {
+      await message.reply(result.response);
+    } else if (isBotQuestion) {
+      // It's a question we can't match to a topic
+      const fallbacks = [
+        `Hmm, I'm not sure about that one, ${authorName}. Can you give me a bit more context?`,
+        `Good question. I don't have a solid answer on that. If it's product-specific, try tagging <@377033754083983361>.`,
+        `Not 100% sure on that. What specifically are you looking for? I'll try to help.`,
+      ];
+      await message.reply(pick(fallbacks));
     } else {
-      const name = message.member?.displayName || message.author.displayName;
-      await message.reply(`What's on your mind, ${name}?`);
+      // Not a question, just a mention. Engage naturally.
+      const result2 = thinkAndReply(cleanText || lower, authorName);
+      if (result2) {
+        await message.reply(result2.response);
+      }
+      // If still nothing matches, stay quiet. Don't force "what's on your mind"
     }
     return;
   }
 
-  // Respond to direct questions in general (with cooldown to avoid spam)
-  if (lower.includes('?') && !isOnCooldown(`gen-q-${message.author.id}`, 120)) {
-    const reply = generateReply(message, lower);
-    if (reply) {
-      await message.reply(reply);
+  // PRIORITY 2: Questions about QANAT in conversation channels
+  if (isBotQuestion && isAboutQANAT && !isOnCooldown(`conv-${message.author.id}`, 60)) {
+    const result = thinkAndReply(lower, authorName);
+    if (result) {
+      await message.reply(result.response);
       return;
     }
   }
 
-  // Occasionally engage with conversation (not every message)
-  // Only when someone is clearly talking about something we can add to
-  if (!isOnCooldown('gen-engage', 300)) {
-    // React to hype/excitement naturally
-    if (/\b(lfg|let'?s go|bullish|we'?re? early)\b/i.test(lower)) {
-      await message.react('🔥');
+  // PRIORITY 3: Someone asks a clear question (even if not about QANAT)
+  if (isBotQuestion && !isOnCooldown(`conv-${message.author.id}`, 120)) {
+    const result = thinkAndReply(lower, authorName);
+    if (result) {
+      await message.reply(result.response);
+      return;
     }
   }
-}
 
-// ── FAQ Detection ────────────────────────────────────────────
+  // PRIORITY 4: Jump into QANAT-related conversations occasionally
+  if (isAboutQANAT && !isOnCooldown('qanat-engage', 600)) {
+    // Only if the message is substantial (not just "qanat" in passing)
+    if (lower.length > 30) {
+      const result = thinkAndReply(lower, authorName);
+      if (result) {
+        // Don't reply to every QANAT mention, be selective
+        const shouldReply = Math.random() < 0.4;
+        if (shouldReply) {
+          await message.reply(result.response);
+          return;
+        }
+      }
+    }
+  }
 
-async function handleFAQDetection(message, lower) {
-  if (isOnCooldown(`faq-${message.author.id}`, 60)) return;
-
-  const faqMatch = matchFAQ(message.content);
-  if (faqMatch && faqMatch.score >= 4) {
-    // Conversational, not robotic copy-paste
-    const name = message.member?.displayName || message.author.displayName;
-    await message.reply(faqMatch.answer);
+  // PRIORITY 5: React naturally to certain messages (no text reply)
+  if (!isOnCooldown('react-engage', 120)) {
+    if (/\b(lfg|let'?s go|bullish|we'?re? early|love this|hyped)\b/i.test(lower)) {
+      await message.react('🔥');
+    }
   }
 }
 
