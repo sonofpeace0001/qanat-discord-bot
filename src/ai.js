@@ -6,7 +6,19 @@ const config = require('./config');
 const { FAQ_DATA } = require('./faq');
 
 const GEMINI_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+
+// Model priority: try cheaper/available models first
+const MODELS = [
+  'gemini-2.5-flash-lite',
+  'gemini-2.0-flash-lite',
+  'gemini-2.0-flash',
+  'gemini-2.5-flash',
+];
+let currentModel = MODELS[0];
+
+function getGeminiUrl(model) {
+  return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`;
+}
 
 // ── Channel conversation buffers ─────────────────────────────
 const channelBuffers = new Map();
@@ -123,18 +135,34 @@ async function generateResponse(channelId, authorName, messageContent) {
       },
     };
 
-    const res = await fetch(GEMINI_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    // Try models with fallback
+    let data = null;
+    for (const model of [currentModel, ...MODELS.filter(m => m !== currentModel)]) {
+      const res = await fetch(getGeminiUrl(model), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
 
-    if (!res.ok) {
-      console.error(`[AI] Gemini API error: ${res.status}`);
-      return null;
+      if (res.ok) {
+        data = await res.json();
+        if (model !== currentModel) {
+          currentModel = model;
+          console.log(`[AI] Switched to model: ${model}`);
+        }
+        break;
+      }
+
+      const errBody = await res.json().catch(() => ({}));
+      if (res.status === 429) {
+        console.log(`[AI] ${model} rate limited, trying next...`);
+        continue;
+      }
+      console.error(`[AI] ${model} error: ${res.status}`);
     }
 
-    const data = await res.json();
+    if (!data) return null;
+
     let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!text) return null;
@@ -237,15 +265,20 @@ async function summarizeText(text) {
       },
     };
 
-    const res = await fetch(GEMINI_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    let data = null;
+    for (const model of [currentModel, ...MODELS.filter(m => m !== currentModel)]) {
+      const res = await fetch(getGeminiUrl(model), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) { data = await res.json(); break; }
+      if (res.status === 429) continue;
+      break;
+    }
 
-    if (!res.ok) return null;
+    if (!data) return null;
 
-    const data = await res.json();
     let summary = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (summary) {
       summary = summary.replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',');
