@@ -500,16 +500,35 @@ client.on('messageReactionAdd', async (reaction, user) => {
     return;
   }
 
-  let actionType, points;
   const emoji = reaction.emoji.name;
-  if (emoji === '❤️') { actionType = 'like'; points = config.POINTS.LIKE; }
-  else if (emoji === '🔁') { actionType = 'retweet'; points = config.POINTS.RETWEET; }
-  else if (emoji === '💬') { actionType = 'comment'; points = config.POINTS.COMMENT; }
-  else return;
-
   const db = require('./db').db;
   const tweet = db.prepare('SELECT tweet_id FROM x_tweets WHERE message_id = ?').get(msg.id);
   if (!tweet) return;
+
+  // ⭐ = did all three (like + comment + retweet)
+  if (emoji === '⭐') {
+    let earned = 0;
+    const actions = [
+      ['like', config.POINTS.LIKE],
+      ['comment', config.POINTS.COMMENT],
+      ['retweet', config.POINTS.RETWEET],
+    ];
+    for (const [action, pts] of actions) {
+      if (recordEngagement(user.id, tweet.tweet_id, action, pts)) earned += pts;
+    }
+    if (earned > 0) {
+      const total = q.getPoints.get(user.id);
+      try { await user.send(`+${earned} points for the full engagement. You're at ${total?.total_points || earned} total. Respect.`); } catch {}
+    }
+    return;
+  }
+
+  // Individual claims
+  let actionType, points;
+  if (emoji === '👍') { actionType = 'like'; points = config.POINTS.LIKE; }
+  else if (emoji === '💬') { actionType = 'comment'; points = config.POINTS.COMMENT; }
+  else if (emoji === '🔄') { actionType = 'retweet'; points = config.POINTS.RETWEET; }
+  else return;
 
   if (recordEngagement(user.id, tweet.tweet_id, actionType, points)) {
     const total = q.getPoints.get(user.id);
@@ -836,11 +855,12 @@ async function cmdPostTweet(interaction) {
     (customMsg ? `${customMsg}\n\n` : `**New post from @${tweetUser} just dropped!** @everyone\n\n`) +
     `Engage on X, then react below to claim your points.\n\n` +
     (tweetText ? `> ${tweetText.split('\n').join('\n> ')}\n\n` : '') +
-    `**How to earn:**\n` +
-    `❤️ Like = **1 point**\n` +
-    `💬 Comment = **2 points**\n` +
-    `🔁 Retweet = **3 points**\n\n` +
-    `Link your X with \`/linkx\` and follow @QANAT_IO first.\n\n` +
+    `**Claim your points:**\n` +
+    `👍 I liked it = **1 point**\n` +
+    `💬 I commented = **2 points**\n` +
+    `🔄 I retweeted/quoted = **3 points**\n` +
+    `⭐ I did all three = **6 points**\n\n` +
+    `You must follow @QANAT_IO and link your X with \`/linkx\` first.\n\n` +
     url;
 
   const trackingMsg = await taskChannel.send({
@@ -848,9 +868,10 @@ async function cmdPostTweet(interaction) {
     allowedMentions: { parse: ['everyone'] },
   });
 
-  await trackingMsg.react('❤️');
+  await trackingMsg.react('👍');
   await trackingMsg.react('💬');
-  await trackingMsg.react('🔁');
+  await trackingMsg.react('🔄');
+  await trackingMsg.react('⭐');
 
   dbq.addTweet.run(tweetId, url, tweetText || 'No text', trackingMsg.id);
 
