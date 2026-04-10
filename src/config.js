@@ -37,12 +37,14 @@ module.exports = {
     '1351659658699604118', // Team chat
   ],
 
-  // Channels where the bot actively engages in conversation (AI-powered)
-  ACTIVE_CHAT_CHANNELS: [
-    '1351659063523410041', // General
-    '1480548557227561040', // Contributor chat
-    '1351659381778944050', // FAQ
-    '1351659102929162301', // Introduction
+  // Channels where bot should NOT engage in conversation (read-only/restricted)
+  SILENT_CHANNELS: [
+    '1351659658699604118', // Team chat
+    '1351658082316451911', // Rules (read-only)
+    '1351658312633946183', // Official links (read-only)
+    '1351658245873471589', // Announcements (read-only)
+    '1447327527101137069', // Mod report (internal)
+    '1445817010893094942', // Staff chat (internal)
   ],
 
   ROLES: {
