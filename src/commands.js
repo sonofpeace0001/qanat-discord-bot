@@ -159,6 +159,21 @@ const commands = [
         .setDescription('Footer text (optional)')
         .setRequired(false)
     ),
+  // ── /verifyx — Check/revoke a member's X link (admin only)
+  new SlashCommandBuilder()
+    .setName('verifyx')
+    .setDescription('Check or revoke a member\'s linked X account (admin only)')
+    .addUserOption(opt =>
+      opt.setName('user')
+        .setDescription('Member to check')
+        .setRequired(true)
+    )
+    .addBooleanOption(opt =>
+      opt.setName('revoke')
+        .setDescription('Revoke their X link and points?')
+        .setRequired(false)
+    ),
+
   // ── /vcsummary — Get a summary of the current VC session
   new SlashCommandBuilder()
     .setName('vcsummary')
