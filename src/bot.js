@@ -132,6 +132,21 @@ client.on('guildMemberAdd', async (member) => {
     }
   } catch (err) { console.error('Invite tracking:', err.message); }
 
+  // Welcome DM
+  try {
+    await member.user.send(
+      `Hey ${member.user.displayName}, welcome to QANAT!\n\n` +
+      `Quick intro: we're building Web X. OS, a decentralized operating system that puts people back in control of their data. Beta is coming Q1 2026, mainnet Q3 2026. You're early.\n\n` +
+      `**Earning points**\n` +
+      `Link your X account with \`/linkx\` in the server, follow @QANAT_IO, and when new posts drop you can engage and earn points. Like = 1pt, comment = 2pt, retweet = 3pt. Use \`/points\` to check your score and \`/leaderboard\` to see where you stand.\n\n` +
+      `**Channels to know**\n` +
+      `General chat for hanging out, GM/GN channel for your daily streak, and the task channel for X engagement quests. If you need help with anything, just ask in support or tag a staff member.\n\n` +
+      `Take your time getting settled. No pressure, just be yourself and have fun. See you in there.`
+    );
+  } catch {
+    // DMs might be disabled, that's fine
+  }
+
   logModAction(member.guild, null, 'member_join', `${member.user.tag} joined`);
 });
 
