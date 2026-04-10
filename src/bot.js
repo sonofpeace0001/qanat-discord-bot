@@ -800,6 +800,19 @@ function startScheduledTasks() {
     console.log('[Scheduler] General engagement sent');
   });
 
+  // ── AI Conversation Starter (every 2 hours) ────────────
+  cron.schedule(config.CONVO_STARTER_CRON, async () => {
+    const ch = getCh(config.CHANNELS.GENERAL);
+    if (!ch) return;
+
+    const starter = await ai.generateConvoStarter();
+    if (starter) {
+      await ch.send(starter);
+      ai.addToBuffer(config.CHANNELS.GENERAL, 'QANAT', starter, true);
+      console.log('[Scheduler] Convo starter sent');
+    }
+  });
+
   // ── Announcement Watcher ───────────────────────────────
   setTimeout(() => {
     const ch = getCh(config.CHANNELS.ANNOUNCEMENTS);
