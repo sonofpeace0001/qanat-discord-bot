@@ -36,6 +36,8 @@ Key facts: QANAT solves digital identity protection. Your data gets stolen by bi
 
 Style: casual, genuine, short (1-2 sentences usually, 3-4 max for real questions). Use contractions. No emdash ever, use commas instead. Minimal emoji. Vary replies. Match energy. Sound like a real person texting, not a corporate account.
 
+When talking to someone, just use their name naturally (like "hey Alex"). Never put @ before names. Never use @ with numbers. Just say the name.
+
 Never: say you're a bot/AI/automated, say "how can I assist", use emdash or double dash, lecture, give walls of text, be sycophantic, use bullet points in chat, always end with a question, say "great question". If asked if you're a bot, deflect naturally.
 
 Always respect admins. If unsure about something, just say so.`;
@@ -45,35 +47,36 @@ Always respect admins. If unsure about something, just say so.`;
 // ═══════════════════════════════════════════════════════════════
 
 async function callGroq(messages, systemPrompt) {
-  const body = {
-    model: 'llama-3.1-8b-instant',
-    messages: [
-      { role: 'system', content: systemPrompt },
-      ...messages,
-    ],
-    temperature: 0.9,
-    max_tokens: 150,
-    top_p: 0.95,
-  };
+  // Try multiple models - each has separate rate limits
+  const models = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
+  
+  for (const model of models) {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_KEY}` },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: 'system', content: systemPrompt }, ...messages],
+        temperature: 0.9,
+        max_tokens: 150,
+      }),
+    });
 
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${GROQ_KEY}`,
-    },
-    body: JSON.stringify(body),
-  });
+    if (res.status === 429) {
+      console.log(`[AI] Groq ${model} rate limited, trying next model...`);
+      continue;
+    }
+    if (!res.ok) continue;
 
-  if (res.status === 429) throw new Error('RATE_LIMITED');
-  if (!res.ok) throw new Error(`GROQ_ERROR_${res.status}`);
-
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content || null;
+    const data = await res.json();
+    const text = data.choices?.[0]?.message?.content;
+    if (text) return text;
+  }
+  throw new Error('RATE_LIMITED');
 }
 
 async function callGemini(messages, systemPrompt) {
-  const models = ['gemini-2.5-flash-lite', 'gemini-2.0-flash-lite', 'gemini-2.0-flash'];
+  const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
 
   const contents = messages.map(m => ({
     role: m.role === 'assistant' ? 'model' : 'user',
@@ -83,55 +86,61 @@ async function callGemini(messages, systemPrompt) {
   const body = {
     contents,
     systemInstruction: { parts: [{ text: systemPrompt }] },
-    generationConfig: { temperature: 0.95, maxOutputTokens: 150, topP: 0.95 },
+    generationConfig: { temperature: 0.95, maxOutputTokens: 150 },
   };
 
   for (const model of models) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
 
-    if (res.status === 429) continue;
-    if (!res.ok) continue;
+      if (res.status === 429) continue;
+      if (!res.ok) continue;
 
-    const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (text) return text;
+      const data = await res.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) return text;
+    } catch { continue; }
   }
-
   throw new Error('RATE_LIMITED');
 }
 
 async function callOpenRouter(messages, systemPrompt) {
-  const body = {
-    model: 'google/gemma-3-27b-it:free',
-    messages: [
-      { role: 'system', content: systemPrompt },
-      ...messages,
-    ],
-    temperature: 0.9,
-    max_tokens: 150,
-  };
+  // Try multiple free models
+  const models = ['google/gemma-3-27b-it:free', 'meta-llama/llama-3.3-70b-instruct:free'];
 
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${OPENROUTER_KEY}`,
-      'HTTP-Referer': 'https://qanat.io',
-      'X-Title': 'QANAT Discord Bot',
-    },
-    body: JSON.stringify(body),
-  });
+  for (const model of models) {
+    try {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENROUTER_KEY}`,
+          'HTTP-Referer': 'https://qanat.io',
+        },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: 'system', content: systemPrompt }, ...messages],
+          temperature: 0.9,
+          max_tokens: 150,
+        }),
+      });
 
-  if (res.status === 429) throw new Error('RATE_LIMITED');
-  if (!res.ok) throw new Error(`OPENROUTER_ERROR_${res.status}`);
+      if (res.status === 429) continue;
+      if (!res.ok) continue;
 
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content || null;
+      const data = await res.json();
+      // OpenRouter can return 200 but with error in body
+      if (data.error) continue;
+      const text = data.choices?.[0]?.message?.content;
+      if (text) return text;
+    } catch { continue; }
+  }
+  throw new Error('RATE_LIMITED');
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -164,9 +173,9 @@ function getAvailableProviders() {
 }
 
 function markRateLimited(provider) {
-  // Cool down for 15 seconds, then try again
-  providerStatus[provider].cooldownUntil = Date.now() + 15_000;
-  console.log(`[AI] ${provider} rate limited, cooling down for 15s`);
+  // Cool down for 5 seconds only, then retry (models rotate so limits are separate)
+  providerStatus[provider].cooldownUntil = Date.now() + 5_000;
+  console.log(`[AI] ${provider} all models exhausted, retry in 5s`);
 }
 
 // ═══════════════════════════════════════════════════════════════
