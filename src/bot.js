@@ -265,9 +265,25 @@ async function handleConversation(message, channelId, lower, authorName) {
   if (!shouldReply) return;
 
   try {
-    const response = await ai.generateResponse(channelId, authorName, message.content);
+    let response = await ai.generateResponse(channelId, authorName, message.content);
 
     if (response) {
+      // Fix mentions: convert @DisplayName to proper <@ID> mentions
+      const guild = message.guild;
+      if (guild) {
+        // Replace @username patterns with proper Discord mentions
+        response = response.replace(/@(\w+)/g, (match, name) => {
+          // Don't convert @everyone, @here, or @QANAT_IO
+          if (['everyone', 'here', 'QANAT_IO'].includes(name)) return match;
+          // Try to find the member by display name or username
+          const member = guild.members.cache.find(m =>
+            m.displayName.toLowerCase() === name.toLowerCase() ||
+            m.user.username.toLowerCase() === name.toLowerCase()
+          );
+          return member ? `<@${member.id}>` : match;
+        });
+      }
+
       ai.recordResponse(channelId, message.author.id);
       ai.addToBuffer(channelId, 'QANAT', response, true);
 
@@ -276,11 +292,9 @@ async function handleConversation(message, channelId, lower, authorName) {
       } else {
         await message.channel.send(response);
       }
-    } else {
-      console.log(`[Chat] No AI response for "${message.content.substring(0, 50)}..." in #${message.channel.name}`);
     }
   } catch (err) {
-    console.error(`[Chat] Error responding:`, err.message);
+    console.error(`[Chat] Error:`, err.message);
   }
 }
 
