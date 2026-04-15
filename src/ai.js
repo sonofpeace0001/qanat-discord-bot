@@ -1,402 +1,331 @@
 // ═══════════════════════════════════════════════════════════════
 // QANAT Bot -- Multi-Provider AI Conversation Engine
 // Groq (primary) -> Gemini (fallback) -> OpenRouter (backup)
-// Auto-rotates when one hits rate limits
 // ═══════════════════════════════════════════════════════════════
 
 const config = require('./config');
 const { FAQ_DATA } = require('./faq');
 
-// ── Provider Keys ────────────────────────────────────────────
-const GROQ_KEY = process.env.GROQ_API_KEY || '';
-const GEMINI_KEY = process.env.GEMINI_API_KEY || '';
-const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || '';
+const GROQ_KEY        = process.env.GROQ_API_KEY        || '';
+const GEMINI_KEY      = process.env.GEMINI_API_KEY      || '';
+const OPENROUTER_KEY  = process.env.OPENROUTER_API_KEY  || '';
 
-// ── Provider Status Tracking ─────────────────────────────────
 const providerStatus = {
-  groq:       { available: true, cooldownUntil: 0, requests: 0 },
-  gemini:     { available: true, cooldownUntil: 0, requests: 0 },
-  openrouter: { available: true, cooldownUntil: 0, requests: 0 },
+  groq:       { cooldownUntil: 0, requests: 0 },
+  gemini:     { cooldownUntil: 0, requests: 0 },
+  openrouter: { cooldownUntil: 0, requests: 0 },
 };
 
-// ── Channel conversation buffers ─────────────────────────────
-const channelBuffers = new Map();
-const MAX_BUFFER = 20;
+const channelBuffers  = new Map(); // channelId -> [{author, content, isBot}]
+const lastUserReply   = new Map(); // `channelId-userId` -> timestamp
+const lastChannelReply = new Map(); // channelId -> timestamp
 
-// ── Cooldowns ────────────────────────────────────────────────
-const lastResponse = new Map();
-const lastUserResponse = new Map();
+const MAX_BUFFER = 15;
 
-// ── Compact System Prompt (token-efficient) ──────────────────
-const SYSTEM_PROMPT = `You're QANAT, community manager for QANAT Technology Discord. You're human, not a bot.
+// ── Crystal-clear system prompt ──────────────────────────────
+// NOTE: Never mention ancient qanat water canals. This is a tech company.
+const SYSTEM_PROMPT = `You are a community manager named QANAT working for QANAT Technology, a Web3 startup.
 
-QANAT: Digital Sovereignty by Design. Building Web X. OS, a decentralized OS giving people control of their data/identity. Beta Q1 2026, mainnet Q3 2026. Token info TBD. Site: qanat.io, X: @QANAT_IO. Whitepaper at qanat.io.
+QANAT Technology builds Web X. OS, a decentralized operating system that gives people full control of their personal data and digital identity. Think of it like owning your home online instead of renting from big tech. Beta launches Q1 2026, mainnet Q3 2026. No token details yet. Website: qanat.io, Twitter: @QANAT_IO.
 
-Key facts: QANAT solves digital identity protection. Your data gets stolen by big tech silently. QANAT empowers users to own their data. Web X. OS is the main product. Software almost ready. You're still early if you're here now.
+Your personality: casual, real, friendly. You have opinions. You care about the community. You sound like a person texting, not a company account.
 
-Style: casual, genuine, short (1-2 sentences usually, 3-4 max for real questions). Use contractions. No emdash ever, use commas instead. Minimal emoji. Vary replies. Match energy. Sound like a real person texting, not a corporate account.
+Response rules:
+- 1-2 sentences for casual chat. 3-5 sentences max for questions. Never cut off mid-sentence.
+- No emdash (use comma or period instead). No double dash.
+- No bullet points or headers in casual replies. Only use them if someone asks for a detailed explanation.
+- Vary how you start messages. Not always "Hey" or "Yeah".
+- No emoji unless the conversation is clearly hype/celebration.
+- Never say "How can I assist", "As an AI", "I'm here to help", or anything robotic.
+- If asked if you're a bot: "lol no, just the community manager"
+- Respect admins. If you don't know something, say so honestly.`;
 
-When talking to someone, just use their name naturally (like "hey Alex"). Never put @ before names. Never use @ with numbers. Just say the name.
+// ─────────────────────────────────────────────────────────────
+// Provider calls
+// ─────────────────────────────────────────────────────────────
 
-Never: say you're a bot/AI/automated, say "how can I assist", use emdash or double dash, lecture, give walls of text, be sycophantic, use bullet points in chat, always end with a question, say "great question". If asked if you're a bot, deflect naturally.
+async function callGroq(messages) {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_KEY}` },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+      temperature: 0.85,
+      max_tokens: 300,
+    }),
+  });
+  if (res.status === 429) throw new Error('RATE_LIMITED');
+  if (!res.ok) throw new Error(`GROQ_${res.status}`);
+  const d = await res.json();
+  return d.choices?.[0]?.message?.content || null;
+}
 
-Always respect admins. If unsure about something, just say so.`;
-
-// ═══════════════════════════════════════════════════════════════
-// PROVIDER IMPLEMENTATIONS
-// ═══════════════════════════════════════════════════════════════
-
-async function callGroq(messages, systemPrompt) {
-  // Try multiple models - each has separate rate limits
-  const models = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
-  
+async function callGemini(messages) {
+  const models = ['gemini-2.5-flash-lite', 'gemini-2.0-flash-lite', 'gemini-2.0-flash'];
+  const contents = messages.map(m => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content }],
+  }));
   for (const model of models) {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`;
+    const res = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_KEY}` },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model,
-        messages: [{ role: 'system', content: systemPrompt }, ...messages],
-        temperature: 0.9,
-        max_tokens: 150,
+        contents,
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        generationConfig: { temperature: 0.85, maxOutputTokens: 300 },
       }),
     });
-
-    if (res.status === 429) {
-      console.log(`[AI] Groq ${model} rate limited, trying next model...`);
-      continue;
-    }
+    if (res.status === 429) continue;
     if (!res.ok) continue;
-
-    const data = await res.json();
-    const text = data.choices?.[0]?.message?.content;
+    const d = await res.json();
+    const text = d.candidates?.[0]?.content?.parts?.[0]?.text;
     if (text) return text;
   }
   throw new Error('RATE_LIMITED');
 }
 
-async function callGemini(messages, systemPrompt) {
-  const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
-
-  const contents = messages.map(m => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }],
-  }));
-
-  const body = {
-    contents,
-    systemInstruction: { parts: [{ text: systemPrompt }] },
-    generationConfig: { temperature: 0.95, maxOutputTokens: 150 },
-  };
-
-  for (const model of models) {
-    try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`;
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      if (res.status === 429) continue;
-      if (!res.ok) continue;
-
-      const data = await res.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text) return text;
-    } catch { continue; }
-  }
-  throw new Error('RATE_LIMITED');
-}
-
-async function callOpenRouter(messages, systemPrompt) {
-  // Try multiple free models
-  const models = ['google/gemma-3-27b-it:free', 'meta-llama/llama-3.3-70b-instruct:free'];
-
-  for (const model of models) {
-    try {
-      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENROUTER_KEY}`,
-          'HTTP-Referer': 'https://qanat.io',
-        },
-        body: JSON.stringify({
-          model,
-          messages: [{ role: 'system', content: systemPrompt }, ...messages],
-          temperature: 0.9,
-          max_tokens: 150,
-        }),
-      });
-
-      if (res.status === 429) continue;
-      if (!res.ok) continue;
-
-      const data = await res.json();
-      // OpenRouter can return 200 but with error in body
-      if (data.error) continue;
-      const text = data.choices?.[0]?.message?.content;
-      if (text) return text;
-    } catch { continue; }
-  }
-  throw new Error('RATE_LIMITED');
-}
-
-// ═══════════════════════════════════════════════════════════════
-// PROVIDER ROTATION
-// ═══════════════════════════════════════════════════════════════
-
-// Priority order: groq first (fastest), gemini second, openrouter third
-const PROVIDER_ORDER = ['groq', 'gemini', 'openrouter'];
-
-const providerFns = {
-  groq: callGroq,
-  gemini: callGemini,
-  openrouter: callOpenRouter,
-};
-
-const providerKeys = {
-  groq: () => GROQ_KEY,
-  gemini: () => GEMINI_KEY,
-  openrouter: () => OPENROUTER_KEY,
-};
-
-function getAvailableProviders() {
-  const now = Date.now();
-  return PROVIDER_ORDER.filter(p => {
-    if (!providerKeys[p]()) return false; // no key configured
-    const status = providerStatus[p];
-    if (status.cooldownUntil > now) return false; // cooling down
-    return true;
+async function callOpenRouter(messages) {
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${OPENROUTER_KEY}`,
+      'HTTP-Referer': 'https://qanat.io',
+      'X-Title': 'QANAT Discord Bot',
+    },
+    body: JSON.stringify({
+      model: 'google/gemma-3-27b-it:free',
+      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+      temperature: 0.85,
+      max_tokens: 300,
+    }),
   });
+  if (res.status === 429) throw new Error('RATE_LIMITED');
+  if (!res.ok) throw new Error(`OR_${res.status}`);
+  const d = await res.json();
+  return d.choices?.[0]?.message?.content || null;
 }
 
-function markRateLimited(provider) {
-  // Cool down for 5 seconds only, then retry (models rotate so limits are separate)
-  providerStatus[provider].cooldownUntil = Date.now() + 5_000;
-  console.log(`[AI] ${provider} all models exhausted, retry in 5s`);
+const PROVIDERS = ['groq', 'gemini', 'openrouter'];
+const PROVIDER_FNS = { groq: callGroq, gemini: callGemini, openrouter: callOpenRouter };
+const PROVIDER_KEYS = { groq: GROQ_KEY, gemini: GEMINI_KEY, openrouter: OPENROUTER_KEY };
+
+function getAvailable() {
+  const now = Date.now();
+  return PROVIDERS.filter(p => PROVIDER_KEYS[p] && providerStatus[p].cooldownUntil < now);
 }
 
-// ═══════════════════════════════════════════════════════════════
-// CORE FUNCTIONS
-// ═══════════════════════════════════════════════════════════════
+function markLimited(provider) {
+  providerStatus[provider].cooldownUntil = Date.now() + 20_000;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Buffer
+// ─────────────────────────────────────────────────────────────
 
 function addToBuffer(channelId, author, content, isBot = false) {
   if (!channelBuffers.has(channelId)) channelBuffers.set(channelId, []);
-  const buffer = channelBuffers.get(channelId);
-  buffer.push({ author, content, isBot, time: Date.now() });
-  if (buffer.length > MAX_BUFFER) buffer.shift();
+  const buf = channelBuffers.get(channelId);
+  buf.push({ author, content, isBot });
+  if (buf.length > MAX_BUFFER) buf.shift();
 }
 
-async function generateResponse(channelId, authorName, messageContent) {
-  const providers = getAvailableProviders();
-  if (providers.length === 0) {
-    console.log('[AI] No providers available');
-    return null;
-  }
+// ─────────────────────────────────────────────────────────────
+// Generate response
+// ─────────────────────────────────────────────────────────────
 
-  // Build conversation messages from buffer
-  const buffer = channelBuffers.get(channelId) || [];
-  const messages = buffer.slice(-12).map(m => ({
+async function generateResponse(channelId, authorName, messageContent) {
+  const providers = getAvailable();
+  if (!providers.length) return null;
+
+  const buf = channelBuffers.get(channelId) || [];
+  const messages = buf.slice(-10).map(m => ({
     role: m.isBot ? 'assistant' : 'user',
     content: m.isBot ? m.content : `${m.author}: ${m.content}`,
   }));
-
-  // Add current message
   messages.push({ role: 'user', content: `${authorName}: ${messageContent}` });
 
-  // Try each provider in order
   for (const provider of providers) {
     try {
-      const text = await providerFns[provider](messages, SYSTEM_PROMPT);
+      let text = await PROVIDER_FNS[provider](messages);
       if (!text) continue;
 
       providerStatus[provider].requests++;
 
-      // Clean the response
-      let clean = text.trim();
-      clean = clean.replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',');
-      clean = clean.replace(/^QANAT:\s*/i, '');
-      if (clean.length > 500) clean = clean.substring(0, 497) + '...';
+      // Clean up
+      text = text.trim();
+      text = text.replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',');
+      text = text.replace(/^QANAT:\s*/i, '');
 
-      console.log(`[AI] Response via ${provider} (${clean.length} chars)`);
-      return clean;
-    } catch (err) {
-      if (err.message === 'RATE_LIMITED') {
-        markRateLimited(provider);
-        continue;
+      // Ensure it doesn't end mid-sentence
+      const lastChar = text[text.length - 1];
+      if (text.length > 20 && !'.!?)"\'`'.includes(lastChar)) {
+        // Find last complete sentence
+        const lastPeriod = Math.max(
+          text.lastIndexOf('. '),
+          text.lastIndexOf('! '),
+          text.lastIndexOf('? '),
+          text.lastIndexOf('.\n'),
+        );
+        if (lastPeriod > text.length * 0.5) {
+          text = text.substring(0, lastPeriod + 1);
+        }
       }
+
+      if (text.length > 600) {
+        const cut = text.lastIndexOf('. ', 600);
+        text = cut > 300 ? text.substring(0, cut + 1) : text.substring(0, 600);
+      }
+
+      console.log(`[AI] ${provider} -> ${text.length} chars`);
+      return text;
+    } catch (err) {
+      if (err.message === 'RATE_LIMITED') { markLimited(provider); continue; }
       console.error(`[AI] ${provider} error:`, err.message);
       continue;
     }
   }
 
-  console.log('[AI] All providers failed');
   return null;
 }
+
+// ─────────────────────────────────────────────────────────────
+// shouldRespond — human-like, not spammy
+// ─────────────────────────────────────────────────────────────
 
 function shouldRespond(message, channelId) {
   const lower = message.content.toLowerCase().trim();
   const mentionsBot = message.mentions?.users?.has(message.client?.user?.id);
+
+  // Always respond when directly mentioned
   if (mentionsBot) return true;
 
-  // Only cooldown: don't reply to the SAME user in the SAME channel within 8 seconds
-  // This prevents double-responding to one person, but doesn't block other users
+  // Skip empty, emoji-only, or very short
+  if (lower.length < 4) return false;
+  if (/^[\u{1F300}-\u{1FAFF}\s]+$/u.test(lower)) return false;
+
+  // Per-user cooldown: 20s (avoid double-replying same person)
   const userKey = `${channelId}-${message.author.id}`;
-  const lastU = lastUserResponse.get(userKey) || 0;
-  if (Date.now() - lastU < 8000) return false;
+  if (Date.now() - (lastUserReply.get(userKey) || 0) < 20_000) return false;
 
-  // Skip emoji-only or very short
-  if (lower.length < 2) return false;
-  if (/^[\u{1F000}-\u{1FFFF}\s]+$/u.test(lower)) return false;
+  // Per-channel cooldown: 12s (avoid flooding the channel)
+  if (Date.now() - (lastChannelReply.get(channelId) || 0) < 12_000) return false;
 
-  // ── Always respond ─────────────────────────────────────
-  if (lower.includes('?')) return true;
-  if (/^(hey|hi|hello|yo|sup|what'?s ?up|howdy|waddup)\b/i.test(lower)) return true;
-  if (/\b(help|confused|how do i|where can|can someone|anyone know|what is|who is)\b/i.test(lower)) return true;
-  if (/\b(qanat|web ?x|sovereignty|whitepaper|mainnet|beta|token)\b/i.test(lower)) return true;
-  if (/\b(anyone|somebody|who here|thoughts on|opinions on|what do you)\b/i.test(lower)) return true;
+  // ── Tier 1: High priority (respond most of the time) ───
+  if (/\b(qanat|web ?x|sovereignty|whitepaper|mainnet|beta|token|roadmap)\b/i.test(lower)) return Math.random() < 0.9;
+  if (lower.endsWith('?')) return Math.random() < 0.85;
+  if (/^(hey|hi|hello|yo|sup|what'?s ?up|howdy)\b/i.test(lower) && lower.length < 30) return Math.random() < 0.7;
+  if (/\b(help|confused|how do i|where can i|can someone|anyone know)\b/i.test(lower)) return Math.random() < 0.85;
+  if (/\b(anyone|everybody|what do you (all|guys)|thoughts on|opinions on)\b/i.test(lower)) return Math.random() < 0.75;
 
-  // ── High probability ───────────────────────────────────
-  if (/\b(lfg|let'?s go|bullish|hyped|we'?re? early|fire|amazing|love)\b/i.test(lower)) return Math.random() < 0.8;
-  if (/\b(i think|i believe|honestly|personally|imo|tbh)\b/i.test(lower)) return Math.random() < 0.7;
-  if (/\b(gm|good morning|morning)\b/i.test(lower) && channelId !== config.CHANNELS.GM_GN) return Math.random() < 0.6;
-  if (/\b(thanks|thank you|appreciate|ty|thx)\b/i.test(lower)) return Math.random() < 0.6;
-  if (/\b(building|working on|coding|developing|shipping|launched|created)\b/i.test(lower)) return Math.random() < 0.7;
-  if (/\b(bye|later|gotta go|heading out|peace)\b/i.test(lower)) return Math.random() < 0.5;
+  // ── Tier 2: Medium priority ────────────────────────────
+  if (/\b(i think|i believe|honestly|imo|tbh|ngl)\b/i.test(lower)) return Math.random() < 0.45;
+  if (/\b(lfg|bullish|hyped|we'?re? early|love this|excited)\b/i.test(lower)) return Math.random() < 0.5;
+  if (/\b(building|working on|shipped|launched|created|made)\b/i.test(lower)) return Math.random() < 0.45;
 
-  // ── Base rate: respond to ~40% of everything else ──────
-  return Math.random() < 0.4;
+  // ── Tier 3: Base rate — low so it doesn't feel like a spam bot ──
+  const highChannels = [config.CHANNELS.GENERAL, config.CHANNELS.CONTRIBUTOR_CHAT];
+  if (highChannels.includes(channelId)) return Math.random() < 0.15;
+  return Math.random() < 0.08;
 }
 
 function recordResponse(channelId, userId) {
-  // Only track per-user to prevent double-reply, no channel blocking
-  lastUserResponse.set(`${channelId}-${userId}`, Date.now());
+  lastUserReply.set(`${channelId}-${userId}`, Date.now());
+  lastChannelReply.set(channelId, Date.now());
 }
 
-async function summarizeText(text) {
-  const providers = getAvailableProviders();
-  if (providers.length === 0) return null;
+// ─────────────────────────────────────────────────────────────
+// Conversation starter (for scheduled use)
+// ─────────────────────────────────────────────────────────────
 
-  const messages = [{
-    role: 'user',
-    content: `Summarize these community contributor reports from the last 24 hours. Brief, clear summary for staff. Focus on key updates, progress, anything needing attention. No emdash:\n\n${text}`,
-  }];
-
-  for (const provider of providers) {
-    try {
-      const result = await providerFns[provider](messages, 'You are a helpful assistant that writes concise summaries. Never use emdash.');
-      if (result) {
-        let clean = result.replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',');
-        return clean;
-      }
-    } catch (err) {
-      if (err.message === 'RATE_LIMITED') { markRateLimited(provider); continue; }
-      continue;
-    }
-  }
-  return null;
-}
-
-/**
- * AI-powered moderation check. Returns { violation, rule, severity, warning } or null.
- */
-async function checkModeration(authorName, messageContent) {
-  const providers = getAvailableProviders();
-  if (providers.length === 0) return null;
-
-  const prompt = `You are a Discord moderator. Analyze this message for rule violations.
-
-Rules:
-1. Respect everyone. No harassment, threats, sexism, racism, hate speech.
-2. English only.
-3. No cursing with negative intent or excessive cursing.
-4. No spam or self-promotion.
-5. No NSFW/obscene content.
-6. Channels must be used for intended purpose.
-7. Don't misuse tags.
-8. No FUD (fear, uncertainty, doubt spreading).
-9. Report violations to staff.
-10. No begging for money.
-11. Respect privacy.
-12. No impersonation.
-13. Follow Discord ToS.
-
-Message from "${authorName}": "${messageContent}"
-
-If the message violates a rule, respond with EXACTLY this JSON format (nothing else):
-{"violation": true, "rule": <number>, "severity": "<minor|moderate|serious>", "warning": "<a short, human, casual warning to the user. no emdash. 1-2 sentences max>"}
-
-If no violation, respond with EXACTLY:
-{"violation": false}
-
-Only flag clear violations. Normal conversation, slang, mild language, and casual chat are fine. Don't be overly strict. "damn", "hell", "crap" are acceptable. Only flag actual harmful content, clear spam, non-English messages (more than a few words), hate speech, harassment, NSFW, threats, or begging.`;
-
-  const messages = [{ role: 'user', content: prompt }];
-
-  for (const provider of providers) {
-    try {
-      const result = await providerFns[provider](messages, 'You are a moderation analysis tool. Respond only in JSON.');
-      if (!result) continue;
-
-      // Extract JSON from response
-      const jsonMatch = result.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) continue;
-
-      const parsed = JSON.parse(jsonMatch[0]);
-      if (parsed.violation === false) return null;
-      if (parsed.violation === true && parsed.warning) {
-        // Clean warning
-        parsed.warning = parsed.warning.replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',');
-        return parsed;
-      }
-      return null;
-    } catch (err) {
-      if (err.message === 'RATE_LIMITED') { markRateLimited(provider); continue; }
-      continue;
-    }
-  }
-  return null;
-}
-
-/**
- * Generate a conversation starter for general chat.
- * Topics: crypto, web3, tech, daily life, internet culture, building, privacy.
- */
 async function generateConvoStarter() {
-  const providers = getAvailableProviders();
-  if (providers.length === 0) return null;
+  const providers = getAvailable();
+  if (!providers.length) return null;
 
   const topics = [
-    "a hot take or interesting thought about crypto, web3, or decentralization",
-    "something interesting happening in tech or AI right now",
-    "a casual question to the community about their day, what they're working on, or what's on their mind",
-    "an opinion on data privacy, digital ownership, or internet culture",
-    "a fun hypothetical question about the future of technology",
-    "a thought about building in public, side projects, or the creator economy",
-    "something relatable about daily life, productivity, or learning new skills",
-    "a take on social media, content creation, or online communities",
+    'a casual thought about data privacy or digital ownership in everyday life',
+    'a question asking the community what they are building or working on',
+    'a hot take about web3 or crypto that sparks discussion',
+    'a fun hypothetical about what the internet could look like in 10 years',
+    'something relatable about being early to a project',
+    'a thought about open source software and community building',
   ];
-
   const topic = topics[Math.floor(Math.random() * topics.length)];
 
   const messages = [{
     role: 'user',
-    content: `Write a single casual message for a Discord general chat as if you're a community manager just dropping a thought or starting a conversation. Topic: ${topic}. Keep it to 1-2 sentences. Sound natural, like a real person just typing something. No emdash. No hashtags. No "hey everyone" or "just thinking". Jump straight into the thought. Don't use quotation marks around it.`,
+    content: `Write one casual message for a Discord general chat. Topic: ${topic}. Max 2 sentences. Sound like a real person, not a brand. No hashtags, no emdash, no emoji unless it really fits. Jump straight into the thought.`,
   }];
 
-  for (const provider of providers) {
+  for (const p of providers) {
     try {
-      const result = await providerFns[provider](messages, 'You are QANAT, a community manager. Write casual messages like a real person. Never use emdash. Short and natural.');
-      if (result) {
-        let clean = result.trim().replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',');
-        clean = clean.replace(/^["']|["']$/g, ''); // strip wrapping quotes
-        if (clean.length > 400) clean = clean.substring(0, 397) + '...';
-        return clean;
+      let text = await PROVIDER_FNS[p](messages);
+      if (!text) continue;
+      text = text.trim().replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',').replace(/^["']|["']$/g, '');
+      if (text.length > 350) {
+        const cut = text.lastIndexOf('. ', 350);
+        text = cut > 100 ? text.substring(0, cut + 1) : text.substring(0, 350);
       }
+      return text;
     } catch (err) {
-      if (err.message === 'RATE_LIMITED') { markRateLimited(provider); continue; }
+      if (err.message === 'RATE_LIMITED') { markLimited(p); continue; }
+      continue;
+    }
+  }
+  return null;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Summarize (for contributor reports)
+// ─────────────────────────────────────────────────────────────
+
+async function summarizeText(text) {
+  const providers = getAvailable();
+  if (!providers.length) return null;
+  const messages = [{
+    role: 'user',
+    content: `Summarize these contributor reports briefly for a staff team. Focus on key updates and blockers. No emdash. Keep it under 200 words:\n\n${text}`,
+  }];
+  for (const p of providers) {
+    try {
+      let result = await PROVIDER_FNS[p](messages);
+      if (result) return result.replace(/\u2014/g, ',').replace(/\u2013/g, ',').replace(/--/g, ',');
+    } catch (err) {
+      if (err.message === 'RATE_LIMITED') { markLimited(p); continue; }
+      continue;
+    }
+  }
+  return null;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Moderation check (AI-powered, call sparingly)
+// ─────────────────────────────────────────────────────────────
+
+async function checkModeration(authorName, messageContent) {
+  const providers = getAvailable();
+  if (!providers.length) return null;
+  const messages = [{
+    role: 'user',
+    content: `Is this Discord message a clear rule violation? Rules: no hate speech/harassment/racism, no NSFW, no spam, no begging for money, English only.\n\nMessage from "${authorName}": "${messageContent}"\n\nReply ONLY with JSON: {"violation":true,"rule":1,"severity":"minor|moderate|serious","warning":"short casual warning"} or {"violation":false}. Only flag obvious violations, not normal chat.`,
+  }];
+  for (const p of providers) {
+    try {
+      const result = await PROVIDER_FNS[p](messages);
+      if (!result) continue;
+      const match = result.match(/\{[\s\S]*\}/);
+      if (!match) continue;
+      const parsed = JSON.parse(match[0]);
+      if (parsed.violation && parsed.warning) {
+        parsed.warning = parsed.warning.replace(/\u2014/g, ',').replace(/--/g, ',');
+        return parsed;
+      }
+      return null;
+    } catch (err) {
+      if (err.message === 'RATE_LIMITED') { markLimited(p); continue; }
       continue;
     }
   }
@@ -409,22 +338,14 @@ function isAIEnabled() {
 
 function getProviderStats() {
   const now = Date.now();
-  return PROVIDER_ORDER.map(p => {
-    const s = providerStatus[p];
-    const hasKey = !!providerKeys[p]();
-    const cooldown = s.cooldownUntil > now ? Math.ceil((s.cooldownUntil - now) / 1000) : 0;
-    return `${p}: ${hasKey ? 'configured' : 'no key'} | ${cooldown ? `cooldown ${cooldown}s` : 'ready'} | ${s.requests} requests`;
+  return PROVIDERS.map(p => {
+    const cd = providerStatus[p].cooldownUntil > now ? `cooldown ${Math.ceil((providerStatus[p].cooldownUntil - now) / 1000)}s` : 'ready';
+    return `${p}: ${PROVIDER_KEYS[p] ? 'SET' : 'NO KEY'} | ${cd} | ${providerStatus[p].requests} reqs`;
   }).join('\n');
 }
 
 module.exports = {
-  addToBuffer,
-  generateResponse,
-  shouldRespond,
-  recordResponse,
-  summarizeText,
-  checkModeration,
-  generateConvoStarter,
-  isAIEnabled,
-  getProviderStats,
+  addToBuffer, generateResponse, shouldRespond, recordResponse,
+  generateConvoStarter, summarizeText, checkModeration,
+  isAIEnabled, getProviderStats,
 };
